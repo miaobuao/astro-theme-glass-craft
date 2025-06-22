@@ -1,0 +1,51 @@
+---
+import BaseHtml, { type Props as BaseHtmlProps } from './BaseHtml.astro'
+import AdaptiveIconButton from '../components/ui/button/AdaptiveIconButton.astro'
+import config from '../consts'
+
+interface Props extends BaseHtmlProps {}
+
+const isTimeline = Astro.url.pathname === '/'
+const isBrowse = Astro.url.pathname === '/browse'
+const isAboutMe = Astro.url.pathname === config.customPages?.aboutMe
+
+const timelineIcon = isTimeline
+	? 'icon-[material-symbols--nest-clock-farsight-analog]'
+	: 'icon-[material-symbols--nest-clock-farsight-analog-outline]'
+
+const browseIcon = isBrowse
+	? 'icon-[material-symbols--folder-open]'
+	: 'icon-[material-symbols--folder-open-outline]'
+
+const meIcon = isAboutMe
+	? 'icon-[material-symbols--sentiment-excited]'
+	: 'icon-[material-symbols--sentiment-excited-outline]'
+---
+
+<BaseHtml {...Astro.props}>
+	<div class="flex flex-col sm:flex-row">
+		<!-- sidebar in md -->
+		<div
+			class:list={[
+				'w-full fixed bottom-0 flex justify-around',
+				'sm:w-48 lg:w-64 sm:top-0 sm:left-0 sm:h-full sm:flex-col sm:justify-start sm:gap-4 sm:p-4',
+			]}
+		>
+			<AdaptiveIconButton active={isTimeline}>
+				<span slot="icon" class:list={[timelineIcon, 'size-8']}></span>
+				Timeline
+			</AdaptiveIconButton>
+			<AdaptiveIconButton active={isBrowse}>
+				<span slot="icon" class:list={[browseIcon, 'size-8']}></span>
+				Browse
+			</AdaptiveIconButton>
+			<AdaptiveIconButton active={isAboutMe}>
+				<span slot="icon" class:list={[meIcon, 'size-8']}></span>
+				About Me
+			</AdaptiveIconButton>
+		</div>
+		<main class="pb-16 sm:pb-0 sm:ml-48 lg:ml-64">
+			<slot />
+		</main>
+	</div>
+</BaseHtml>
