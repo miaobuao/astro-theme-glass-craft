@@ -1,7 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import BlogList from '../components/BlogList.astro'
+import { getCollection } from 'astro:content'
+
+const blogPosts = await getCollection('blog')
 ---
 
 <BaseLayout title="Astro Theme Explorer" description="Astro Theme Explorer">
-	hi
+	<BlogList posts={blogPosts} />
 </BaseLayout>

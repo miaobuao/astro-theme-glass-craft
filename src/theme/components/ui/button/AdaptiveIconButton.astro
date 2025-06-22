@@ -1,6 +1,7 @@
 ---
-export type Props = {
-	class?: string
+import type { HTMLAttributes } from 'astro/types'
+
+export type Props = HTMLAttributes<'button'> & {
 	active?: boolean
 }
 
@@ -12,7 +13,7 @@ const { class: className, active } = Astro.props
 		'flex flex-col items-center justify-center px-6 py-0.5 rounded-full',
 		'sm:flex-row sm:justify-start sm:gap-4 sm:p-2',
 		className,
-		active && 'text-primary sm:text-white sm:bg-primary',
+		active && 'text-primary sm:text-primary-fg sm:bg-primary',
 	]}
 >
 	<div class="flex justify-center items-center">

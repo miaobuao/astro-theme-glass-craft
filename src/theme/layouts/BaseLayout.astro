@@ -24,27 +24,45 @@ const meIcon = isAboutMe
 
 <BaseHtml {...Astro.props}>
 	<div class="flex flex-col sm:flex-row">
-		<!-- sidebar in md -->
 		<div
 			class:list={[
-				'w-full fixed bottom-0 flex justify-around',
-				'sm:w-48 lg:w-64 sm:top-0 sm:left-0 sm:h-full sm:flex-col sm:justify-start sm:gap-4 sm:p-4',
+				'w-full fixed bottom-0',
+				'sm:top-0 sm:left-0 sm:h-full',
+				'lg:flex lg:w-144',
 			]}
 		>
-			<AdaptiveIconButton active={isTimeline}>
-				<span slot="icon" class:list={[timelineIcon, 'size-8']}></span>
-				Timeline
-			</AdaptiveIconButton>
-			<AdaptiveIconButton active={isBrowse}>
-				<span slot="icon" class:list={[browseIcon, 'size-8']}></span>
-				Browse
-			</AdaptiveIconButton>
-			<AdaptiveIconButton active={isAboutMe}>
-				<span slot="icon" class:list={[meIcon, 'size-8']}></span>
-				About Me
-			</AdaptiveIconButton>
+			<!-- nav -->
+			<div
+				class:list={[
+					'flex justify-around',
+					'sm:w-48 sm:flex-col sm:justify-start sm:gap-4 sm:p-4',
+					'lg:w-64 lg:gap-6 lg:p-6',
+				]}
+			>
+				<AdaptiveIconButton active={isTimeline}>
+					<span slot="icon" class:list={[timelineIcon, 'size-8']}></span>
+					Timeline
+				</AdaptiveIconButton>
+				<AdaptiveIconButton active={isBrowse}>
+					<span slot="icon" class:list={[browseIcon, 'size-8']}></span>
+					Browse
+				</AdaptiveIconButton>
+				<AdaptiveIconButton active={isAboutMe}>
+					<span slot="icon" class:list={[meIcon, 'size-8']}></span>
+					About Me
+				</AdaptiveIconButton>
+			</div>
+
+			<!-- author info -->
+			<div class="flex-1 hidden lg:block">Author</div>
 		</div>
-		<main class="pb-16 sm:pb-0 sm:ml-48 lg:ml-64">
+		<main
+			class:list={[
+				'pb-16 w-full p-4',
+				'sm:pb-0 sm:ml-48 sm:pl-0',
+				'lg:ml-144 lg:p-6',
+			]}
+		>
 			<slot />
 		</main>
 	</div>
