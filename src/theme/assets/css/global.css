@@ -3,5 +3,11 @@
 @plugin "@iconify/tailwind4";
 
 @theme {
-	--color-primary: #00c9a7;
+	--color-primary: #008f79;
+	--color-primary-fg: #ffffff;
+}
+
+body {
+	background-color: #001411;
+	color: #c2fff6;
 }

@@ -1,0 +1,38 @@
+---
+import type { AnyEntryMap } from 'astro:content'
+import type { HTMLAttributes } from 'astro/types'
+
+type BlogEntryMap = AnyEntryMap['blog']
+
+interface Props extends HTMLAttributes<'div'> {
+	posts: Array<BlogEntryMap[keyof BlogEntryMap]>
+}
+
+const { posts, class: className } = Astro.props
+---
+
+<div class:list={['flex flex-col gap-6', 'lg:block lg:columns-2', className]}>
+	{
+		posts.map((post) => (
+			<article
+				class:list={[
+					'transition-all',
+					'break-all',
+					'p-6',
+					'rounded-2xl',
+					'text-primary-fg',
+					'bg-primary/90',
+					'hover:bg-primary',
+					'hover:scale-101',
+					'lg:mb-6',
+				]}
+			>
+				<h2 class="text-2xl font-bol mb-2">{post.data.title}</h2>
+				<p class="mb-4">{post.data.description}</p>
+				<p class="text-sm">
+					{new Date(post.data.pubDate).toLocaleDateString()}
+				</p>
+			</article>
+		))
+	}
+</div>
