@@ -54,7 +54,19 @@ const meIcon = isAboutMe
 			</div>
 
 			<!-- author info -->
-			<div class="flex-1 hidden lg:block">Author</div>
+			<div
+				class="flex-1 flex-col hidden lg:flex p-6 gap-6 items-center break-all"
+			>
+				<img
+					src={config.author.avatar.url}
+					alt={config.author.avatar.alt ?? 'avatar'}
+					class="rounded-full size-48"
+				/>
+				<p class="text-3xl font-bold">
+					{config.author.name}
+				</p>
+				{config.author.signature && <p>{config.author.signature}</p>}
+			</div>
 		</div>
 		<main
 			class:list={[
