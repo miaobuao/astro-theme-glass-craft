@@ -6,6 +6,10 @@ import { getCollection } from 'astro:content'
 const blogPosts = await getCollection('blog')
 ---
 
-<BaseLayout title="Astro Theme Explorer" description="Astro Theme Explorer">
+<BaseLayout
+	title="Astro Theme Explorer"
+	description="Astro Theme Explorer"
+	showAuthorInfo
+>
 	<BlogList posts={blogPosts} />
 </BaseLayout>

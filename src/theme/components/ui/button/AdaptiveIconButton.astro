@@ -1,25 +1,30 @@
 ---
 import type { HTMLAttributes } from 'astro/types'
 
-export type Props = HTMLAttributes<'button'> & {
+export type Props = HTMLAttributes<'a'> & {
 	active?: boolean
 }
 
-const { class: className, active } = Astro.props
+const { class: className, active, ...props } = Astro.props
 ---
 
-<button
+<a
 	class:list={[
-		'flex flex-col items-center justify-center px-6 py-0.5 rounded-full',
-		'sm:flex-row sm:justify-start sm:gap-4 sm:p-2',
+		'transition-all flex flex-col items-center justify-center px-8 py-2 rounded-3xl',
+		'sm:flex-row sm:justify-start sm:gap-4 sm:p-4 lg:px-6',
 		className,
-		active && 'text-primary sm:text-primary-fg sm:bg-primary',
+		active
+			? 'neumorphism-sunken'
+			: 'neumorphism-bulge hover:neumorphism-sunken hover:scale-99',
 	]}
+	role="button"
+	tabindex="0"
+	{...props}
 >
 	<div class="flex justify-center items-center">
 		<slot name="icon" />
 	</div>
-	<div class="text-xs sm:text-base">
+	<div class="text-xs sm:text-base select-none">
 		<slot />
 	</div>
-</button>
+</a>

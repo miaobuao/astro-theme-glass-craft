@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions'
 import '../assets/css/global.css'
 
 export interface Props {
@@ -15,6 +16,7 @@ const { title, description } = Astro.props
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		{description && <meta name="description" content={description} />}
 		{title && <title>{title}</title>}
+		<ClientRouter />
 	</head>
 	<body>
 		<div></div>
