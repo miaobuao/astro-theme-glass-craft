@@ -76,15 +76,12 @@ const meIcon = isAboutMe
 			<!-- author info -->
 			{
 				showAuthorInfo && (
-					<div
-						class="flex-1 flex-col hidden lg:flex p-8 gap-6 items-center break-all neumorphism-bulge"
-						transition:name="author"
-						transition:animate="slide"
-					>
+					<div class="flex-1 flex-col hidden lg:flex p-8 gap-6 items-center break-all neumorphism-bulge">
 						<img
 							src={config.author.avatar.url}
 							alt={config.author.avatar.alt ?? 'avatar'}
 							class="rounded-full size-48 select-none"
+							transition:name="avatar"
 						/>
 						<p class="text-3xl font-bold">{config.author.name}</p>
 						{config.author.signature && <p>{config.author.signature}</p>}
