@@ -31,7 +31,8 @@ const meIcon = isAboutMe
 		<div
 			class:list={[
 				'w-full fixed bottom-0 z-50 bg-primary neumorphism-bulge',
-				'sm:bg-transparent sm:shadow-none sm:top-0 sm:left-0 sm:h-full sm:w-48',
+				'sm:bg-transparent sm:shadow-none sm:top-0 sm:left-0 sm:h-full sm:w-42',
+				'md:w-48',
 				showAuthorInfo ? 'lg:flex lg:w-144' : 'lg:w-64',
 			]}
 		>
@@ -39,7 +40,8 @@ const meIcon = isAboutMe
 			<div
 				class:list={[
 					'flex justify-around',
-					'sm:w-48 sm:flex-col sm:justify-start sm:gap-6 sm:p-4',
+					'sm:w-42 sm:flex-col sm:justify-start sm:gap-6 sm:p-4',
+					'md:w-48',
 					'lg:gap-8 lg:p-8',
 					showAuthorInfo ? 'lg:w-64' : 'lg:w-64',
 				]}
@@ -93,7 +95,8 @@ const meIcon = isAboutMe
 		<main
 			class:list={[
 				'pb-16 w-full p-4',
-				'sm:pb-6 sm:ml-48 sm:pl-4 sm:mr-2',
+				'sm:pb-6 sm:ml-42 sm:pl-4 sm:mr-2',
+				'md:ml-48',
 				showAuthorInfo ? 'lg:ml-144 lg:p-6' : 'lg:ml-64',
 			]}
 			transition:name="main"
