@@ -7,7 +7,21 @@
 	--color-primary-fg: #ffffff;
 }
 
+@utility neumorphism-sunken {
+	background: #008f79;
+	box-shadow:
+		inset 5px 5px 10px #00816d,
+		inset -5px -5px 10px #009d85;
+}
+
+@utility neumorphism-bulge {
+	background: #008f79;
+	box-shadow:
+		5px 5px 10px #00816d,
+		-5px -5px 10px #009d85;
+}
+
 body {
-	background-color: #001411;
-	color: #c2fff6;
+	background-color: #008f79;
+	color: white;
 }
