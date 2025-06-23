@@ -1,6 +1,4 @@
 import { defineConfig } from 'astro/config'
-import mdx from '@astrojs/mdx'
-import sitemap from '@astrojs/sitemap'
 import theme from '.'
 
 export default defineConfig({
@@ -8,12 +6,12 @@ export default defineConfig({
 	integrations: [
 		theme({
 			author: {
-				name: 'Astro Theme Explorer',
+				name: 'Meo',
 				email: 'example@example.com',
 				signature: 'Astro Theme Explorer',
 				avatar: {
-					url: '/avatar.png',
-					alt: 'Astro Theme Explorer',
+					url: 'https://avatars.githubusercontent.com/u/62047803?v=4',
+					alt: 'Avatar',
 				},
 			},
 		}),
