@@ -1,20 +1,51 @@
 ---
+import moment from 'moment'
 import type { InferGetStaticPropsType } from 'astro'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
+import config from '../../consts'
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import { slugifyBlogPostUrl } from '../../utils/slugify-blog-post-url'
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog')
 	return posts.map((post) => ({
-		params: { slug: post.id },
+		params: { slug: slugifyBlogPostUrl(post.id) },
 		props: post,
 	}))
 }
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>
 const props = Astro.props
+
+const { Content } = await render(props)
 ---
 
 <BaseLayout>
-	{props.body}
+	<div class="flex flex-col gap-6">
+		<header class="neumorphism-bulge p-6 rounded-full flex items-center gap-6">
+			<img
+				src={config.author.avatar.url}
+				alt={config.author.avatar.alt}
+				class="size-18 rounded-full select-none"
+			/>
+			<div class="flex flex-col gap-2">
+				<p class="break-all text-xl font-bold">
+					{props.data.title}
+				</p>
+				<p class="text-sm">
+					{config.author.name}
+					·
+					{moment(props.data.pubDate).format('YYYY-MM-DD')}
+				</p>
+			</div>
+		</header>
+		<article
+			class:list={[
+				'neumorphism-bulge p-6 rounded-3xl prose prose-invert text-primary-fg max-w-full',
+				'sm:prose-lg',
+			]}
+		>
+			<Content />
+		</article>
+	</div>
 </BaseLayout>
