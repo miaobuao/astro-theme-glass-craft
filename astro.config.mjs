@@ -14,6 +14,9 @@ export default defineConfig({
 					alt: 'Avatar',
 				},
 			},
+			customPages: {
+				aboutMe: '/about-me',
+			},
 		}),
 	],
 })
