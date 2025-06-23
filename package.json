@@ -8,6 +8,11 @@
 		"preview": "astro preview",
 		"astro": "astro"
 	},
+	"exports": {
+		".": "./index.ts",
+		"./pages/*": "./src/theme/pages/*",
+		"./layouts/*": "./src/theme/layouts/*"
+	},
 	"dependencies": {
 		"@astrojs/markdown-remark": "^6.3.2",
 		"@astrojs/mdx": "^4.3.0",
