@@ -102,3 +102,7 @@ body {
 @utility glassmorphism {
 	@apply border-white/50 border-[0.5px] bg-white/20 backdrop-blur-xl;
 }
+
+@utility no-scrollbar {
+	@apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
