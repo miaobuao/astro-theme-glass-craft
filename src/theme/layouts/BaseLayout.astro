@@ -30,8 +30,8 @@ const meIcon = isAboutMe
 	<div class="flex flex-col sm:flex-row">
 		<div
 			class:list={[
-				'w-full fixed bottom-0 z-50 bg-primary neumorphism-bulge',
-				'sm:bg-transparent sm:shadow-none sm:top-0 sm:left-0 sm:h-full sm:w-42',
+				'transition-all w-full fixed bottom-0 left-0 right-0 z-50',
+				'sm:top-0 sm:h-full sm:w-42 sm:p-0',
 				'md:w-48',
 				showAuthorInfo ? 'lg:flex lg:w-144' : 'lg:w-64',
 			]}
@@ -39,8 +39,9 @@ const meIcon = isAboutMe
 			<!-- nav -->
 			<div
 				class:list={[
-					'flex justify-around',
-					'sm:w-42 sm:flex-col sm:justify-start sm:gap-6 sm:p-4',
+					'transition-all flex justify-around rounded-xl glassmorphism w-[calc(100%-1rem)] mx-auto mb-2',
+					'sm:shadow-none sm:backdrop:blur-none sm:bg-transparent sm:text-inherit',
+					'sm:w-42 sm:flex-col sm:justify-start sm:gap-6 sm:p-4 sm:m-0',
 					'md:w-48',
 					'lg:gap-8 lg:p-8',
 					showAuthorInfo ? 'lg:w-64' : 'lg:w-64',
