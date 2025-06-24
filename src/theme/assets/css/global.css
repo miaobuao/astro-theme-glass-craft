@@ -21,6 +21,15 @@
 		-5px -5px 10px #009d85;
 }
 
+@utility glassmorphism {
+	backdrop-filter: blur(10px);
+	background: rgba(255, 255, 255, 0.2);
+	color: black;
+	box-shadow:
+		inset 5px 5px 10px rgba(0, 0, 0, 0.1),
+		inset -5px -5px 15px rgba(255, 255, 255, 0.3);
+}
+
 body {
 	background-color: #008f79;
 	color: white;
