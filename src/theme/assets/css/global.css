@@ -5,32 +5,100 @@
 @theme {
 	--color-primary: #008f79;
 	--color-primary-fg: #ffffff;
+	--color-background: #e0e0e0;
+	--color-neumorphism-shadow-tl: #ffffff;
+	--color-neumorphism-shadow-br: #bebebe;
 }
-
-@utility neumorphism-sunken {
-	background: #008f79;
-	box-shadow:
-		inset 5px 5px 10px #00816d,
-		inset -5px -5px 10px #009d85;
-}
-
-@utility neumorphism-bulge {
-	background: #008f79;
-	box-shadow:
-		5px 5px 10px #00816d,
-		-5px -5px 10px #009d85;
-}
-
-@utility glassmorphism {
-	backdrop-filter: blur(10px);
-	background: rgba(255, 255, 255, 0.2);
-	color: black;
-	box-shadow:
-		inset 5px 5px 10px rgba(0, 0, 0, 0.1),
-		inset -5px -5px 15px rgba(255, 255, 255, 0.3);
+:root {
+	/* --color-primary: #008f79; */
+	--color-primary: #c7edcc;
+	--color-primary-fg: #ffffff;
+	--color-background: #e0e0e0;
+	--color-neumorphism-shadow-tl: #ffffff;
+	--color-neumorphism-shadow-br: #bebebe;
+	@media (prefers-color-scheme: dark) {
+		--color-background: #404040;
+		--color-neumorphism-shadow-tl: #4a4a4a;
+		--color-neumorphism-shadow-br: #363636;
+	}
 }
 
 body {
-	background-color: #008f79;
-	color: white;
+	background-color: var(--color-background);
+	color: black;
+}
+@media (prefers-color-scheme: dark) {
+	body {
+		color: white;
+	}
+}
+
+@utility neumorphism-sunken-xs {
+	@apply bg-background;
+	box-shadow:
+		inset 3px 3px 5px var(--color-neumorphism-shadow-br),
+		inset -3px -3px 5px var(--color-neumorphism-shadow-tl);
+}
+
+@utility neumorphism-bulge-xs {
+	@apply bg-background;
+	box-shadow:
+		3px 3px 5px var(--color-neumorphism-shadow-br),
+		-3px -3px 5px var(--color-neumorphism-shadow-tl);
+}
+
+@utility neumorphism-sunken-sm {
+	@apply bg-background;
+	box-shadow:
+		inset 5px 5px 10px var(--color-neumorphism-shadow-br),
+		inset -5px -5px 10px var(--color-neumorphism-shadow-tl);
+}
+@utility neumorphism-bulge-sm {
+	@apply bg-background;
+	box-shadow:
+		5px 5px 10px var(--color-neumorphism-shadow-br),
+		-5px -5px 10px var(--color-neumorphism-shadow-tl);
+}
+
+@utility neumorphism-sunken-md {
+	@apply bg-background;
+	box-shadow:
+		inset 10px 10px 21px var(--color-neumorphism-shadow-br),
+		inset -10px -10px 21px var(--color-neumorphism-shadow-tl);
+}
+@utility neumorphism-bulge-md {
+	@apply bg-background;
+	box-shadow:
+		10px 10px 21px var(--color-neumorphism-shadow-br),
+		-10px -10px 21px var(--color-neumorphism-shadow-tl);
+}
+
+@utility neumorphism-sunken-lg {
+	@apply bg-background;
+	box-shadow:
+		inset 16px 16px 32px var(--color-neumorphism-shadow-br),
+		inset -16px -16px 32px var(--color-neumorphism-shadow-tl);
+}
+@utility neumorphism-bulge-lg {
+	@apply bg-background;
+	box-shadow:
+		16px 16px 32px var(--color-neumorphism-shadow-br),
+		-16px -16px 32px var(--color-neumorphism-shadow-tl);
+}
+
+@utility neumorphism-sunken-xl {
+	@apply bg-background;
+	box-shadow:
+		inset 24px 24px 47px var(--color-neumorphism-shadow-br),
+		inset -24px -24px 47px var(--color-neumorphism-shadow-tl);
+}
+@utility neumorphism-bulge-xl {
+	@apply bg-background;
+	box-shadow:
+		24px 24px 47px var(--color-neumorphism-shadow-br),
+		-24px -24px 47px var(--color-neumorphism-shadow-tl);
+}
+
+@utility glassmorphism {
+	@apply border-white/50 border-[0.5px] bg-white/20 backdrop-blur-xl;
 }
