@@ -19,9 +19,9 @@ const pubDate = props.frontmatter?.pubDate ?? props.pubDate
 ---
 
 <BaseLayout>
-	<div class="flex flex-col gap-6">
+	<div class="flex flex-col">
 		<header
-			class="neumorphism-bulge-md p-6 rounded-full flex items-center gap-6"
+			class="neumorphism-bulge-xs p-6 rounded-full flex items-center gap-6"
 		>
 			<img
 				src={config.author.avatar.url}
@@ -30,7 +30,7 @@ const pubDate = props.frontmatter?.pubDate ?? props.pubDate
 				transition:name="avatar"
 			/>
 			<div class="flex flex-col gap-2">
-				<p class="break-all text-xl font-bold">
+				<p class="break-all text-lg md:text-xl font-bold">
 					{title}
 				</p>
 				<p class="text-sm">

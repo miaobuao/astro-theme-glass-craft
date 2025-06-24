@@ -3,19 +3,13 @@
 @plugin "@iconify/tailwind4";
 
 @theme {
-	--color-primary: #008f79;
+	--color-primary: #2ec4b6;
 	--color-primary-fg: #ffffff;
 	--color-background: #e0e0e0;
 	--color-neumorphism-shadow-tl: #ffffff;
 	--color-neumorphism-shadow-br: #bebebe;
 }
 :root {
-	/* --color-primary: #008f79; */
-	--color-primary: #c7edcc;
-	--color-primary-fg: #ffffff;
-	--color-background: #e0e0e0;
-	--color-neumorphism-shadow-tl: #ffffff;
-	--color-neumorphism-shadow-br: #bebebe;
 	@media (prefers-color-scheme: dark) {
 		--color-background: #404040;
 		--color-neumorphism-shadow-tl: #4a4a4a;
