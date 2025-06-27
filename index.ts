@@ -41,6 +41,12 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/share/[...slug]',
+					entrypoint: resolve(__dirname, 'src/theme/pages/share/[...slug].ts'),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/',
 					entrypoint: resolve(__dirname, 'src/theme/pages/index.astro'),
 					prerender: true,
@@ -82,6 +88,9 @@ export default function ThemeIntegration(
 
 				updateConfig({
 					vite: {
+						define: {
+							'process.env.ROOT_DIRNAME': JSON.stringify(__dirname),
+						},
 						assetsInclude: ['**/*.{zip,jpg,jpeg,png,gif,webp,svg,bmp}'],
 						build: {
 							cssTarget: 'chrome61',
