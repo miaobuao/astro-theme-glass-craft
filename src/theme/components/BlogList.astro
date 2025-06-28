@@ -16,7 +16,7 @@ const { posts, class: className } = Astro.props
 <div
 	class:list={[
 		'flex flex-col gap-6',
-		'xl:block xl:columns-2 2xl:columns-3 lg:gap-8',
+		'2xl:block 2xl:columns-2 lg:gap-8',
 		className,
 	]}
 >
@@ -27,12 +27,12 @@ const { posts, class: className } = Astro.props
 					class:list={[
 						'transition-all',
 						'break-all',
-						'neumorphism-bulge-xs hover:neumorphism-sunken-xs',
+						'glassmorphism hover:scale-102 hover:shadow-lg',
+						'sm:border-none sm:neumorphism-bulge-xs sm:hover:neumorphism-sunken-xs sm:hover:scale-99',
 						'p-6',
 						'rounded-3xl',
-						'hover:scale-99',
 						'break-inside-avoid',
-						'lg:mb-8',
+						'2xl:mb-8',
 					]}
 				>
 					<h2 class="text-2xl font-bold mb-2">{post.data.title}</h2>
