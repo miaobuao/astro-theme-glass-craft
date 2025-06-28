@@ -1,7 +1,7 @@
 ---
 import BaseHtml, { type Props as BaseHtmlProps } from './BaseHtml.astro'
 import AdaptiveIconButton from '../components/ui/button/AdaptiveIconButton.astro'
-import config from '../consts'
+import { config } from '../consts'
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
@@ -10,7 +10,8 @@ interface Props extends BaseHtmlProps {
 const { showAuthorInfo } = Astro.props
 
 const isTimeline = Astro.url.pathname === '/'
-const isBrowse = Astro.url.pathname === '/browse'
+const isBrowse =
+	Astro.url.pathname === '/browse' || Astro.url.pathname.startsWith('/browse/')
 const isAboutMe = Astro.url.pathname === config.customPages?.aboutMe
 
 const timelineIcon = isTimeline
@@ -47,25 +48,19 @@ const meIcon = isAboutMe
 					'lg:w-56',
 				]}
 			>
-				<AdaptiveIconButton
-					active={isTimeline}
-					href={isTimeline ? undefined : '/'}
-				>
+				<AdaptiveIconButton active={isTimeline} href="/">
 					<span slot="icon" class:list={[timelineIcon, 'size-8']}></span>
 					Timeline
 				</AdaptiveIconButton>
-				<AdaptiveIconButton
-					active={isBrowse}
-					href={isBrowse ? undefined : '/browse'}
-				>
+				<AdaptiveIconButton active={isBrowse} href="/browse">
 					<span slot="icon" class:list={[browseIcon, 'size-8']}></span>
-					Browse
+					Share
 				</AdaptiveIconButton>
 				{
 					config.customPages?.aboutMe && (
 						<AdaptiveIconButton
 							active={isAboutMe}
-							href={isAboutMe ? undefined : config.customPages.aboutMe}
+							href={config.customPages.aboutMe}
 						>
 							<span slot="icon" class:list={[meIcon, 'size-8']} />
 							About Me
@@ -103,7 +98,7 @@ const meIcon = isAboutMe
 		</div>
 		<main
 			class:list={[
-				'pb-16 w-full p-4',
+				'pb-22 w-full p-4',
 				'sm:pb-6 sm:ml-42 sm:pl-4 sm:mr-2',
 				'md:ml-48',
 				showAuthorInfo ? 'lg:ml-144 lg:px-0 lg:mr-8' : 'lg:ml-64',

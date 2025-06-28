@@ -1,32 +1,17 @@
 import type { APIRoute } from 'astro'
-import { readdir, stat, readFile } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
-
-const SHARE_DIR = join(process.env.ROOT_DIRNAME!, 'src/content/share')
-
-async function getAllFiles(dirPath: string, originalPath: string) {
-	const files = await readdir(dirPath)
-	let fileList: string[] = []
-
-	for (const file of files) {
-		const filePath = join(dirPath, file)
-		const fileStat = await stat(filePath)
-
-		if (fileStat.isDirectory()) {
-			fileList = fileList.concat(await getAllFiles(filePath, originalPath))
-		} else {
-			fileList.push(relative(originalPath, filePath))
-		}
-	}
-
-	return fileList
-}
+import { getAllFiles } from '../../utils/get-all-files'
+import { SHARE_DIR } from '../../consts'
+import { flattenFiles } from '../../utils/flatten-files'
 
 export async function getStaticPaths() {
-	const files = await getAllFiles(SHARE_DIR, SHARE_DIR)
-	return files.map((path) => ({
-		params: { slug: path },
-	}))
+	const files = await getAllFiles(SHARE_DIR)
+	return flattenFiles(files)
+		.filter((f) => !f.isDir)
+		.map((path) => ({
+			params: { slug: relative(SHARE_DIR, path.absPath) },
+		}))
 }
 
 export const GET: APIRoute = async function ({ params }) {

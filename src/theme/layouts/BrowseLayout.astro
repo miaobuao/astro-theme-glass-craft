@@ -1,0 +1,68 @@
+---
+import { join } from 'path'
+import AbstractFileButton from '../components/ui/button/AbstractFileButton.astro'
+import type { AbstractFile } from '../utils/abstract-file'
+import BaseLayout from './BaseLayout.astro'
+import { basename } from 'path'
+import { relative } from 'path'
+import { SHARE_DIR } from '../consts'
+import { isImageFilename } from '../utils/is-image-filename'
+
+interface Props {
+	files: AbstractFile[]
+}
+
+const { files } = Astro.props as Props
+
+function dir2Url(absPath: string) {
+	return join(Astro.url.pathname, basename(absPath))
+}
+
+function abs2Rel(absPath: string) {
+	return relative(SHARE_DIR, absPath)
+}
+
+function file2Url(absPath: string) {
+	return join('/share', abs2Rel(absPath))
+}
+function file2ThumbnailUrl(absPath: string) {
+	return join('/thumbnail', abs2Rel(absPath))
+}
+---
+
+<BaseLayout>
+	<div
+		class:list={[
+			'grid gap-4',
+			'sm:grid-cols-2',
+			'md:gap-6',
+			'lg:gap-8',
+			'xl:grid-cols-3',
+		]}
+	>
+		{
+			files.map(async (file) =>
+				file.isDir ? (
+					<AbstractFileButton
+						isDir={true}
+						url={dir2Url(file.absPath)}
+						name={basename(file.absPath)}
+					/>
+				) : isImageFilename(file.absPath) ? (
+					<AbstractFileButton
+						isDir={false}
+						url={file2Url(file.absPath)}
+						name={basename(file.absPath)}
+						thumbnailUrl={file2ThumbnailUrl(file.absPath)}
+					/>
+				) : (
+					<AbstractFileButton
+						isDir={false}
+						url={file2Url(file.absPath)}
+						name={basename(file.absPath)}
+					/>
+				),
+			)
+		}
+	</div>
+</BaseLayout>
