@@ -41,7 +41,10 @@ const pubDate = props.frontmatter?.pubDate ?? props.pubDate
 			</div>
 		</header>
 		<article
-			class:list={['p-6 rounded-3xl prose dark:prose-invert max-w-full']}
+			class:list={[
+				'p-6 rounded-3xl max-w-full',
+				'prose prose-headings:no-underline dark:prose-invert',
+			]}
 		>
 			<slot />
 		</article>
