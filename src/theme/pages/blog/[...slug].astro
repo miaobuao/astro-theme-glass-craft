@@ -2,15 +2,13 @@
 import moment from 'moment'
 import type { InferGetStaticPropsType } from 'astro'
 import { getCollection, render } from 'astro:content'
-import config from '../../consts'
-import BaseLayout from '../../layouts/BaseLayout.astro'
-import { slugifyBlogPostUrl } from '../../utils/slugify-blog-post-url'
 import BlogPostLayout from '../../layouts/BlogPostLayout.astro'
+import { blogFilePath2Url } from '../../utils/blog-file-path-to-url'
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog')
 	return posts.map((post) => ({
-		params: { slug: slugifyBlogPostUrl(post.id) },
+		params: { slug: blogFilePath2Url(post.filePath!) },
 		props: post,
 	}))
 }

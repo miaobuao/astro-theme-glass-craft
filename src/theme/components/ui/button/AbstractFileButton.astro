@@ -1,0 +1,64 @@
+---
+interface Props {
+	url: string
+	isDir: boolean
+	name: string
+	thumbnailUrl?: string
+}
+
+const { url, isDir, name, thumbnailUrl } = Astro.props
+
+const ext = name.split('.').pop() ?? ''
+const icon = isDir
+	? 'icon-[vscode-icons--default-folder]'
+	: getIconFromExtName(ext)
+
+function getIconFromExtName(ext: string) {
+	switch (ext.toLowerCase()) {
+		case 'md':
+			return 'icon-[vscode-icons--file-type-markdown]'
+		case 'html':
+			return 'icon-[vscode-icons--file-type-html]'
+		case 'js':
+			return 'icon-[vscode-icons--file-type-javascript-official]'
+		case 'ts':
+			return 'icon-[vscode-icons--file-type-typescript-official]'
+		case 'css':
+			return 'icon-[vscode-icons--file-type-css]'
+		case 'json':
+			return 'icon-[vscode-icons--file-type-json]'
+		case 'png':
+			return 'icon-[vscode-icons--file-type-png]'
+		case 'jpg':
+			return 'icon-[vscode-icons--file-type-jpeg]'
+		case 'svg':
+			return 'icon-[vscode-icons--file-type-svg]'
+		default:
+			return 'icon-[vscode-icons--default-file]'
+	}
+}
+---
+
+<a
+	href={url}
+	class:list={[
+		'transition-all flex items-center gap-2 p-4 rounded-3xl',
+		'neumorphism-bulge-xs hover:neumorphism-sunken-xs',
+	]}
+>
+	{
+		thumbnailUrl ? (
+			<i
+				class:list={['rounded-sm size-16 bg-center bg-cover']}
+				style={{
+					backgroundImage: `url(${thumbnailUrl})`,
+				}}
+			/>
+		) : (
+			<i class:list={[icon, 'size-16']} />
+		)
+	}
+	<p class="flex-1 truncate text-lg" title={name}>
+		{name}
+	</p>
+</a>

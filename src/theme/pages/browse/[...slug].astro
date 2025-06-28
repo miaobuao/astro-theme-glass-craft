@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getAllFiles } from '../../utils/get-all-files'
+import { SHARE_DIR } from '../../consts'
+import { relative } from 'node:path'
+import { flattenFiles } from '../../utils/flatten-files'
+import BrowseLayout from '../../layouts/BrowseLayout.astro'
+import { sortAbstractFiles } from '../../utils/sort-abstract-files'
+
+export async function getStaticPaths() {
+	const files = await getAllFiles(SHARE_DIR)
+	return flattenFiles(files)
+		.filter((f) => f.isDir && f.children)
+		.map((file) => ({
+			params: { slug: relative(SHARE_DIR, file.absPath) },
+			props: file,
+		}))
+}
+
+const files = Astro.props.children!
+---
+
+<BrowseLayout files={sortAbstractFiles(files)} />

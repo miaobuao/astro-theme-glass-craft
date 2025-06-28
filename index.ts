@@ -47,6 +47,24 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/thumbnail/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/thumbnail/[...slug].ts',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/browse/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/browse/[...slug].astro',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/',
 					entrypoint: resolve(__dirname, 'src/theme/pages/index.astro'),
 					prerender: true,
@@ -54,7 +72,7 @@ export default function ThemeIntegration(
 
 				injectRoute({
 					pattern: '/browse',
-					entrypoint: resolve(__dirname, 'src/theme/pages/browse.astro'),
+					entrypoint: resolve(__dirname, 'src/theme/pages/browse/index.astro'),
 					prerender: true,
 				})
 

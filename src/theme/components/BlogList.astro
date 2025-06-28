@@ -1,5 +1,5 @@
 ---
-import { slugifyBlogPostUrl } from '../utils/slugify-blog-post-url'
+import { blogFilePath2Url } from '../utils/blog-file-path-to-url'
 import moment from 'moment'
 import type { AnyEntryMap } from 'astro:content'
 import type { HTMLAttributes } from 'astro/types'
@@ -22,7 +22,7 @@ const { posts, class: className } = Astro.props
 >
 	{
 		posts.map((post) => (
-			<a href={`/blog/${slugifyBlogPostUrl(post.id)}`}>
+			<a href={`/blog/${blogFilePath2Url(post.filePath!)}`}>
 				<article
 					class:list={[
 						'transition-all',

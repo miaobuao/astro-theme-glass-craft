@@ -1,0 +1,10 @@
+---
+import BrowseLayout from '../../layouts/BrowseLayout.astro'
+import { getAllFiles } from '../../utils/get-all-files'
+import { SHARE_DIR } from '../../consts'
+import { sortAbstractFiles } from '../../utils/sort-abstract-files'
+
+const files = await getAllFiles(SHARE_DIR)
+---
+
+<BrowseLayout files={sortAbstractFiles(files)} />

@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss'
 import type { APIRoute } from 'astro'
 import { getCollection } from 'astro:content'
-import config from '../consts'
+import { config } from '../consts'
 
 export const GET: APIRoute = async function (context) {
 	const posts = await getCollection('blog')
