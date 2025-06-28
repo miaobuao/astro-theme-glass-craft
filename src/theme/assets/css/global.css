@@ -95,6 +95,7 @@ body {
 
 @utility glassmorphism {
 	@apply border-white/50 border-[0.5px] bg-white/20 backdrop-blur-xl;
+	@apply dark:border-white/20 dark:bg-white/10;
 }
 
 @utility no-scrollbar {
