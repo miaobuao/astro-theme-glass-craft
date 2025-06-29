@@ -65,6 +65,24 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/gallery/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/gallery/[...slug].astro',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/gallery/_images/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/gallery/_images/[...slug].ts',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/',
 					entrypoint: resolve(__dirname, 'src/theme/pages/index.astro'),
 					prerender: true,
@@ -73,6 +91,12 @@ export default function ThemeIntegration(
 				injectRoute({
 					pattern: '/browse',
 					entrypoint: resolve(__dirname, 'src/theme/pages/browse/index.astro'),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/gallery',
+					entrypoint: resolve(__dirname, 'src/theme/pages/gallery/index.astro'),
 					prerender: true,
 				})
 

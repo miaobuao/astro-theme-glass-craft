@@ -1,7 +1,7 @@
 ---
-title: "Markdown Style Guide"
-description: "Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro."
-pubDate: "Jun 19 2024"
+title: 'Markdown Style Guide'
+description: 'Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.'
+pubDate: 'Jun 19 2024'
 ---
 
 Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.
@@ -166,23 +166,23 @@ we can use 3 backticks ``` in new line and write snippet and close with 3 backti
 
 ```markdown
 - Fruit
-    - Apple
-    - Orange
-    - Banana
+  - Apple
+  - Orange
+  - Banana
 - Dairy
-    - Milk
-    - Cheese
+  - Milk
+  - Cheese
 ```
 
 #### Output
 
 - Fruit
-    - Apple
-    - Orange
-    - Banana
+  - Apple
+  - Orange
+  - Banana
 - Dairy
-    - Milk
-    - Cheese
+  - Milk
+  - Cheese
 
 ## Other Elements — abbr, sub, sup, kbd, mark
 

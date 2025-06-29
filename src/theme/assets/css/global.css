@@ -18,13 +18,8 @@
 }
 
 body {
-	background-color: var(--color-background);
-	color: black;
-}
-@media (prefers-color-scheme: dark) {
-	body {
-		color: white;
-	}
+	@apply bg-background text-black;
+	@apply dark:text-white;
 }
 
 @utility neumorphism-sunken-xs {
@@ -100,4 +95,12 @@ body {
 
 @utility no-scrollbar {
 	@apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
+@utility col-count-* {
+	column-count: --value(integer);
+}
+
+@utility col-gap-* {
+	column-gap: --spacing(--value(integer));
 }

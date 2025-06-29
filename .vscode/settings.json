@@ -1,6 +1,10 @@
 {
 	"editor.formatOnSave": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.codeActionsOnSave": {
+		"source.sortImports": "explicit",
+		"source.removeUnusedImports": "explicit"
+	},
 	"[astro]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
