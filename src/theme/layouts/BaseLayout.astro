@@ -13,6 +13,9 @@ const isTimeline = Astro.url.pathname === '/'
 const isBrowse =
 	Astro.url.pathname === '/browse' || Astro.url.pathname.startsWith('/browse/')
 const isAboutMe = Astro.url.pathname === config.customPages?.aboutMe
+const isGallery =
+	Astro.url.pathname === '/gallery' ||
+	Astro.url.pathname.startsWith('/gallery/')
 
 const timelineIcon = isTimeline
 	? 'icon-[material-symbols--nest-clock-farsight-analog]'
@@ -25,6 +28,10 @@ const browseIcon = isBrowse
 const meIcon = isAboutMe
 	? 'icon-[material-symbols--sentiment-excited]'
 	: 'icon-[material-symbols--sentiment-excited-outline]'
+
+const galleryIcon = isGallery
+	? 'icon-[material-symbols--image]'
+	: 'icon-[material-symbols--image-outline]'
 ---
 
 <BaseHtml {...Astro.props}>
@@ -55,6 +62,10 @@ const meIcon = isAboutMe
 				<AdaptiveIconButton active={isBrowse} href="/browse">
 					<span slot="icon" class:list={[browseIcon, 'size-8']}></span>
 					Share
+				</AdaptiveIconButton>
+				<AdaptiveIconButton active={isGallery} href="/gallery">
+					<span slot="icon" class:list={[galleryIcon, 'size-8']}></span>
+					Gallery
 				</AdaptiveIconButton>
 				{
 					config.customPages?.aboutMe && (

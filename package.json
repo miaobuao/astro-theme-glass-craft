@@ -27,6 +27,7 @@
 		"@types/mime-types": "^3.0.1",
 		"astro-pagefind": "^1.8.3",
 		"astro-rehype-relative-markdown-links": "^0.18.1",
+		"hash-wasm": "^4.12.0",
 		"lodash-es": "^4.17.21",
 		"mime-types": "^3.0.1",
 		"moment": "^2.30.1",
@@ -43,9 +44,11 @@
 		"remark-footnotes-extra": "^0.3.0",
 		"remark-github-admonitions-to-directives": "^2.1.0",
 		"remark-math": "^6.0.0",
+		"remark-stringify": "^11.0.0",
 		"sharp": "^0.34.2",
 		"tailwindcss": "^4.1.10",
-		"transliteration": "^2.3.5"
+		"transliteration": "^2.3.5",
+		"unist-util-visit": "^5.0.0"
 	},
 	"devDependencies": {
 		"astro": "^5.10.0",
