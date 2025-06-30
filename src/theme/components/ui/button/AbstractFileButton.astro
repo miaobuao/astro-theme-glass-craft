@@ -28,11 +28,12 @@ function getIconFromExtName(ext: string) {
 		case 'json':
 			return 'icon-[vscode-icons--file-type-json]'
 		case 'png':
-			return 'icon-[vscode-icons--file-type-png]'
 		case 'jpg':
-			return 'icon-[vscode-icons--file-type-jpeg]'
+			return 'icon-[vscode-icons--file-type-image]'
 		case 'svg':
 			return 'icon-[vscode-icons--file-type-svg]'
+		case 'text':
+			return 'icon-[vscode-icons--file-type-text]'
 		default:
 			return 'icon-[vscode-icons--default-file]'
 	}
@@ -51,13 +52,13 @@ function getIconFromExtName(ext: string) {
 	{
 		thumbnailUrl ? (
 			<i
-				class:list={['rounded-sm size-16 bg-center bg-cover']}
+				class:list={['rounded-sm size-12 sm:size-16 bg-center bg-cover']}
 				style={{
 					backgroundImage: `url(${thumbnailUrl})`,
 				}}
 			/>
 		) : (
-			<i class:list={[icon, 'size-16']} />
+			<i class:list={[icon, 'size-12 sm:size-16']} />
 		)
 	}
 	<p class="flex-1 truncate text-lg" title={name}>
