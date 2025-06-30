@@ -29,14 +29,14 @@ const { posts, class: className } = Astro.props
 						'break-all',
 						'glassmorphism hover:scale-102 hover:shadow-lg',
 						'sm:border-none sm:neumorphism-bulge-xs sm:hover:neumorphism-sunken-xs sm:hover:scale-99',
-						'p-6',
+						'p-4 md:p-6',
 						'rounded-3xl',
 						'break-inside-avoid',
 						'2xl:mb-8',
 					]}
 				>
-					<h2 class="text-2xl font-bold mb-2">{post.data.title}</h2>
-					<p class="mb-4">{post.data.description}</p>
+					<h2 class="text-lg md:text-2xl font-bold mb-2">{post.data.title}</h2>
+					<p class="mb-2 md:mb-4">{post.data.description}</p>
 					<p class="text-sm">
 						{moment(post.data.pubDate).format('YYYY-MM-DD')}
 					</p>
