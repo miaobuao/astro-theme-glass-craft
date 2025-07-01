@@ -1,10 +1,16 @@
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
-import rehypeAstroRelativeMarkdownLinks from 'astro-rehype-relative-markdown-links'
+import solidJs from '@astrojs/solid-js'
 import { transformerColorizedBrackets } from '@shikijs/colorized-brackets'
-import type { AstroIntegration, AstroIntegrationLogger } from 'astro'
+import tailwindcss from '@tailwindcss/vite'
+import type {
+	AstroIntegration,
+	AstroIntegrationLogger,
+	ViteUserConfig,
+} from 'astro'
 import pagefind from 'astro-pagefind'
+import rehypeAstroRelativeMarkdownLinks from 'astro-rehype-relative-markdown-links'
 import { uniq } from 'lodash-es'
 import { spawn } from 'node:child_process'
 import { dirname, relative, resolve } from 'node:path'
@@ -18,8 +24,6 @@ import remarkGithubAdmonitionsToDirectives from 'remark-github-admonitions-to-di
 import remarkMath from 'remark-math'
 import packageJson from './package.json'
 import type { ThemeConfig } from './src/theme/config'
-import type { ViteUserConfig } from 'astro'
-import tailwindcss from '@tailwindcss/vite'
 
 const packageName = packageJson.name
 const __dirname = import.meta.dirname
@@ -180,7 +184,14 @@ export default function ThemeIntegration(
 						]),
 					},
 					integrations: [
-						...[mdx(), pagefind(), sitemap()].filter(
+						...[
+							solidJs({
+								include: ['**/solid/**'],
+							}),
+							mdx(),
+							pagefind(),
+							sitemap(),
+						].filter(
 							(integration) =>
 								!config.integrations.find((d) => d.name === integration.name),
 						),

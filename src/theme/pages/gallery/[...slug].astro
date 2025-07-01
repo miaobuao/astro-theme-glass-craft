@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content'
 import { GalleryHelper } from '../../utils/gallery'
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import { AdaptiveImageList } from '../../components/solid/AdaptiveImageList/AdaptiveImageList'
 
 export async function getStaticPaths() {
 	const collection = await getCollection('gallery')
@@ -17,31 +18,35 @@ const gallery = new GalleryHelper(Astro.props)
 
 <BaseLayout>
 	<div class="container">
-	<h1 class="text-3xl font-bold">{gallery.title}</h1>
-	{
-		gallery.gallerySections.map((section) => (
-			<h2 class="text-xl font-semibold">{section.title}</h2>
-			<div class="flex flex-wrap gap-1">
-				{
-					section.images.map(async image=>(
-						<img class="h-64 object-cover object-center rounded-sm" src={await image.getUrl()} alt="">
-					))
-				}
-				<div class="grow-999"></div>
-			</div>
-		))
-	}
+		<h1 class="text-3xl font-bold">{gallery.title}</h1>
+		{
+			gallery.gallerySections.map(async (section) => (
+				<Fragment>
+					<h2 class="text-xl font-semibold">{section.title}</h2>
+
+					<AdaptiveImageList
+						client:only="solid"
+						images={await Promise.all(
+							section.images.map(async (img) => ({
+								src: await img.getUrl(),
+								alt: img.description,
+								description: img.description,
+							})),
+						)}
+					/>
+				</Fragment>
+			))
+		}
 	</div>
 </BaseLayout>
 
 <style>
-	
-.container {
-	h1 {
-		margin: 1rem 0;
+	.container {
+		h1 {
+			margin: 1rem 0;
+		}
+		h2 {
+			margin: 0.5rem 0;
+		}
 	}
-	h2 {
-		margin: 0.5rem 0;
-	}
-}
 </style>
