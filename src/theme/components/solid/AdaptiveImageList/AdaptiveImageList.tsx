@@ -1,3 +1,5 @@
+import { Fancybox } from '@fancyapps/ui/dist/fancybox/'
+import '@fancyapps/ui/dist/fancybox/fancybox.css'
 import { createEffect, createSignal, onMount } from 'solid-js'
 import { layoutImages } from './layout'
 
@@ -77,6 +79,10 @@ export function AdaptiveImageList(
 		window.addEventListener('resize', () => {
 			layout()
 		})
+
+		Fancybox.bind('[data-fancybox]', {
+			// Your custom options
+		})
 	})
 
 	function numberToPx(num: number | undefined) {
@@ -90,12 +96,15 @@ export function AdaptiveImageList(
 		<div ref={containerRef} class={`flex flex-wrap ${props.className}`}>
 			{props.images.map((image, index) => {
 				return (
-					<div
+					<a
 						style={{
 							height: numberToPx(imageSizes().at(index)?.height),
 							width: numberToPx(imageSizes().at(index)?.width),
 						}}
 						class="p-0.5 relative group"
+						data-fancybox="gallery"
+						data-caption={image.description}
+						data-src={image.src}
 					>
 						<img
 							src={image.src}
@@ -112,12 +121,12 @@ export function AdaptiveImageList(
 							}}
 							class="size-full rounded-sm object-cover object-center"
 						/>
-						<div class="absolute top-0 p-1 max-w-full">
-							<p class="p-1 bg-black/30 backdrop-blur-md text-xs rounded-lg truncate max-w-full lg:p-2 lg:text-base">
+						<div class="absolute top-0 p-1 max-w-full invisible lg:visible">
+							<p class="p-1 bg-black/30 backdrop-blur-md text-xs rounded-lg truncate max-w-full">
 								{image.description}
 							</p>
 						</div>
-					</div>
+					</a>
 				)
 			})}
 		</div>
