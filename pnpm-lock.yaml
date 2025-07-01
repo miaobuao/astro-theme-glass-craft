@@ -23,6 +23,9 @@ importers:
       '@astrojs/solid-js':
         specifier: ^5.1.0
         version: 5.1.0(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(solid-js@1.9.7)
+      '@fancyapps/ui':
+        specifier: ^6.0.5
+        version: 6.0.5
       '@iconify/json':
         specifier: ^2.2.351
         version: 2.2.351
@@ -456,6 +459,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fancyapps/ui@6.0.5':
+    resolution: {integrity: sha512-pDowgTxM57wj8Q9XfgVbl4MKpr0Nb71LnGxSZIHngEXgkd7751+3tPdRyGzF1n2bXhted6zM9CQ7Q0SVV4cH2A==}
 
   '@iconify/json@2.2.351':
     resolution: {integrity: sha512-xZnNLPmnkRFpsQG+v9f0b7pQewIKz/ueJL7vAMLSBuw76UdL2SJ86pTCPUe0dgcZ8CdZ6pylUU+mTut0iB9DGQ==}
@@ -3267,6 +3273,8 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.5':
     optional: true
+
+  '@fancyapps/ui@6.0.5': {}
 
   '@iconify/json@2.2.351':
     dependencies:
