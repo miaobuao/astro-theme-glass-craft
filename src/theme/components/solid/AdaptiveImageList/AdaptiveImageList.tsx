@@ -2,8 +2,7 @@ import { Fancybox } from '@fancyapps/ui/dist/fancybox/'
 import '@fancyapps/ui/dist/fancybox/fancybox.css'
 import { createEffect, createSignal, onMount } from 'solid-js'
 import { createBreakpoints } from '../breakpoints'
-import { layoutImages } from './layout'
-
+import { layoutImages, type Size } from './layout'
 export interface ImageProps {
 	src: string
 	alt?: string
@@ -34,16 +33,16 @@ export function AdaptiveImageList(
 	const layout = () => {
 		let GOLD_HEIGHT = 224
 		let MIN_IMAGE_WIDTH = 224
-		let MAX_COL = 4
+		let MAX_COL = 3
 		if (breakpoints.md()) {
-			MAX_COL = 6
-		}
-		if (breakpoints.lg()) {
 			GOLD_HEIGHT = 384
 			MIN_IMAGE_WIDTH = 384
 		}
+		if (breakpoints.lg()) {
+			MAX_COL = 4
+		}
 		if (breakpoints['2xl']()) {
-			MAX_COL = 8
+			MAX_COL = 5
 		}
 		const imageSizes = loadedImages()
 			.filter((img) => !!img)
@@ -51,16 +50,17 @@ export function AdaptiveImageList(
 				width: img!.naturalWidth,
 				height: img!.naturalHeight,
 			}))
+		const aspectRadios = imageSizes.map(({ width, height }) => width / height)
 		const CONTAINER_WIDTH = containerRef.getBoundingClientRect().width
 		const layout = layoutImages(
 			CONTAINER_WIDTH,
-			imageSizes,
+			aspectRadios,
 			GOLD_HEIGHT,
 			MAX_COL,
 			MIN_IMAGE_WIDTH,
 		)
 
-		const newImageSizes = []
+		const newImageSizes: Size[] = []
 		for (const v of layout) {
 			const sizes = imageSizes.slice(v.i, v.j).map(({ width, height }) => {
 				return {
@@ -106,7 +106,7 @@ export function AdaptiveImageList(
 	}
 
 	return (
-		<div ref={containerRef} class={`flex flex-wrap ${props.className}`}>
+		<div ref={containerRef} class={`flex flex-wrap ${props.className || ''}`}>
 			{props.images.map((image, index) => {
 				return (
 					<a
