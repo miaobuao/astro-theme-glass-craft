@@ -16,13 +16,12 @@ export interface Vertex {
 
 export function layoutImages(
 	screenWidth: number,
-	imageSizes: Size[],
+	aspectRadios: number[],
 	goldHeight: number,
 	maxColumnCount: number,
 	minImageWidth: number,
 ) {
-	imageSizes = imageSizes.map(({ width, height }) => {
-		const aspect = width / height
+	const imageSizes = aspectRadios.map((aspect) => {
 		return {
 			height: goldHeight,
 			width: Math.max(goldHeight * aspect, minImageWidth),
@@ -94,6 +93,9 @@ export function layoutImages(
 			if (dist < getDist(successor)) {
 				distances.set(successor, dist)
 				predecessors.set(successor, minVertex)
+			}
+			if (successor === end) {
+				break
 			}
 		}
 	}
