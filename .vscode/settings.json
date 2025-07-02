@@ -5,6 +5,9 @@
 		"source.sortImports": "explicit",
 		"source.removeUnusedImports": "explicit"
 	},
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
 	"[astro]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
