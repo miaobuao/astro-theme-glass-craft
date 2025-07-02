@@ -1,7 +1,15 @@
 import { type AnyEntryMap } from 'astro:content'
 import { readFile } from 'fs/promises'
 import { sha256 } from 'hash-wasm'
-import { basename, extname, isAbsolute, relative, resolve } from 'path'
+import {
+	basename,
+	dirname,
+	extname,
+	isAbsolute,
+	join,
+	relative,
+	resolve,
+} from 'path'
 import { remark } from 'remark'
 import { slugify } from 'transliteration'
 import { visit } from 'unist-util-visit'
@@ -46,6 +54,16 @@ class GalleryImage {
 		return isValidHttpUrl(this.attrs.url)
 			? this.attrs.url
 			: `/gallery/_images/${await this.getOutputFilename()}`
+	}
+
+	async getThumbnailUrl(maxSize: number, format: 'webp' | 'avif' = 'webp') {
+		return isValidHttpUrl(this.attrs.url)
+			? this.attrs.url
+			: getResizedOutputFilename(
+					`/gallery/_images/${await this.getOutputFilename()}`,
+					maxSize,
+					format,
+				)
 	}
 
 	async getOutputFilename() {
@@ -131,4 +149,17 @@ export class GalleryHelper {
 	get title() {
 		return basename(this.gallery.filePath!, extname(this.gallery.filePath!))
 	}
+}
+
+export function getResizedOutputFilename(
+	filename: string,
+	maxSize: number,
+	format: string,
+) {
+	const currentExt = extname(filename)
+	const outputFilename = join(
+		dirname(filename),
+		`${basename(filename, currentExt)}_${maxSize}x.${format}`,
+	)
+	return outputFilename
 }
