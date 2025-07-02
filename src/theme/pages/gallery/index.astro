@@ -11,7 +11,7 @@ let galleries = await Promise.all(
 		return {
 			href: `/gallery/${gallery.slugUrl}`,
 			title: gallery.title,
-			coverUrl: await getFirstImage(gallery)?.getUrl(),
+			coverUrl: await getFirstImage(gallery)?.getThumbnailUrl(384, 'webp'),
 			imageCount: gallery.gallerySections.reduce(
 				(acc, cur) => acc + cur.images.length,
 				0,

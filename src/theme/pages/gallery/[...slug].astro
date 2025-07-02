@@ -31,6 +31,7 @@ const gallery = new GalleryHelper(Astro.props)
 								src: await img.getUrl(),
 								alt: img.description,
 								description: img.description,
+								thumbnailUrl: await img.getThumbnailUrl(384, 'webp'),
 							})),
 						)}
 					/>
