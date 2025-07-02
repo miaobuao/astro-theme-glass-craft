@@ -1,19 +1,10 @@
 import { type AnyEntryMap } from 'astro:content'
 import { readFile } from 'fs/promises'
 import { sha256 } from 'hash-wasm'
-import {
-	basename,
-	dirname,
-	extname,
-	isAbsolute,
-	join,
-	relative,
-	resolve,
-} from 'path'
+import { basename, dirname, extname, isAbsolute, join, resolve } from 'path'
 import { remark } from 'remark'
-import { slugify } from 'transliteration'
 import { visit } from 'unist-util-visit'
-import { GALLERY_DIR, ROOT_DIR } from '../consts'
+import { ROOT_DIR } from '../consts'
 import { isValidHttpUrl } from './is-valid-http-url'
 
 type GalleryEntryMap = AnyEntryMap['gallery']
@@ -138,12 +129,7 @@ export class GalleryHelper {
 	}
 
 	get slugUrl() {
-		const absPath = resolve(ROOT_DIR, this.gallery.filePath!)
-		const relPath = relative(GALLERY_DIR, absPath)
-		return relPath
-			.split('/')
-			.map((d) => slugify(d))
-			.join('/')
+		return this.gallery.id
 	}
 
 	get title() {
