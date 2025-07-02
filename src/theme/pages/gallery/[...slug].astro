@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content'
 import { GalleryHelper } from '../../utils/gallery'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import { AdaptiveImageList } from '../../components/solid/AdaptiveImageList/AdaptiveImageList'
+import { GALLERY_THUMBNAIL_CONFIG } from '../../consts'
 
 export async function getStaticPaths() {
 	const collection = await getCollection('gallery')
@@ -31,7 +32,10 @@ const gallery = new GalleryHelper(Astro.props)
 								src: await img.getUrl(),
 								alt: img.description,
 								description: img.description,
-								thumbnailUrl: await img.getThumbnailUrl(384, 'webp'),
+								thumbnailUrl: await img.getThumbnailUrl(
+									GALLERY_THUMBNAIL_CONFIG.size,
+									GALLERY_THUMBNAIL_CONFIG.format,
+								),
 							})),
 						)}
 					/>

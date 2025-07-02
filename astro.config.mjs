@@ -17,6 +17,12 @@ export default defineConfig({
 			customPages: {
 				aboutMe: '/about-me',
 			},
+			gallery: {
+				thumbnail: {
+					size: 384,
+					format: 'webp',
+				},
+			},
 		}),
 	],
 	devToolbar: { enabled: false },

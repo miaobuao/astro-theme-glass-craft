@@ -1,6 +1,7 @@
 import type { APIRoute, InferGetStaticPropsType } from 'astro'
 import { getCollection } from 'astro:content'
 import sharp from 'sharp'
+import { GALLERY_THUMBNAIL_CONFIG } from '../../../consts'
 import { GalleryHelper, getResizedOutputFilename } from '../../../utils/gallery'
 
 export async function getStaticPaths() {
@@ -67,10 +68,12 @@ export async function getStaticPaths() {
 				}),
 			)
 		}
+		const maxSize = GALLERY_THUMBNAIL_CONFIG.size
+		const thumbnailFormat = GALLERY_THUMBNAIL_CONFIG.format
 		return [
 			paths,
-			await generateThumbnail(384, 'avif'),
-			await generateThumbnail(384, 'webp'),
+			await generateThumbnail(maxSize, thumbnailFormat),
+			await generateThumbnail(maxSize, thumbnailFormat),
 		].flat()
 	}
 	const res: Awaited<ReturnType<typeof getStaticPathsFromGallery>> = []

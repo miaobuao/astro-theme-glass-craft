@@ -2,6 +2,7 @@
 import GalleryLayout from '../../layouts/GalleryLayout.astro'
 import { getCollection } from 'astro:content'
 import { GalleryHelper } from '../../utils/gallery'
+import { GALLERY_THUMBNAIL_CONFIG } from '../../consts'
 
 const collections = await getCollection('gallery')
 
@@ -11,7 +12,10 @@ let galleries = await Promise.all(
 		return {
 			href: `/gallery/${gallery.slugUrl}`,
 			title: gallery.title,
-			coverUrl: await getFirstImage(gallery)?.getThumbnailUrl(384, 'webp'),
+			coverUrl: await getFirstImage(gallery)?.getThumbnailUrl(
+				GALLERY_THUMBNAIL_CONFIG.size,
+				GALLERY_THUMBNAIL_CONFIG.format,
+			),
 			imageCount: gallery.gallerySections.reduce(
 				(acc, cur) => acc + cur.images.length,
 				0,
