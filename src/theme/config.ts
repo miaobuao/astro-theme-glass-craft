@@ -27,4 +27,10 @@ export interface ThemeConfig {
 	customPages?: {
 		aboutMe?: string
 	}
+	gallery?: {
+		thumbnail?: {
+			size?: number
+			format?: 'webp' | 'avif'
+		}
+	}
 }
