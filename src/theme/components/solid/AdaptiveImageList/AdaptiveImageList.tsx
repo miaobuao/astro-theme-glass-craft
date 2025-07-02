@@ -93,7 +93,7 @@ export function AdaptiveImageList(
 		})
 
 		Fancybox.bind('[data-fancybox]', {
-			// Your custom options
+			Hash: false,
 		})
 	})
 
