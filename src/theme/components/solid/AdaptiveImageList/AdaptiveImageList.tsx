@@ -8,6 +8,7 @@ export interface ImageProps {
 	src: string
 	alt?: string
 	description?: string
+	thumbnailUrl?: string
 }
 
 export interface AdaptiveImageListProps {
@@ -119,7 +120,7 @@ export function AdaptiveImageList(
 						data-src={image.src}
 					>
 						<img
-							src={image.src}
+							src={image.thumbnailUrl || image.src}
 							alt={image.alt}
 							ref={(el) => {
 								if (el) {
