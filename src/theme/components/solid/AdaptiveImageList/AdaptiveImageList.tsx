@@ -1,6 +1,7 @@
 import { Fancybox } from '@fancyapps/ui/dist/fancybox/'
 import '@fancyapps/ui/dist/fancybox/fancybox.css'
 import { createEffect, createSignal, onMount } from 'solid-js'
+import { createBreakpoints } from '../breakpoints'
 import { layoutImages } from './layout'
 
 export interface ImageProps {
@@ -18,6 +19,7 @@ export function AdaptiveImageList(
 		className?: string
 	},
 ) {
+	const breakpoints = createBreakpoints()
 	const [loadedImages, setLoadedImages] = createSignal<
 		(undefined | HTMLImageElement)[]
 	>(props.images.map(() => undefined))
@@ -29,9 +31,19 @@ export function AdaptiveImageList(
 	const loadEnd = () => loadedImages().every((flag) => flag)
 
 	const layout = () => {
-		const GOLD_HEIGHT = 180
-		const MAX_COL = 6
-		const MIN_IMAGE_WIDTH = 200
+		let GOLD_HEIGHT = 224
+		let MIN_IMAGE_WIDTH = 224
+		let MAX_COL = 4
+		if (breakpoints.md()) {
+			MAX_COL = 6
+		}
+		if (breakpoints.lg()) {
+			GOLD_HEIGHT = 384
+			MIN_IMAGE_WIDTH = 384
+		}
+		if (breakpoints['2xl']()) {
+			MAX_COL = 8
+		}
 		const imageSizes = loadedImages()
 			.filter((img) => !!img)
 			.map((img) => ({
