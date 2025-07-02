@@ -1,25 +1,77 @@
 import type { APIRoute, InferGetStaticPropsType } from 'astro'
 import { getCollection } from 'astro:content'
-import { GalleryHelper } from '../../../utils/gallery'
+import sharp from 'sharp'
+import { GalleryHelper, getResizedOutputFilename } from '../../../utils/gallery'
 
 export async function getStaticPaths() {
 	const collection = await getCollection('gallery')
 	const galleries = collection.map((entry) => new GalleryHelper(entry))
 
 	async function getStaticPathsFromGallery(gallery: GalleryHelper) {
-		return await Promise.all(
+		const paths = await Promise.all(
 			gallery.gallerySections
 				.flatMap((s) => s.images)
 				.filter((s) => s.absPath)
-				.map(async (s) => ({
+				.map(async (img) => ({
 					params: {
-						slug: await s.getOutputFilename(),
+						slug: await img.getOutputFilename(),
 					},
 					props: {
-						buffer: await s.getBuffer(),
+						buffer: await img.getBuffer(),
 					},
 				})),
 		)
+
+		async function generateThumbnail(
+			maxSize: number,
+			format: 'avif' | 'webp' = 'webp',
+		) {
+			return await Promise.all(
+				paths.map(async (p) => {
+					const outputFilename = getResizedOutputFilename(
+						p.params.slug!,
+						maxSize,
+						format,
+					)
+					let image = sharp(p.props.buffer)
+					const metadata = await image.metadata()
+					const aspectRadio = metadata.width / metadata.height
+					if (metadata.height > metadata.width) {
+						if (metadata.height > maxSize) {
+							image = image.resize({
+								width: Math.floor(maxSize * aspectRadio),
+								height: Math.floor(maxSize),
+							})
+						}
+					} else {
+						if (metadata.width > maxSize) {
+							image = image.resize({
+								width: Math.floor(maxSize),
+								height: Math.floor(maxSize / aspectRadio),
+							})
+						}
+					}
+					if (format === 'avif') {
+						image = image.avif()
+					} else if (format === 'webp') {
+						image = image.webp()
+					}
+					return {
+						params: {
+							slug: outputFilename,
+						},
+						props: {
+							buffer: await image.toBuffer(),
+						},
+					}
+				}),
+			)
+		}
+		return [
+			paths,
+			await generateThumbnail(384, 'avif'),
+			await generateThumbnail(384, 'webp'),
+		].flat()
 	}
 	const res: Awaited<ReturnType<typeof getStaticPathsFromGallery>> = []
 	for (const gallery of galleries) {
