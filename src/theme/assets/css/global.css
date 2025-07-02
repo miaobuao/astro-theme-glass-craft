@@ -104,3 +104,35 @@ body {
 @utility col-gap-* {
 	column-gap: --spacing(--value(integer));
 }
+
+.prose {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		> a:nth-child(1) {
+			@apply no-underline;
+
+			&:hover {
+				@apply underline relative;
+				&::before {
+					@apply absolute -left-1 md:block hidden;
+					content: '#';
+					transform: translateX(-100%);
+				}
+			}
+		}
+	}
+	.footnotes {
+		.sr-only {
+			@apply hidden;
+		}
+
+		&::before {
+			content: '';
+			@apply block border-b opacity-80;
+		}
+	}
+}
