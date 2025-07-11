@@ -1,5 +1,8 @@
 import { slugify } from 'transliteration'
 
 export function slugifyBlogPostUrl(postId: string) {
-	return slugify(postId)
+	return postId
+		.split('/')
+		.map((p) => slugify(p))
+		.join('/')
 }
