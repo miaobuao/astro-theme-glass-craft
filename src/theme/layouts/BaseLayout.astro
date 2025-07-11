@@ -11,8 +11,7 @@ const { showAuthorInfo } = Astro.props
 
 const isTimeline = Astro.url.pathname === '/'
 const isBrowse =
-	Astro.url.pathname === '/browse' ||
-	Astro.url.pathname.startsWith('/browse/')
+	Astro.url.pathname === '/browse' || Astro.url.pathname.startsWith('/browse/')
 const isAboutMe = Astro.url.pathname === config.customPages?.aboutMe
 const isGallery =
 	Astro.url.pathname === '/gallery' ||
@@ -35,7 +34,7 @@ const galleryIcon = isGallery
 	: 'icon-[material-symbols--image-outline]'
 ---
 
-<BaseHtml {...Astro.props}>
+<BaseHtml {...Astro.props} useBackground>
 	<div class="absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2">
 		<div class="sm:glassmorphism size-full rounded-md flex flex-row gap-2">
 			<div
@@ -54,12 +53,8 @@ const galleryIcon = isGallery
 								class="rounded-full size-24 select-none shadow-md"
 								transition:name="avatar"
 							/>
-							<p class="text-2xl font-bold">
-								{config.author.name}
-							</p>
-							{config.author.signature && (
-								<p>{config.author.signature}</p>
-							)}
+							<p class="text-2xl font-bold">{config.author.name}</p>
+							{config.author.signature && <p>{config.author.signature}</p>}
 						</div>
 					)
 				}
@@ -68,21 +63,15 @@ const galleryIcon = isGallery
 					class="flex flex-row sm:flex-col w-full justify-around glassmorphism sm:no-glassmorphism"
 				>
 					<AdaptiveIconButton active={isTimeline} href="/">
-						<i
-							slot="icon"
-							class:list={[timelineIcon, 'size-6 sm:size-8']}></i>
+						<i slot="icon" class:list={[timelineIcon, 'size-6 sm:size-8']}></i>
 						Timeline
 					</AdaptiveIconButton>
 					<AdaptiveIconButton active={isBrowse} href="/browse">
-						<i
-							slot="icon"
-							class:list={[browseIcon, 'size-6 sm:size-8']}></i>
+						<i slot="icon" class:list={[browseIcon, 'size-6 sm:size-8']}></i>
 						Share
 					</AdaptiveIconButton>
 					<AdaptiveIconButton active={isGallery} href="/gallery">
-						<i
-							slot="icon"
-							class:list={[galleryIcon, 'size-6 sm:size-8']}></i>
+						<i slot="icon" class:list={[galleryIcon, 'size-6 sm:size-8']}></i>
 						Gallery
 					</AdaptiveIconButton>
 					{
@@ -91,10 +80,7 @@ const galleryIcon = isGallery
 								active={isAboutMe}
 								href={config.customPages.aboutMe}
 							>
-								<i
-									slot="icon"
-									class:list={[meIcon, 'size-6 sm:size-8']}
-								/>
+								<i slot="icon" class:list={[meIcon, 'size-6 sm:size-8']} />
 								About Me
 							</AdaptiveIconButton>
 						)

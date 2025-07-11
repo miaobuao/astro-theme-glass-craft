@@ -1,14 +1,20 @@
 ---
-import { ClientRouter } from 'astro:transitions'
 import '../assets/css/global.css'
-import type {HTMLAttributes}from "astro/types"
 
-export interface Props extends HTMLAttributes<"body"> {
+import { ClientRouter } from 'astro:transitions'
+import type { HTMLAttributes } from 'astro/types'
+
+import { config } from '../consts'
+
+export interface Props extends Omit<HTMLAttributes<'body'>, 'style'> {
 	title?: string
 	description?: string
+	useBackground?: boolean
 }
 
-const { title, description , ...bodyProps} = Astro.props
+const { title, description, useBackground, ...bodyProps } = Astro.props
+
+const canUseBackground = useBackground && config.site.backgroundUrl
 ---
 
 <html lang="zh-CN" class="no-scrollbar">
@@ -19,7 +25,15 @@ const { title, description , ...bodyProps} = Astro.props
 		{title && <title>{title}</title>}
 		<ClientRouter />
 	</head>
-	<body {...bodyProps}>
+
+	<body
+		{...bodyProps}
+		style={canUseBackground
+			? {
+					backgroundImage: `url(${config.site.backgroundUrl})`,
+				}
+			: {}}
+	>
 		<slot />
 	</body>
 </html>

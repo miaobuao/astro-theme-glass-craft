@@ -13,6 +13,7 @@ export interface ThemeConfig {
 	site: {
 		title?: string
 		description?: string
+		backgroundUrl?: string
 	}
 	author: {
 		name: string

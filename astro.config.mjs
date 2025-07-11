@@ -5,6 +5,9 @@ export default defineConfig({
 	site: 'https://example.com',
 	integrations: [
 		theme({
+			site: {
+				backgroundUrl: '/public/background/xiaogou.jpg',
+			},
 			author: {
 				name: 'Meo',
 				email: 'example@example.com',

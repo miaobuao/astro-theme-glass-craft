@@ -33,9 +33,7 @@ function getFirstImage(gallery: GalleryHelper) {
 
 <BaseLayout showAuthorInfo>
 	<div
-		class:list={[
-			'flex flex-wrap glassmorphism sm:no-glassmorphism rounded-lg',
-		]}
+		class:list={['flex flex-wrap glassmorphism sm:no-glassmorphism rounded-lg']}
 	>
 		{
 			galleries.map(async (g, index) => (
@@ -48,9 +46,7 @@ function getFirstImage(gallery: GalleryHelper) {
 						]}
 					>
 						<div
-							class:list={[
-								'w-[3rem] sm:w-full aspect-square sm:mb-3 relative',
-							]}
+							class:list={['w-[3rem] sm:w-full aspect-square sm:mb-3 relative']}
 						>
 							<div class="size-full rounded-lg hidden sm:block translate-0 bg-white/70 dark:bg-black/50 absolute top-0 left-0" />
 							<div class="size-full rounded-lg hidden sm:block translate-1.5 bg-white/30 dark:bg-black/30 absolute top-0 left-0" />
