@@ -114,7 +114,7 @@ export function AdaptiveImageList(
 							height: numberToPx(imageSizes().at(index)?.height),
 							width: numberToPx(imageSizes().at(index)?.width),
 						}}
-						class="p-0.5 relative group"
+						class="p-1 relative hover:scale-101"
 						data-fancybox="gallery"
 						data-caption={image.description}
 						data-src={image.src}
@@ -132,10 +132,10 @@ export function AdaptiveImageList(
 									})
 								}
 							}}
-							class="size-full rounded-sm object-cover object-center"
+							class="transition size-full rounded-sm object-cover object-center"
 						/>
-						<div class="absolute top-0 p-1 max-w-full invisible lg:visible">
-							<p class="p-1 bg-black/30 backdrop-blur-md text-xs rounded-lg truncate max-w-full">
+						<div class="absolute top-0 pt-2 px-1 max-w-full invisible lg:visible">
+							<p class="p-1 glassmorphism text-xs rounded-lg truncate max-w-full">
 								{image.description}
 							</p>
 						</div>

@@ -19,7 +19,11 @@ body {
 }
 
 @utility glassmorphism {
-	@apply bg-white/20 backdrop-blur-sm;
+	@apply bg-white/30 backdrop-blur-lg border border-white/60;
+}
+
+@utility no-glassmorphism {
+	@apply bg-transparent border-none backdrop-blur-none;
 }
 
 @utility no-scrollbar {

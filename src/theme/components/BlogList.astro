@@ -12,17 +12,28 @@ interface Props extends HTMLAttributes<'div'> {
 const { posts, class: className } = Astro.props
 ---
 
-<div class:list={['flex flex-col gap-2', className]}>
+<div
+	class:list={[
+		'flex flex-col gap-2 glassmorphism sm:no-glassmorphism rounded-lg',
+		className,
+	]}
+>
 	{
-		posts.map((post) => (
-			<a
-				href={`/blog/${post.id}`}
-				class="glassmorphism rounded-xl p-4 md:p-6 break-all"
-			>
-				<h2 class="text-lg md:text-2xl font-bold mb-2">{post.data.title}</h2>
-				<p class="mb-2 md:mb-4">{post.data.description}</p>
-				<p class="text-sm">{moment(post.data.pubDate).format('YYYY-MM-DD')}</p>
-			</a>
+		posts.map((post, index) => (
+			<Fragment>
+				<a href={`/blog/${post.id}`} class="p-4 md:p-6 break-all">
+					<h2 class="text-lg md:text-2xl font-bold mb-2">
+						{post.data.title}
+					</h2>
+					<p class="mb-2 md:mb-4">{post.data.description}</p>
+					<p class="text-sm">
+						{moment(post.data.pubDate).format('YYYY-MM-DD')}
+					</p>
+				</a>
+				{index !== posts.length - 1 && (
+					<span class="mx-auto my-2 w-[95%] h-[0.1px] bg-white/80" />
+				)}
+			</Fragment>
 		))
 	}
 </div>

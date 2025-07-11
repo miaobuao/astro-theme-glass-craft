@@ -1,8 +1,8 @@
 ---
-import GalleryLayout from '../../layouts/GalleryLayout.astro'
 import { getCollection } from 'astro:content'
 import { GalleryHelper } from '../../utils/gallery'
 import { GALLERY_THUMBNAIL_CONFIG } from '../../consts'
+import BaseLayout from '../../layouts/BaseLayout.astro'
 
 const collections = await getCollection('gallery')
 
@@ -31,29 +31,58 @@ function getFirstImage(gallery: GalleryHelper) {
 }
 ---
 
-<GalleryLayout>
-	<div class:list={['flex flex-wrap']}>
+<BaseLayout showAuthorInfo>
+	<div
+		class:list={[
+			'flex flex-wrap glassmorphism sm:no-glassmorphism rounded-lg',
+		]}
+	>
 		{
-			galleries.map(async (g) => (
-				<a
-					href={g.href}
-					class:list={[
-						'w-1/2 p-2 flex flex-col group',
-						'sm:w-1/3',
-						'md:w-1/4',
-						'2xl:w-1/6 2xl:p-4',
-					]}
-				>
-					<img
-						src={g.coverUrl}
+			galleries.map(async (g, index) => (
+				<Fragment>
+					<a
+						href={g.href}
 						class:list={[
-							'transition-all w-full object-cover object-center mb-1 rounded-xl aspect-square group-hover:scale-105 group-hover:shadow-lg',
+							'w-full p-2 flex sm:flex-col',
+							'sm:w-1/3 md:w-1/4 lg:w-1/5 2xl:w-1/6',
 						]}
-					/>
-					<p class="text-sm">{g.title}</p>
-					<p class="text-sm opacity-50">{g.imageCount}</p>
-				</a>
+					>
+						<div
+							class:list={[
+								'w-[3rem] sm:w-full aspect-square sm:mb-2 relative',
+							]}
+						>
+							<div class="size-full rounded-xl hidden sm:block translate-0 bg-white/70 absolute top-0 left-0" />
+							<div class="size-full rounded-xl hidden sm:block translate-1 bg-white/30 absolute top-0 left-0" />
+							<div
+								class:list={[
+									'size-full bg-cover bg-center sm:mb-1 rounded-md sm:rounded-xl',
+									'sm:-translate-1',
+								]}
+								style={{
+									backgroundImage: `url(${g.coverUrl})`,
+								}}
+							/>
+						</div>
+
+						<div class="flex flex-1 justify-between px-4 items-center sm:hidden">
+							<p>{g.title}</p>
+							<p class="flex justify-center items-center gap-1">
+								<span>{g.imageCount}</span>
+								<span class="icon-[uiw--right] size-[1rem] text-inherit" />
+							</p>
+						</div>
+						<div class="hidden sm:block">
+							<p class="sm:text-sm">{g.title}</p>
+							<p class="text-sm opacity-50">{g.imageCount}</p>
+						</div>
+					</a>
+
+					{index !== galleries.length - 1 && (
+						<span class="mx-auto my-1 w-[95%] h-[0.1px] bg-white/80 sm:hidden" />
+					)}
+				</Fragment>
 			))
 		}
 	</div>
-</GalleryLayout>
+</BaseLayout>
