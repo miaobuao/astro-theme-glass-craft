@@ -14,6 +14,7 @@ export interface ThemeConfig {
 		title?: string
 		description?: string
 		backgroundUrl?: string
+		slugifyArticleUrl?: boolean
 	}
 	author: {
 		name: string

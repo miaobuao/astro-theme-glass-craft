@@ -2,6 +2,8 @@
 import moment from 'moment'
 import type { AnyEntryMap } from 'astro:content'
 import type { HTMLAttributes } from 'astro/types'
+import { config } from '../consts'
+import { slugifyBlogPostUrl } from '../utils/slugify-blog-post-url'
 
 type BlogEntryMap = AnyEntryMap['blog']
 
@@ -10,6 +12,13 @@ interface Props extends HTMLAttributes<'div'> {
 }
 
 const { posts, class: className } = Astro.props
+
+function slugify(id: string) {
+	if (config.site.slugifyArticleUrl) {
+		return slugifyBlogPostUrl(id)
+	}
+	return id
+}
 ---
 
 <div
@@ -21,7 +30,7 @@ const { posts, class: className } = Astro.props
 	{
 		posts.map((post, index) => (
 			<Fragment>
-				<a href={`/blog/${post.id}`} class="p-4 md:p-6 break-all">
+				<a href={`/blog/${slugify(post.id)}`} class="p-4 md:p-6 break-all">
 					<h2 class="text-lg md:text-2xl font-bold mb-2">{post.data.title}</h2>
 					<p class="mb-2 md:mb-4">{post.data.description}</p>
 					<p class="text-sm">
