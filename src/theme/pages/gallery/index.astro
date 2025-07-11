@@ -44,20 +44,20 @@ function getFirstImage(gallery: GalleryHelper) {
 						href={g.href}
 						class:list={[
 							'w-full p-2 flex sm:flex-col',
-							'sm:w-1/3 md:w-1/4 lg:w-1/5 2xl:w-1/6',
+							'sm:p-4 sm:w-1/3 md:w-1/4 lg:w-1/5 2xl:w-1/6',
 						]}
 					>
 						<div
 							class:list={[
-								'w-[3rem] sm:w-full aspect-square sm:mb-2 relative',
+								'w-[3rem] sm:w-full aspect-square sm:mb-3 relative',
 							]}
 						>
-							<div class="size-full rounded-xl hidden sm:block translate-0 bg-white/70 absolute top-0 left-0" />
-							<div class="size-full rounded-xl hidden sm:block translate-1 bg-white/30 absolute top-0 left-0" />
+							<div class="size-full rounded-lg hidden sm:block translate-0 bg-white/70 dark:bg-black/50 absolute top-0 left-0" />
+							<div class="size-full rounded-lg hidden sm:block translate-1.5 bg-white/30 dark:bg-black/30 absolute top-0 left-0" />
 							<div
 								class:list={[
-									'size-full bg-cover bg-center sm:mb-1 rounded-md sm:rounded-xl',
-									'sm:-translate-1',
+									'size-full bg-cover bg-center sm:mb-1 rounded-md sm:rounded-lg',
+									'sm:-translate-1.5',
 								]}
 								style={{
 									backgroundImage: `url(${g.coverUrl})`,

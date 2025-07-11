@@ -2,11 +2,6 @@
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
 
-@theme {
-	--color-primary: #2ec4b6;
-	--color-primary-fg: #ffffff;
-}
-
 :root {
 	@media (prefers-color-scheme: dark) {
 	}
@@ -16,10 +11,12 @@ body {
 	background-attachment: fixed;
 	background-image: url('../background/xiaogou.jpg');
 	@apply min-h-screen bg-no-repeat bg-cover;
+	@apply dark:text-white;
 }
 
 @utility glassmorphism {
 	@apply bg-white/30 backdrop-blur-lg border border-white/60;
+	@apply dark:bg-black/30 border-black/10;
 }
 
 @utility no-glassmorphism {
