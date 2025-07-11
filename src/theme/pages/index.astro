@@ -4,6 +4,14 @@ import BlogList from '../components/BlogList.astro'
 import { getCollection } from 'astro:content'
 
 const blogPosts = await getCollection('blog')
+
+const sortedPosts = blogPosts.toSorted((a, b) => {
+	return a.data.pubDate > b.data.pubDate
+		? -1
+		: a.data.pubDate < b.data.pubDate
+			? 1
+			: 0
+})
 ---
 
 <BaseLayout
@@ -11,5 +19,5 @@ const blogPosts = await getCollection('blog')
 	description="Astro Theme Explorer"
 	showAuthorInfo
 >
-	<BlogList posts={blogPosts} />
+	<BlogList posts={sortedPosts} />
 </BaseLayout>

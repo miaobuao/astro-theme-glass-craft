@@ -5,6 +5,10 @@ export default defineConfig({
 	site: 'https://example.com',
 	integrations: [
 		theme({
+			site: {
+				backgroundUrl: '/background/xiaogou.webp',
+				slugifyArticleUrl: true,
+			},
 			author: {
 				name: 'Meo',
 				email: 'example@example.com',

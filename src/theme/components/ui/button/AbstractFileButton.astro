@@ -41,25 +41,23 @@ function getIconFromExtName(ext: string) {
 <a
 	href={url}
 	class:list={[
-		'transition-all flex items-center gap-2 p-4 rounded-3xl',
-		'glassmorphism hover:scale-105 hover:shadow-md',
-		'sm:neumorphism-bulge-xs sm:hover:neumorphism-sunken-xs sm:hover:scale-99 sm:border-none',
+		'transition-all flex items-center gap-2 p-2 rounded-md glassmorphism',
 	]}
 	target={isDir ? '_self' : '_blank'}
 >
 	{
 		thumbnailUrl ? (
 			<i
-				class:list={['rounded-sm size-12 sm:size-16 bg-center bg-cover']}
+				class:list={['rounded-sm size-12 bg-center bg-cover']}
 				style={{
 					backgroundImage: `url(${thumbnailUrl})`,
 				}}
 			/>
 		) : (
-			<i class:list={[icon, 'size-12 sm:size-16']} />
+			<i class:list={[icon, 'size-12']} />
 		)
 	}
-	<p class="flex-1 truncate text-lg" title={name}>
+	<p class="flex-1 truncate" title={name}>
 		{name}
 	</p>
 </a>
