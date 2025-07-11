@@ -2,95 +2,24 @@
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
 
-@theme {
-	--color-primary: #2ec4b6;
-	--color-primary-fg: #ffffff;
-	--color-background: #e0e0e0;
-	--color-neumorphism-shadow-tl: #ffffff;
-	--color-neumorphism-shadow-br: #bebebe;
-}
 :root {
 	@media (prefers-color-scheme: dark) {
-		--color-background: #34353c;
-		--color-neumorphism-shadow-tl: #3c3d45;
-		--color-neumorphism-shadow-br: #2c2d33;
 	}
 }
 
 body {
-	@apply bg-background text-black;
+	background-attachment: fixed;
+	@apply min-h-screen bg-no-repeat bg-cover;
 	@apply dark:text-white;
 }
 
-@utility neumorphism-sunken-xs {
-	@apply bg-background;
-	box-shadow:
-		inset 3px 3px 5px var(--color-neumorphism-shadow-br),
-		inset -3px -3px 5px var(--color-neumorphism-shadow-tl);
-}
-
-@utility neumorphism-bulge-xs {
-	@apply bg-background;
-	box-shadow:
-		3px 3px 5px var(--color-neumorphism-shadow-br),
-		-3px -3px 5px var(--color-neumorphism-shadow-tl);
-}
-
-@utility neumorphism-sunken-sm {
-	@apply bg-background;
-	box-shadow:
-		inset 5px 5px 10px var(--color-neumorphism-shadow-br),
-		inset -5px -5px 10px var(--color-neumorphism-shadow-tl);
-}
-@utility neumorphism-bulge-sm {
-	@apply bg-background;
-	box-shadow:
-		5px 5px 10px var(--color-neumorphism-shadow-br),
-		-5px -5px 10px var(--color-neumorphism-shadow-tl);
-}
-
-@utility neumorphism-sunken-md {
-	@apply bg-background;
-	box-shadow:
-		inset 10px 10px 21px var(--color-neumorphism-shadow-br),
-		inset -10px -10px 21px var(--color-neumorphism-shadow-tl);
-}
-@utility neumorphism-bulge-md {
-	@apply bg-background;
-	box-shadow:
-		10px 10px 21px var(--color-neumorphism-shadow-br),
-		-10px -10px 21px var(--color-neumorphism-shadow-tl);
-}
-
-@utility neumorphism-sunken-lg {
-	@apply bg-background;
-	box-shadow:
-		inset 16px 16px 32px var(--color-neumorphism-shadow-br),
-		inset -16px -16px 32px var(--color-neumorphism-shadow-tl);
-}
-@utility neumorphism-bulge-lg {
-	@apply bg-background;
-	box-shadow:
-		16px 16px 32px var(--color-neumorphism-shadow-br),
-		-16px -16px 32px var(--color-neumorphism-shadow-tl);
-}
-
-@utility neumorphism-sunken-xl {
-	@apply bg-background;
-	box-shadow:
-		inset 24px 24px 47px var(--color-neumorphism-shadow-br),
-		inset -24px -24px 47px var(--color-neumorphism-shadow-tl);
-}
-@utility neumorphism-bulge-xl {
-	@apply bg-background;
-	box-shadow:
-		24px 24px 47px var(--color-neumorphism-shadow-br),
-		-24px -24px 47px var(--color-neumorphism-shadow-tl);
-}
-
 @utility glassmorphism {
-	@apply border-white/50 border-[0.5px] bg-white/20 backdrop-blur-xl;
-	@apply dark:border-white/20 dark:bg-white/10;
+	@apply bg-white/30 backdrop-blur-lg border border-white/60;
+	@apply dark:bg-black/30 border-black/10;
+}
+
+@utility no-glassmorphism {
+	@apply bg-transparent border-none backdrop-blur-none;
 }
 
 @utility no-scrollbar {
