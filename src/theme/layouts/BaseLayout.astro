@@ -35,26 +35,12 @@ const galleryIcon = isGallery
 ---
 
 <BaseHtml {...Astro.props}>
-	<div class="flex flex-col sm:flex-row">
+	<div class="absolute size-full p-2">
 		<div
-			class:list={[
-				'transition-all w-full fixed bottom-0 left-0 right-0 z-50',
-				'sm:top-0 sm:h-full sm:w-42 sm:p-0',
-				'md:w-48',
-				showAuthorInfo ? 'lg:flex lg:w-144' : 'lg:w-64',
-			]}
+			class="size-full flex flex-col sm:flex-row bg-white/20 backdrop-blur-xs rounded-md border border-white/30 p-2 gap-2"
 		>
 			<!-- nav -->
-			<div
-				class:list={[
-					'transition-all flex justify-around rounded-xl glassmorphism w-[calc(100%-1rem)] mx-auto mb-2',
-					'sm:shadow-none sm:backdrop-blur-none sm:bg-transparent sm:text-inherit sm:border-none',
-					'sm:w-42 sm:flex-col sm:justify-start sm:gap-8 sm:p-4 sm:m-0',
-					'md:w-48',
-					'lg:py-8 lg:pl-8 lg:pr-0',
-					'lg:w-56',
-				]}
-			>
+			<div class:list={['flex flex-col gap-2']}>
 				<AdaptiveIconButton active={isTimeline} href="/">
 					<i slot="icon" class:list={[timelineIcon, 'size-6 sm:size-8']}></i>
 					Timeline
@@ -79,45 +65,27 @@ const galleryIcon = isGallery
 					)
 				}
 			</div>
-
-			<!-- author info -->
 			{
 				showAuthorInfo && (
 					<div
 						class:list={[
-							'hidden h-full pt-8 flex-1 overflow-y-auto no-scrollbar',
-							'lg:flex lg:px-8 box-border',
+							'flex flex-col gap-1 justify-center items-center h-fit glassmorphism rounded-md p-4',
 						]}
 					>
-						<div
-							class:list={[
-								'w-full flex flex-col p-8 gap-6 items-center break-all neumorphism-bulge-xs h-fit rounded-3xl',
-							]}
-						>
-							<img
-								src={config.author.avatar.url}
-								alt={config.author.avatar.alt ?? 'avatar'}
-								class="rounded-full size-48 select-none"
-								transition:name="avatar"
-							/>
-							<p class="text-3xl font-bold">{config.author.name}</p>
-							{config.author.signature && <p>{config.author.signature}</p>}
-						</div>
+						<img
+							src={config.author.avatar.url}
+							alt={config.author.avatar.alt ?? 'avatar'}
+							class="rounded-full size-24 select-none"
+							transition:name="avatar"
+						/>
+						<p class="text-2xl font-bold">{config.author.name}</p>
+						{config.author.signature && <p>{config.author.signature}</p>}
 					</div>
 				)
 			}
+			<main transition:name="main" class="overflow h-full flex-1">
+				<slot />
+			</main>
 		</div>
-		<main
-			class:list={[
-				'pb-22 w-full p-4',
-				'sm:pb-6 sm:ml-42 sm:pl-4 sm:mr-2',
-				'md:ml-48',
-				showAuthorInfo ? 'lg:ml-144 lg:px-0 lg:mr-8' : 'lg:ml-64',
-				'lg:pt-8',
-			]}
-			transition:name="main"
-		>
-			<slot />
-		</main>
 	</div>
 </BaseHtml>
