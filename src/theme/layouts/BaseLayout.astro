@@ -12,7 +12,9 @@ const { showAuthorInfo } = Astro.props
 const isTimeline = Astro.url.pathname === '/'
 const isBrowse =
 	Astro.url.pathname === '/browse' || Astro.url.pathname.startsWith('/browse/')
-const isAboutMe = Astro.url.pathname === config.customPages?.aboutMe
+const isAboutMe =
+	Astro.url.pathname === config.customPages?.aboutMe ||
+	Astro.url.pathname === config.customPages?.aboutMe + '/'
 const isGallery =
 	Astro.url.pathname === '/gallery' ||
 	Astro.url.pathname.startsWith('/gallery/')
