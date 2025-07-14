@@ -88,7 +88,10 @@ const galleryIcon = isGallery
 				</div>
 			</div>
 
-			<main class="overflow-auto h-full flex-1 no-scrollbar">
+			<main
+				id="main-scroll-container"
+				class="overflow-auto h-full flex-1 no-scrollbar"
+			>
 				<div class="p-2 sm:pl-0">
 					<slot />
 				</div>
@@ -96,3 +99,18 @@ const galleryIcon = isGallery
 		</div>
 	</div>
 </BaseHtml>
+
+<script defer>
+	window.addEventListener(
+		'wheel',
+		(e) => {
+			const scrollContainer = document.getElementById('main-scroll-container')
+			if (e.target !== document.body) {
+				return
+			}
+			e.preventDefault()
+			scrollContainer.scrollTop += e.deltaY
+		},
+		{ passive: false },
+	)
+</script>
