@@ -36,11 +36,11 @@ export async function getStaticPaths() {
 					)
 					let image = sharp(p.props.buffer)
 					const metadata = await image.metadata()
-					const aspectRadio = metadata.width / metadata.height
+					const aspectRatio = metadata.width / metadata.height
 					if (metadata.height > metadata.width) {
 						if (metadata.height > maxSize) {
 							image = image.resize({
-								width: Math.floor(maxSize * aspectRadio),
+								width: Math.floor(maxSize * aspectRatio),
 								height: Math.floor(maxSize),
 							})
 						}
@@ -48,7 +48,7 @@ export async function getStaticPaths() {
 						if (metadata.width > maxSize) {
 							image = image.resize({
 								width: Math.floor(maxSize),
-								height: Math.floor(maxSize / aspectRadio),
+								height: Math.floor(maxSize / aspectRatio),
 							})
 						}
 					}
