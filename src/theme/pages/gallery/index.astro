@@ -32,9 +32,7 @@ function getFirstImage(gallery: GalleryHelper) {
 ---
 
 <BaseLayout showAuthorInfo>
-	<div
-		class:list={['flex flex-wrap glassmorphism sm:no-glassmorphism rounded-lg']}
-	>
+	<div class:list={['flex flex-wrap max-sm:glassmorphism rounded-lg']}>
 		{
 			galleries.map(async (g, index) => (
 				<Fragment>
@@ -46,14 +44,16 @@ function getFirstImage(gallery: GalleryHelper) {
 						]}
 					>
 						<div
-							class:list={['w-[3rem] sm:w-full aspect-square sm:mb-3 relative']}
+							class:list={[
+								'group w-[3rem] sm:w-full aspect-square sm:mb-3 relative',
+							]}
 						>
-							<div class="size-full rounded-lg hidden sm:block translate-0 bg-white/70 dark:bg-black/50 absolute top-0 left-0" />
-							<div class="size-full rounded-lg hidden sm:block translate-1.5 bg-white/30 dark:bg-black/30 absolute top-0 left-0" />
+							<div class="transition group-hover:translate-1.5 translate-1 size-full rounded-lg hidden sm:block bg-white/30 dark:bg-black/30 absolute top-0 left-0" />
+							<div class="transition group-hover:translate-0 translate-0 size-full rounded-lg hidden sm:block bg-white/70 dark:bg-black/50 absolute top-0 left-0" />
 							<div
 								class:list={[
-									'size-full bg-cover bg-center sm:mb-1 rounded-md sm:rounded-lg',
-									'sm:-translate-1.5',
+									'transition size-full bg-cover bg-center sm:mb-1 rounded-md sm:rounded-lg',
+									'sm:-translate-1 group-hover:-translate-1.5',
 								]}
 								style={{
 									backgroundImage: `url(${g.coverUrl})`,
