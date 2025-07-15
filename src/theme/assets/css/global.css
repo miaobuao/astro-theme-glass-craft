@@ -2,6 +2,10 @@
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
 
+@theme inline {
+	--radius-inherit: inherit;
+}
+
 :root {
 	@media (prefers-color-scheme: dark) {
 	}
@@ -14,8 +18,8 @@ body {
 }
 
 @utility glassmorphism {
-	@apply bg-white/30 backdrop-blur-lg border border-white/60;
-	@apply dark:bg-black/30 border-black/10;
+	@apply bg-white/50 backdrop-blur-lg border border-white/60;
+	@apply dark:bg-black/50 border-black/10;
 }
 
 @utility no-glassmorphism {
