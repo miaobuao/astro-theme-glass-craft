@@ -41,13 +41,13 @@ const galleryIcon = isGallery
 	<div class="absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2">
 		<div class="sm:glassmorphism size-full rounded-md flex flex-row gap-2">
 			<div
-				class="transition-all fixed w-full sm:w-fit bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:p-2 sm:overflow-auto no-scrollbar gap-2"
+				class="fixed w-full sm:w-fit bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:p-2 sm:overflow-auto no-scrollbar gap-2"
 			>
 				{
 					showAuthorInfo && (
 						<div
 							class:list={[
-								'hidden sm:flex flex-col gap-1 justify-center items-center rounded-md p-4',
+								'hidden sm:flex flex-col gap-1 justify-center items-center p-4',
 							]}
 						>
 							<img
@@ -55,6 +55,7 @@ const galleryIcon = isGallery
 								alt={config.author.avatar.alt ?? 'avatar'}
 								class="rounded-full size-24 select-none shadow-md"
 								transition:name="avatar"
+								loading="lazy"
 							/>
 							<p class="text-2xl font-bold">{config.author.name}</p>
 							{config.author.signature && <p>{config.author.signature}</p>}
