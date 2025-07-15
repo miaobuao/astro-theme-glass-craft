@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config'
-import theme from '.'
+import theme from './src/theme'
 
 export default defineConfig({
 	site: 'https://example.com',
