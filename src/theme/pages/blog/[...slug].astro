@@ -23,8 +23,12 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>
 const props = Astro.props
 
 const { Content } = await render(props)
+
+const title = props.data.title
+const description = props.data.description
+const pubDate = props.data.pubDate
 ---
 
-<BlogPostLayout title={props.data.title} pubDate={props.data.pubDate}>
+<BlogPostLayout {title} {description} {pubDate}>
 	<Content />
 </BlogPostLayout>
