@@ -3,6 +3,7 @@ import { readFile } from 'fs/promises'
 import { sha256 } from 'hash-wasm'
 import { basename, dirname, extname, isAbsolute, join, resolve } from 'path'
 import { remark } from 'remark'
+import sharp from 'sharp'
 import { visit } from 'unist-util-visit'
 import { ROOT_DIR } from '../consts'
 import { isValidHttpUrl } from './is-valid-http-url'
@@ -39,6 +40,10 @@ class GalleryImage {
 				.then((res) => res.arrayBuffer())
 				.then((arrayBuffer) => Buffer.from(arrayBuffer))
 		}
+	}
+
+	async sharp() {
+		return sharp(await this.getBuffer())
 	}
 
 	async getUrl() {

@@ -18,7 +18,7 @@ const gallery = new GalleryHelper(Astro.props)
 ---
 
 <BaseLayout showAuthorInfo>
-	<div class="container">
+	<div class="container max-sm:glassmorphism px-2 rounded-lg">
 		<h1 class="text-3xl font-bold">{gallery.title}</h1>
 		{
 			gallery.gallerySections.map(async (section) => (
@@ -28,15 +28,33 @@ const gallery = new GalleryHelper(Astro.props)
 					<AdaptiveImageList
 						client:only="solid"
 						images={await Promise.all(
-							section.images.map(async (img) => ({
-								src: await img.getUrl(),
-								alt: img.description,
-								description: img.description,
-								thumbnailUrl: await img.getThumbnailUrl(
-									GALLERY_THUMBNAIL_CONFIG.size,
-									GALLERY_THUMBNAIL_CONFIG.format,
-								),
-							})),
+							section.images.map(async (img) => {
+								try {
+									const sharp = await img.sharp()
+									const meta = await sharp.metadata()
+									var size = {
+										width: meta.width,
+										height: meta.height,
+									}
+								} catch (e) {
+									console.error(e)
+									size = {
+										width: 1,
+										height: 1,
+									}
+								}
+								return {
+									src: await img.getUrl(),
+									alt: img.description,
+									description: img.description,
+									thumbnailUrl: await img.getThumbnailUrl(
+										GALLERY_THUMBNAIL_CONFIG.size,
+										GALLERY_THUMBNAIL_CONFIG.format,
+									),
+									naturalWidth: size.width,
+									naturalHeight: size.height,
+								}
+							}),
 						)}
 					/>
 				</Fragment>
