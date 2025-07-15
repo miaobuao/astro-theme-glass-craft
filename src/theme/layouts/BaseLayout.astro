@@ -7,7 +7,7 @@ interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
 }
 
-const { showAuthorInfo } = Astro.props
+const { showAuthorInfo, title, description, ...otherProps } = Astro.props
 
 const isTimeline =
 	Astro.url.pathname === '/' || Astro.url.pathname.startsWith('/blog/')
@@ -37,7 +37,12 @@ const galleryIcon = isGallery
 	: 'icon-[material-symbols--image-outline]'
 ---
 
-<BaseHtml {...Astro.props} useBackground>
+<BaseHtml
+	{...otherProps}
+	title={title ?? config.site.title}
+	description={description ?? config.site.description}
+	useBackground
+>
 	<div class="absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2">
 		<div class="sm:glassmorphism size-full rounded-md flex flex-row gap-2">
 			<div

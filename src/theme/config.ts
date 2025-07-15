@@ -1,3 +1,22 @@
+import type { GiscusWidget } from 'giscus'
+
+export type GiscusConfig = Pick<
+	GiscusWidget,
+	| 'repo'
+	| 'repoId'
+	| 'category'
+	| 'categoryId'
+	| 'mapping'
+	| 'term'
+	| 'strict'
+	| 'reactionsEnabled'
+	| 'emitMetadata'
+	| 'inputPosition'
+	| 'theme'
+	| 'lang'
+	| 'loading'
+>
+
 export interface AvatarType {
 	url: string
 	alt?: string
@@ -34,5 +53,8 @@ export interface ThemeConfig {
 			size?: number
 			format?: 'webp' | 'avif'
 		}
+	}
+	comment?: {
+		giscus?: GiscusConfig
 	}
 }

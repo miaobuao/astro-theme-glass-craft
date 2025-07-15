@@ -23,6 +23,18 @@ const canUseBackground = useBackground && config.site.backgroundUrl
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		{description && <meta name="description" content={description} />}
 		{title && <title>{title}</title>}
+
+		<!-- Open Graph / Facebook -->
+		{
+			title && (
+				<Fragment>
+					<meta property="og:title" content={title} />
+					<meta property="og:type" content="website" />
+					<meta property="og:url" content={Astro.url} />
+				</Fragment>
+			)
+		}
+		{description && <meta property="og:description" content={description} />}
 		<ClientRouter />
 	</head>
 

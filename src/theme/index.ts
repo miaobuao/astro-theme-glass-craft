@@ -22,11 +22,11 @@ import remarkDirective from 'remark-directive'
 import remarkFootnotesExtra from 'remark-footnotes-extra'
 import remarkGithubAdmonitionsToDirectives from 'remark-github-admonitions-to-directives'
 import remarkMath from 'remark-math'
-import packageJson from './package.json'
-import type { ThemeConfig } from './src/theme/config'
+import packageJson from '../../package.json'
+import type { ThemeConfig } from './config'
 
 const packageName = packageJson.name
-const __dirname = import.meta.dirname
+const __dirname = resolve(import.meta.dirname, '../../')
 
 export default function ThemeIntegration(
 	userOpts: ThemeConfig,
