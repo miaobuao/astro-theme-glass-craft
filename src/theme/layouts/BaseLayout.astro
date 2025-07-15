@@ -19,6 +19,9 @@ const isAboutMe =
 const isGallery =
 	Astro.url.pathname === '/gallery' ||
 	Astro.url.pathname.startsWith('/gallery/')
+const isFriendLinks =
+	Astro.url.pathname === '/friend-links' ||
+	Astro.url.pathname === '/friend-links/'
 
 const timelineIcon = isTimeline
 	? 'icon-[material-symbols--nest-clock-farsight-analog]'
@@ -35,6 +38,10 @@ const meIcon = isAboutMe
 const galleryIcon = isGallery
 	? 'icon-[material-symbols--image]'
 	: 'icon-[material-symbols--image-outline]'
+
+const friendLinksIcon = isFriendLinks
+	? 'icon-[icon-park-solid--friends-circle]'
+	: 'icon-[icon-park-outline--friends-circle]'
 ---
 
 <BaseHtml
@@ -46,7 +53,7 @@ const galleryIcon = isGallery
 	<div class="absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2">
 		<div class="sm:glassmorphism size-full rounded-md flex flex-row gap-2">
 			<div
-				class="fixed w-full sm:w-fit bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:p-2 sm:overflow-auto no-scrollbar gap-2"
+				class="fixed w-full sm:w-fit sm:max-w-48 lg:max-w-52 bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:p-2 sm:overflow-auto no-scrollbar gap-2"
 			>
 				{
 					showAuthorInfo && (
@@ -58,12 +65,14 @@ const galleryIcon = isGallery
 							<img
 								src={config.author.avatar.url}
 								alt={config.author.avatar.alt ?? 'avatar'}
-								class="rounded-full size-24 select-none shadow-md"
+								class="rounded-full size-24 select-none"
 								transition:name="avatar"
 								loading="lazy"
 							/>
 							<p class="text-2xl font-bold">{config.author.name}</p>
-							{config.author.signature && <p>{config.author.signature}</p>}
+							{config.author.signature && (
+								<p class="text-sm">{config.author.signature}</p>
+							)}
 						</div>
 					)
 				}
@@ -82,6 +91,11 @@ const galleryIcon = isGallery
 					<AdaptiveIconButton active={isGallery} href="/gallery">
 						<i slot="icon" class:list={[galleryIcon, 'size-6 sm:size-8']}></i>
 						Gallery
+					</AdaptiveIconButton>
+					<AdaptiveIconButton active={isFriendLinks} href="/friend-links/">
+						<i slot="icon" class:list={[friendLinksIcon, 'size-6 sm:size-8']}
+						></i>
+						Friends
 					</AdaptiveIconButton>
 					{
 						config.customPages?.aboutMe && (

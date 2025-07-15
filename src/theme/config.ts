@@ -24,6 +24,7 @@ export interface AvatarType {
 
 export interface FriendLinkType {
 	name: string
+	description?: string
 	url: string
 	avatar: AvatarType
 }

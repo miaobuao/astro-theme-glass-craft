@@ -6,13 +6,14 @@ export default defineConfig({
 	integrations: [
 		theme({
 			site: {
+				title: 'Glass Craft Demo | Astro Theme',
 				backgroundUrl: '/background/xiaogou.webp',
 				slugifyArticleUrl: true,
 			},
 			author: {
-				name: 'Meo',
+				name: 'Demo',
 				email: 'example@example.com',
-				signature: 'Glass Craft',
+				signature: 'Beautiful glass craft.',
 				avatar: {
 					url: 'https://avatars.githubusercontent.com/u/62047803?v=4',
 					alt: 'Avatar',
@@ -27,6 +28,24 @@ export default defineConfig({
 					format: 'webp',
 				},
 			},
+			friends: [
+				{
+					name: 'YangQiuyi',
+					avatar: {
+						url: 'https://avatars.githubusercontent.com/u/62047803?v=4',
+					},
+					url: 'https://yangqiuyi.com',
+					description: 'To be a geek 😉',
+				},
+				{
+					name: 'Kimbleex',
+					avatar: {
+						url: 'https://avatars.githubusercontent.com/u/173974903?v=4',
+					},
+					url: 'https://blog.kimbleex.top/',
+					description: '丢掉幻想，准备斗争',
+				},
+			],
 			comment: {
 				giscus: {
 					repo: 'miaobuao/astro-theme-glass-craft',

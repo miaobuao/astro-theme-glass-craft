@@ -93,6 +93,24 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/friend-links/',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/friend-links/index.astro',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/friend-links/avatar/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/friend-links/avatar/[...slug].ts',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/browse',
 					entrypoint: resolve(__dirname, 'src/theme/pages/browse/index.astro'),
 					prerender: true,

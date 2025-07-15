@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { config } from '../../consts'
+
+import { digest, hash } from 'ohash'
+import { isValidHttpUrl } from '../../utils/is-valid-http-url'
+
+const friends =
+	config.friends?.map((f) => {
+		if (!isValidHttpUrl(f.avatar.url)) {
+			return f
+		}
+		const slug = digest(hash(f)) + '.webp'
+		const avatarUrl = 'avatar/' + slug
+		return {
+			...f,
+			avatar: {
+				...f.avatar,
+				url: avatarUrl,
+			},
+		}
+	}) ?? []
+---
+
+<BaseLayout showAuthorInfo>
+	<div class="sm:columns-2 lg:columns-3 2xl:columns-4 col-gap-4">
+		{
+			friends?.map((f) => (
+				<a
+					href={f.url}
+					target="_blank"
+					class="block break-inside-avoid mb-2 sm:mb-4"
+				>
+					<div class="glassmorphism p-4 flex flex-col gap-4 rounded-md">
+						<div class="flex items-center gap-4">
+							<img
+								src={f.avatar.url}
+								alt={f.avatar.alt}
+								class="size-[3rem] rounded-full"
+								loading="lazy"
+							/>
+							<p class="truncate">{f.name}</p>
+						</div>
+						{f.description && <p class="break-all">{f.description}</p>}
+					</div>
+				</a>
+			))
+		}
+	</div>
+</BaseLayout>
