@@ -45,16 +45,19 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
-					pattern: '/share/[...slug]',
-					entrypoint: resolve(__dirname, 'src/theme/pages/share/[...slug].ts'),
+					pattern: '/share/files/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/share/files/[...slug].ts',
+					),
 					prerender: true,
 				})
 
 				injectRoute({
-					pattern: '/thumbnail/[...slug]',
+					pattern: '/share/thumbnail/[...slug]',
 					entrypoint: resolve(
 						__dirname,
-						'src/theme/pages/thumbnail/[...slug].ts',
+						'src/theme/pages/share/thumbnail/[...slug].ts',
 					),
 					prerender: true,
 				})

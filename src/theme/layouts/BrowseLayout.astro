@@ -23,10 +23,10 @@ function abs2Rel(absPath: string) {
 }
 
 function file2Url(absPath: string) {
-	return join('/share', abs2Rel(absPath))
+	return join('/share/files', abs2Rel(absPath))
 }
 function file2ThumbnailUrl(absPath: string) {
-	return join('/thumbnail', abs2Rel(absPath))
+	return join('/share/thumbnail', abs2Rel(absPath))
 }
 ---
 

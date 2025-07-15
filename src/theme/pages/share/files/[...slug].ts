@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro'
 import { readFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
-import { getAllFiles } from '../../utils/get-all-files'
-import { SHARE_DIR } from '../../consts'
-import { flattenFiles } from '../../utils/flatten-files'
+import { SHARE_DIR } from '../../../consts'
+import { flattenFiles } from '../../../utils/flatten-files'
+import { getAllFiles } from '../../../utils/get-all-files'
 
 export async function getStaticPaths() {
 	const files = await getAllFiles(SHARE_DIR)
