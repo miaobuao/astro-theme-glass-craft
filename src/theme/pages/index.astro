@@ -14,10 +14,6 @@ const sortedPosts = blogPosts.toSorted((a, b) => {
 })
 ---
 
-<BaseLayout
-	title="Astro Theme Explorer"
-	description="Astro Theme Explorer"
-	showAuthorInfo
->
+<BaseLayout showAuthorInfo>
 	<BlogList posts={sortedPosts} />
 </BaseLayout>

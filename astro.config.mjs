@@ -12,7 +12,7 @@ export default defineConfig({
 			author: {
 				name: 'Meo',
 				email: 'example@example.com',
-				signature: 'Astro Theme Explorer',
+				signature: 'Glass Craft',
 				avatar: {
 					url: 'https://avatars.githubusercontent.com/u/62047803?v=4',
 					alt: 'Avatar',
