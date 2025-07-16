@@ -3,6 +3,7 @@ import theme from './src/theme'
 
 export default defineConfig({
 	site: 'https://example.com',
+	prefetch: true,
 	integrations: [
 		theme({
 			site: {
