@@ -35,6 +35,7 @@ export interface ThemeConfig {
 		description?: string
 		backgroundUrl?: string
 		slugifyArticleUrl?: boolean
+		lang?: 'zh' | 'en'
 	}
 	author: {
 		name: string
