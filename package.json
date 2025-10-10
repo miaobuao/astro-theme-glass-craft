@@ -50,6 +50,7 @@
 		"remark-math": "^6.0.0",
 		"remark-stringify": "^11.0.0",
 		"sharp": "^0.34.2",
+		"simple-git": "^3.28.0",
 		"solid-js": "^1.9.7",
 		"tailwindcss": "^4.1.10",
 		"transliteration": "^2.3.5",
