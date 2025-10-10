@@ -1,14 +1,12 @@
 ---
 import moment from 'moment'
-import type { AnyEntryMap } from 'astro:content'
 import type { HTMLAttributes } from 'astro/types'
 import { config } from '../../consts'
 import { slugifyBlogPostUrl } from '../../utils/slugify-blog-post-url'
-
-type BlogEntryMap = AnyEntryMap['blog']
+import type { ProcessedPost } from '../../utils/fallback-blog-frontmatter'
 
 interface Props extends HTMLAttributes<'div'> {
-	posts: Array<BlogEntryMap[keyof BlogEntryMap]>
+	posts: Array<ProcessedPost>
 }
 
 const { posts, class: className } = Astro.props
@@ -30,11 +28,16 @@ function slugify(id: string) {
 	{
 		posts.map((post, index) => (
 			<Fragment>
-				<a href={`/blog/${slugify(post.id)}`} class="p-4 md:p-6 break-all">
-					<h2 class="text-lg md:text-2xl font-bold mb-2">{post.data.title}</h2>
-					<p class="mb-2 md:mb-4">{post.data.description}</p>
+				<a
+					href={`/blog/${slugify(post.frontMatter.slug)}`}
+					class="p-4 md:p-6 break-all"
+				>
+					<h2 class="text-lg md:text-2xl font-bold mb-2">
+						{post.frontMatter.title}
+					</h2>
+					<p class="mb-2 md:mb-4">{post.frontMatter.description}</p>
 					<p class="text-sm">
-						{moment(post.data.pubDate).format('YYYY-MM-DD')}
+						{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
 					</p>
 				</a>
 				{index !== posts.length - 1 && (

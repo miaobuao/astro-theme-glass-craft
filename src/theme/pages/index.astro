@@ -2,13 +2,21 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import BlogList from '../components/astro/BlogList.astro'
 import { getCollection } from 'astro:content'
+import { createFallbackBlogFrontMatterProcessor } from '../utils/fallback-blog-frontmatter'
+import { config } from '../consts'
 
 const blogPosts = await getCollection('blog')
+const fallback = createFallbackBlogFrontMatterProcessor({
+	options: {
+		slugify: config.site.slugifyArticleUrl ?? true,
+	},
+})
+const processedPosts = await Promise.all(blogPosts.map(fallback))
 
-const sortedPosts = blogPosts.toSorted((a, b) => {
-	return a.data.pubDate > b.data.pubDate
+const sortedPosts = processedPosts.toSorted((a, b) => {
+	return a.frontMatter.publishDate > b.frontMatter.publishDate
 		? -1
-		: a.data.pubDate < b.data.pubDate
+		: a.frontMatter.publishDate < b.frontMatter.publishDate
 			? 1
 			: 0
 })
