@@ -4,6 +4,7 @@ import { getCollection, render } from 'astro:content'
 import BlogPostLayout from '../../layouts/BlogPostLayout.astro'
 import { config } from '../../consts'
 import { slugifyBlogPostUrl } from '../../utils/slugify-blog-post-url'
+import { createFallbackBlogFrontMatterProcessor } from '../../utils/fallback-blog-frontmatter'
 
 export async function getStaticPaths() {
 	function slugify(id: string) {
@@ -13,20 +14,27 @@ export async function getStaticPaths() {
 		return id
 	}
 	const posts = await getCollection('blog')
-	return posts.map((post) => ({
-		params: { slug: slugify(post.id) },
-		props: post,
-	}))
+	const fallback = createFallbackBlogFrontMatterProcessor({
+		options: {
+			slugify: config.site.slugifyArticleUrl ?? true,
+		},
+	})
+	return Promise.all(posts.map(fallback)).then((posts) =>
+		posts.map((post) => ({
+			params: { slug: post.frontMatter.slug },
+			props: post,
+		})),
+	)
 }
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>
 const props = Astro.props
 
-const { Content } = await render(props)
+const { Content } = await render(props.entry)
 
-const title = props.data.title
-const description = props.data.description
-const pubDate = props.data.pubDate
+const title = props.frontMatter.title
+const description = props.frontMatter.description
+const pubDate = props.frontMatter.publishDate
 ---
 
 <BlogPostLayout {title} {description} {pubDate}>
