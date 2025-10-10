@@ -61,7 +61,10 @@ export const defaultContentProcessorOptions: ContentProcessorOptions = {
 		(entry.body ? extractArticleExcerpt(entry.body) : ''),
 	publishDate: async (entry) => {
 		const fromFrontmatter =
-			entry.data.date ?? entry.data.ctime ?? entry.data.pubDate
+			entry.data.date ??
+			entry.data.ctime ??
+			entry.data.pubDate ??
+			entry.data.publishDate
 		if (fromFrontmatter) return new Date(fromFrontmatter)
 
 		const { created } = await getFileCommitDates(entry.filePath!)

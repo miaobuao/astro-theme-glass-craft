@@ -13,13 +13,15 @@ const fallback = createFallbackBlogFrontMatterProcessor({
 })
 const processedPosts = await Promise.all(blogPosts.map(fallback))
 
-const sortedPosts = processedPosts.toSorted((a, b) => {
-	return a.frontMatter.publishDate > b.frontMatter.publishDate
-		? -1
-		: a.frontMatter.publishDate < b.frontMatter.publishDate
-			? 1
-			: 0
-})
+const sortedPosts = processedPosts
+	.filter((post) => post.frontMatter.isDraft === false)
+	.toSorted((a, b) => {
+		return a.frontMatter.publishDate > b.frontMatter.publishDate
+			? -1
+			: a.frontMatter.publishDate < b.frontMatter.publishDate
+				? 1
+				: 0
+	})
 ---
 
 <BaseLayout showAuthorInfo>

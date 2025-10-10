@@ -13,7 +13,8 @@ const blog = defineCollection({
 			// pub date
 			date: z.coerce.date().optional(),
 			ctime: z.coerce.date().optional(),
-			pubDate: z.coerce.date(),
+			pubDate: z.coerce.date().optional(),
+			publishDate: z.coerce.date().optional(),
 
 			// mtime
 			mtime: z.coerce.date().optional(),
