@@ -114,6 +114,24 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/public/avatar/[...id]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/public/avatar/[...id].ts',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/public/bg/[...id]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/public/bg/[...id].ts',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/browse',
 					entrypoint: resolve(__dirname, 'src/theme/pages/browse/index.astro'),
 					prerender: true,

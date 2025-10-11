@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 		return []
 	}
 
-	const bgUrl = backgroundImage.url
+	const bgUrl = new URL(backgroundImage.url)
 
 	const [thumbnailId, originalId] = await Promise.all([
 		getBackgroundThumbnailImageId(bgUrl),

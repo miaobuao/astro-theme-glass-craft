@@ -19,14 +19,14 @@ export type GiscusConfig = Pick<
 
 export interface ProgressiveImage {
 	type: 'progressive'
-	url: URL
+	url: string
 	alt?: string
 	loading?: 'eager' | 'lazy'
 }
 
 export interface CommonImage {
 	type: 'common'
-	url: string | URL
+	url: string
 	alt?: string
 	loading?: 'eager' | 'lazy'
 }
