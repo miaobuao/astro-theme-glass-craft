@@ -92,3 +92,17 @@ export function getBackgroundThumbnailImage(url: URL) {
 export function getAvatarThumbnailImage(url: URL) {
 	return getThumbnailImage(url, 48)
 }
+
+async function getOriginalImage(url: URL) {
+	const buf = await getImageBytesFromUrl(url)
+	// Convert to webp but keep original size
+	return sharp(buf).webp().toBuffer()
+}
+
+export function getBackgroundOriginalImage(url: URL) {
+	return getOriginalImage(url)
+}
+
+export function getAvatarOriginalImage(url: URL) {
+	return getOriginalImage(url)
+}
