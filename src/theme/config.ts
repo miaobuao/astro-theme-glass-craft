@@ -21,12 +21,14 @@ export interface ProgressiveImage {
 	type: 'progressive'
 	url: string
 	alt?: string
+	loading?: 'eager' | 'lazy'
 }
 
 export interface CommonImage {
 	type: 'common'
 	url: string
 	alt?: string
+	loading?: 'eager' | 'lazy'
 }
 
 export type UnionImageType = CommonImage | ProgressiveImage

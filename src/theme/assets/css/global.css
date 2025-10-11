@@ -17,17 +17,23 @@ body {
 	@apply dark:text-white;
 }
 
-@utility glassmorphism {
-	@apply bg-white/50 backdrop-blur-lg border border-white/60;
-	@apply dark:bg-black/50 border-black/10;
+@layer components {
+	glassmorphism {
+		@apply bg-white/50 backdrop-blur-lg border border-white/60;
+		@apply dark:bg-black/50 border-black/10;
+	}
 }
 
-@utility no-glassmorphism {
-	@apply bg-transparent border-none backdrop-blur-none;
+@layer components {
+	no-glassmorphism {
+		@apply bg-transparent border-none backdrop-blur-none;
+	}
 }
 
-@utility no-scrollbar {
-	@apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+@layer components {
+	no-scrollbar {
+		@apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+	}
 }
 
 @utility col-count-* {
@@ -36,6 +42,10 @@ body {
 
 @utility col-gap-* {
 	column-gap: --spacing(--value(integer));
+}
+
+@utility image-pixelated {
+	image-rendering: pixelated;
 }
 
 .prose {
