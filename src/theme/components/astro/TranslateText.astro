@@ -42,7 +42,7 @@ const { t, ...props } = Astro.props
 <t-text data-t={t} {...props}>
 	{
 		translate({
-			locale: config.site?.lang?.split('-')[0].toLowerCase() ?? 'zh',
+			locale: config?.lang?.split('-')[0].toLowerCase() ?? 'zh',
 			text: t,
 		})
 	}

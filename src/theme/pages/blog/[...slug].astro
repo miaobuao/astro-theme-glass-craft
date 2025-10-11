@@ -8,7 +8,7 @@ import { createFallbackBlogFrontMatterProcessor } from '../../utils/fallback-blo
 
 export async function getStaticPaths() {
 	function slugify(id: string) {
-		if (config.site.slugifyArticleUrl) {
+		if (config.slugifyArticleUrl) {
 			return slugifyBlogPostUrl(id)
 		}
 		return id
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 	const posts = await getCollection('blog')
 	const fallback = createFallbackBlogFrontMatterProcessor({
 		options: {
-			slugify: config.site.slugifyArticleUrl ?? true,
+			slugify: config.slugifyArticleUrl ?? true,
 		},
 	})
 	return Promise.all(posts.map(fallback)).then((posts) =>

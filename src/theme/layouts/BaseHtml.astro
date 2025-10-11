@@ -14,7 +14,7 @@ export interface Props extends Omit<HTMLAttributes<'body'>, 'style'> {
 
 const { title, description, useBackground, ...bodyProps } = Astro.props
 
-const canUseBackground = useBackground && config.site.backgroundUrl
+const canUseBackground = useBackground && config.backgroundImage
 ---
 
 <html lang="zh-CN" class="no-scrollbar">
@@ -42,7 +42,7 @@ const canUseBackground = useBackground && config.site.backgroundUrl
 		{...bodyProps}
 		style={canUseBackground
 			? {
-					backgroundImage: `url(${config.site.backgroundUrl})`,
+					backgroundImage: `url(${config.backgroundImage?.url})`,
 				}
 			: {}}
 	>
