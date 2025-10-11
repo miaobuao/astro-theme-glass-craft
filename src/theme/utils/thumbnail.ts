@@ -1,4 +1,5 @@
 import { createHash } from 'crypto'
+import { extname } from 'path'
 import sharp from 'sharp'
 import { getImageBytesFromUrl } from './get-image-bytes-from-url'
 
@@ -24,13 +25,39 @@ async function getThumbnailImageId(
 	const height = metadata.height ?? 0
 	const needsResize = Math.max(width, height) > size
 
-	return needsResize ? `${hashHex}_${size}x.${ext}` : `${hashHex}.${ext}`
+	return needsResize ? `${hashHex}_${size}x${ext}` : `${hashHex}${ext}`
 }
 
-export function getBackgroundThumbnailImageId(url: URL, ext: string) {
+async function getOriginalImageId(url: URL, ext: string) {
+	const buf = await getImageBytesFromUrl(url)
+	const hashHex = sha256Hex(buf)
+	return `${hashHex}${ext}`
+}
+
+export function getBackgroundThumbnailImageId(
+	url: URL,
+	ext: string = extname(url.pathname),
+) {
 	return getThumbnailImageId(url, ext, 48)
 }
 
-export function getAvatarThumbnailImageId(url: URL, ext: string) {
+export function getBackgroundOriginalImageId(
+	url: URL,
+	ext: string = extname(url.pathname),
+) {
+	return getOriginalImageId(url, ext)
+}
+
+export function getAvatarThumbnailImageId(
+	url: URL,
+	ext: string = extname(url.pathname),
+) {
 	return getThumbnailImageId(url, ext, 48)
+}
+
+export function getAvatarOriginalImageId(
+	url: URL,
+	ext: string = extname(url.pathname),
+) {
+	return getOriginalImageId(url, ext)
 }
