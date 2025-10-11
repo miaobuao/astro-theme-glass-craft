@@ -8,8 +8,8 @@ export default defineConfig({
 		theme({
 			title: 'Glass Craft Demo | Astro Theme',
 			backgroundImage: {
-				type: 'common',
-				url: '/background/xiaogou.webp',
+				type: 'progressive',
+				url: new URL('./public/background/xiaogou.webp', import.meta.url),
 			},
 			slugifyArticleUrl: true,
 

@@ -88,15 +88,27 @@ const {
 	defineCustomElement('progressive-image', ProgressiveImageElement)
 </script>
 
-<progressive-image
-	data-url={url}
-	data-imageClass={imageClass}
-	class:list={['relative overflow-hidden', className]}
->
-	<img
-		src={thumbnailUrl}
-		alt={alt}
-		loading={loading}
-		class:list={['image-pixelated blur-md scale-105', imageClass]}
-	/>
-</progressive-image>
+{
+	thumbnailUrl === url.toString() ? (
+		<img
+			src={thumbnailUrl}
+			alt={alt}
+			loading={loading}
+			class:list={[imageClass]}
+		/>
+	) : (
+		<progressive-image
+			data-url={url}
+			data-thumbnailUrl={thumbnailUrl}
+			data-imageClass={imageClass}
+			class:list={['relative overflow-hidden', className]}
+		>
+			<img
+				src={thumbnailUrl}
+				alt={alt}
+				loading={loading}
+				class:list={['image-pixelated blur-md scale-105', imageClass]}
+			/>
+		</progressive-image>
+	)
+}
