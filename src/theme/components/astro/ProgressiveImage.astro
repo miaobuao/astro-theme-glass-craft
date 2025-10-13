@@ -32,6 +32,8 @@ const {
 	})
 
 	class ProgressiveImageElement extends HTMLElement {
+		private loaded = false
+
 		get thumbnailImage() {
 			return this.querySelector('img')!
 		}
@@ -43,45 +45,54 @@ const {
 		get imageClass() {
 			return this.dataset.imageClass
 		}
+		async handleLoaded() {
+			this.thumbnailImage.removeEventListener('load', this.handleLoaded)
+			this.thumbnailImage.removeEventListener('error', this.handleLoaded)
 
-		connectedCallback() {
-			const handleLoaded = async () => {
-				this.thumbnailImage.removeEventListener('load', handleLoaded)
-				this.thumbnailImage.removeEventListener('error', handleLoaded)
+			await documentLoaded
 
-				await documentLoaded
-
-				const originalImageUrl = this.originalImageUrl
-				if (!originalImageUrl) {
-					throw new Error('need `data-url`')
-				}
-
-				const handleOriginalImageLoaded = (ev: Event) => {
-					originalImage.removeEventListener('load', handleOriginalImageLoaded)
-					originalImage.removeEventListener('error', handleOriginalImageLoaded)
-					if (ev.type === 'error' || ev instanceof ErrorEvent) {
-						return
-					}
-					originalImage.classList.add(
-						'transition-all duration-1000 absolute top-0 left-0 opacity-0 w-full h-full',
-						...(this.imageClass?.split(' ') ?? []),
-					)
-					this.appendChild(originalImage)
-					originalImage.classList.remove('opacity-0')
-
-					setTimeout(() => {
-						this.thumbnailImage.remove()
-					}, 1000)
-				}
-
-				const originalImage = new Image()
-				originalImage.src = originalImageUrl
-				originalImage.addEventListener('load', handleOriginalImageLoaded)
-				originalImage.addEventListener('error', handleOriginalImageLoaded)
+			const originalImageUrl = this.originalImageUrl
+			if (!originalImageUrl) {
+				throw new Error('need `data-url`')
 			}
 
-			this.thumbnailImage.addEventListener('load', handleLoaded)
-			this.thumbnailImage.addEventListener('error', handleLoaded)
+			const handleOriginalImageLoaded = (ev: Event) => {
+				this.loaded = true
+				originalImage.removeEventListener('load', handleOriginalImageLoaded)
+				originalImage.removeEventListener('error', handleOriginalImageLoaded)
+				if (ev.type === 'error' || ev instanceof ErrorEvent) {
+					return
+				}
+				originalImage.classList.add(
+					'transition-all duration-1000 absolute top-0 left-0 opacity-0 w-full h-full',
+					...(this.imageClass?.split(' ') ?? []),
+				)
+
+				this.appendChild(originalImage)
+				originalImage.classList.remove('opacity-0')
+
+				setTimeout(() => {
+					if (this.thumbnailImage && this.contains(this.thumbnailImage)) {
+						this.thumbnailImage.remove()
+					}
+				}, 1000)
+			}
+
+			const originalImage = new Image()
+			originalImage.src = originalImageUrl
+			originalImage.addEventListener('load', handleOriginalImageLoaded)
+			originalImage.addEventListener('error', handleOriginalImageLoaded)
+		}
+		connectedCallback() {
+			if (this.loaded) return
+
+			this.thumbnailImage.addEventListener('load', this.handleLoaded)
+			this.thumbnailImage.addEventListener('error', this.handleLoaded)
+		}
+
+		disconnectedCallback() {
+			this.thumbnailImage?.removeEventListener('load', this.handleLoaded)
+			this.thumbnailImage?.removeEventListener('error', this.handleLoaded)
 		}
 	}
 
