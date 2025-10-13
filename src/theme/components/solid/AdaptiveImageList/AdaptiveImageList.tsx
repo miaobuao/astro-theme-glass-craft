@@ -153,7 +153,7 @@ export function AdaptiveImageList(
 										})
 									}
 								}}
-								class="transition size-full rounded-inherit object-cover object-center absolute top-0 left-0"
+								class="transition size-full rounded-inherit object-cover object-center absolute top-0 left-0 hover:scale-102 duration-300 cursor-pointer"
 								loading="lazy"
 							/>
 						</div>
