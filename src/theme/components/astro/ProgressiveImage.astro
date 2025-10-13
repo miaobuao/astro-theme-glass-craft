@@ -67,23 +67,19 @@ const {
 				}
 				originalImage.setAttribute(
 					'class',
-					`transition-all duration-1000 absolute inset-0 opacity-0 ${this.imageClass}`,
+					`absolute inset-0 transition-opacity duration-1000 opacity-0 ${this.imageClass}`,
 				)
 
 				this.appendChild(originalImage)
-
-				requestAnimationFrame(() => {
-					originalImage.classList.remove('opacity-0')
-					setTimeout(() => {
-						this.thumbnailImage?.remove()
-					}, 1000)
+				setTimeout(() => {
+					originalImage.classList.add('opacity-100')
 				})
 			}
 
 			const originalImage = new Image()
-			originalImage.src = originalImageUrl
 			originalImage.addEventListener('load', handleOriginalImageLoaded)
 			originalImage.addEventListener('error', handleOriginalImageLoaded)
+			originalImage.src = originalImageUrl
 		}
 		connectedCallback() {
 			if (this.loaded) {
@@ -109,13 +105,19 @@ const {
 <progressive-image
 	data-url={url}
 	data-thumbnailUrl={thumbnailUrl}
-	data-imageClass={imageClass}
-	class:list={['relative overflow-hidden', className]}
+	data-image-class={imageClass}
+	class:list={['relative', className]}
 >
 	<img
 		src={thumbnailUrl}
 		alt={alt}
 		loading={loading}
-		class:list={['image-pixelated blur-md scale-105', imageClass]}
+		class:list={['image-pixelated', imageClass]}
 	/>
 </progressive-image>
+
+<style>
+	progressive-image {
+		display: block;
+	}
+</style>

@@ -89,11 +89,12 @@ const background = await (async () => {
 	<body {...bodyProps} class:list={['relative', bodyClassNames]}>
 		{
 			canUseBackground && background ? (
-				<div class="absolute top-0 left-0 w-screen h-screen overflow-hidden">
+				<div class="absolute w-screen h-screen">
 					<ProgressiveImage
-						imageClass="size-full object-cover object-center"
+						imageClass="object-cover object-center size-full"
 						url={background.backgroundOriginalUrl}
 						thumbnailUrl={background.backgroundThumbnailUrl}
+						class="size-full"
 					/>
 				</div>
 			) : (
