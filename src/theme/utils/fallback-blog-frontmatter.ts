@@ -106,7 +106,7 @@ export function createFallbackBlogFrontMatterProcessor(
 	const finalOptions = { ...defaultContentProcessorOptions, ...options }
 
 	return async function processEntry(entry: BlogEntry): Promise<ProcessedPost> {
-		const cacheKey = `${entry.collection}:${entry.id}`
+		const cacheKey = `${entry.collection}:${entry.id}:${finalOptions.options?.slugify}`
 		return readMap(postCache, cacheKey, async () => {
 			const { headings } = await render(entry)
 			const textContent = entry.body ? toString(fromMarkdown(entry.body)) : ''

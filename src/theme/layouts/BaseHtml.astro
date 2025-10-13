@@ -58,7 +58,6 @@ const background = await (async () => {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		{description && <meta name="description" content={description} />}
 		{title && <title>{title}</title>}
 
 		<!-- Open Graph / Facebook -->
@@ -71,7 +70,14 @@ const background = await (async () => {
 				</Fragment>
 			)
 		}
-		{description && <meta property="og:description" content={description} />}
+		{
+			description && (
+				<Fragment>
+					<meta name="description" content={description} />
+					<meta property="og:description" content={description} />
+				</Fragment>
+			)
+		}
 		<ClientRouter />
 	</head>
 
