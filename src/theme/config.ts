@@ -43,7 +43,7 @@ export interface FriendLinkType {
 export interface ThemeConfig {
 	title?: string
 	description?: string
-	backgroundImage?: UnionImageType
+	backgroundImage?: UnionImageType | false
 	slugifyArticleUrl?: boolean
 	lang?: 'zh' | 'en'
 	customPages?: {

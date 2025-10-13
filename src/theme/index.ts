@@ -32,6 +32,10 @@ const __dirname = resolve(import.meta.dirname, '../../')
 export default function ThemeIntegration(
 	userOpts: ThemeConfig,
 ): AstroIntegration {
+	userOpts.backgroundImage ??= {
+		type: 'progressive',
+		url: new URL('../../public/background/xiaogou.webp', import.meta.url),
+	}
 	return {
 		name: packageName,
 		hooks: {
