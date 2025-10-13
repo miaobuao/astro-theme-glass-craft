@@ -15,11 +15,15 @@ export async function getImageBytesFromUrl(url: URL, useCache = true) {
 		if (cached) {
 			return cached
 		}
-		const bytes = await fetch(url).then((d) => d.bytes())
+		const bytes = await fetch(url)
+			.then((d) => d.arrayBuffer())
+			.then((d) => new Uint8Array(d))
 		imageCache.set(urlString, bytes)
 		return bytes
 	} else {
-		const bytes = await fetch(url).then((d) => d.bytes())
+		const bytes = await fetch(url)
+			.then((d) => d.arrayBuffer())
+			.then((d) => new Uint8Array(d))
 		return bytes
 	}
 }

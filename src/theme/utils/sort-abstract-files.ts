@@ -1,7 +1,7 @@
 import type { AbstractFile } from './abstract-file'
 
 export function sortAbstractFiles(files: AbstractFile[]) {
-	return files.toSorted((a, b) => {
+	return [...files].sort((a, b) => {
 		if (a.isDir && !b.isDir) {
 			return -1
 		}
