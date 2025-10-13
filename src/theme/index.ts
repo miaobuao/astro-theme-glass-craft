@@ -22,6 +22,7 @@ import remarkDirective from 'remark-directive'
 import remarkFootnotesExtra from 'remark-footnotes-extra'
 import remarkGithubAdmonitionsToDirectives from 'remark-github-admonitions-to-directives'
 import remarkMath from 'remark-math'
+import SuperJSON from 'superjson'
 import packageJson from '../../package.json'
 import type { ThemeConfig } from './config'
 
@@ -105,10 +106,10 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
-					pattern: '/friend-links/avatar/[...slug]',
+					pattern: '/images/[...id]',
 					entrypoint: resolve(
 						__dirname,
-						'src/theme/pages/friend-links/avatar/[...slug].ts',
+						'src/theme/pages/public/images/[...id].ts',
 					),
 					prerender: true,
 				})
@@ -148,7 +149,7 @@ export default function ThemeIntegration(
 					},
 					load(id) {
 						if (id === resolvedVirtualModuleId) {
-							return `export default ${JSON.stringify(userOpts)}`
+							return `export default ${JSON.stringify(SuperJSON.serialize(userOpts))}`
 						}
 					},
 				}

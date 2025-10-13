@@ -17,38 +17,47 @@ export type GiscusConfig = Pick<
 	| 'loading'
 >
 
-export interface AvatarType {
-	url: string
+export interface ProgressiveImage {
+	type: 'progressive'
+	url: URL
 	alt?: string
+	loading?: 'eager' | 'lazy'
 }
+
+export interface CommonImage {
+	type: 'common'
+	url: URL
+	alt?: string
+	loading?: 'eager' | 'lazy'
+}
+
+export type UnionImageType = CommonImage | ProgressiveImage
 
 export interface FriendLinkType {
 	name: string
 	description?: string
 	url: string
-	avatar: AvatarType
+	avatar: UnionImageType
 }
 
 export interface ThemeConfig {
-	site: {
-		title?: string
-		description?: string
-		backgroundUrl?: string
-		slugifyArticleUrl?: boolean
-		lang?: 'zh' | 'en'
+	title?: string
+	description?: string
+	backgroundImage?: UnionImageType
+	slugifyArticleUrl?: boolean
+	lang?: 'zh' | 'en'
+	customPages?: {
+		aboutMe?: string
 	}
 	author: {
 		name: string
-		avatar: AvatarType
+		avatar: UnionImageType
 		email?: string
 		signature?: string
 	}
 	friends?: FriendLinkType[]
 	socialLinks?: {
 		github?: string
-	}
-	customPages?: {
-		aboutMe?: string
 	}
 	gallery?: {
 		thumbnail?: {

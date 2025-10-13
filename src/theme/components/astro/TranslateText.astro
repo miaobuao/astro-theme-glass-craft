@@ -12,6 +12,7 @@ const { t, ...props } = Astro.props
 
 <script>
 	import { getNavigatorLocale, translate } from '../../i18n'
+	import { defineCustomElement } from '../../utils/define-custom-element'
 
 	class TranslateText extends HTMLElement {
 		get locale() {
@@ -36,13 +37,14 @@ const { t, ...props } = Astro.props
 			this.update()
 		}
 	}
-	customElements.define('t-text', TranslateText)
+
+	defineCustomElement('t-text', TranslateText)
 </script>
 
 <t-text data-t={t} {...props}>
 	{
 		translate({
-			locale: config.site?.lang?.split('-')[0].toLowerCase() ?? 'zh',
+			locale: config?.lang?.split('-')[0].toLowerCase() ?? 'zh',
 			text: t,
 		})
 	}

@@ -46,8 +46,8 @@ const friendLinksIcon = isFriendLinks
 
 <BaseHtml
 	{...otherProps}
-	title={title ?? config.site.title}
-	description={description ?? config.site.description}
+	title={title ?? config.title}
+	description={description ?? config.description}
 	useBackground
 >
 	<div class="absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2">
@@ -63,7 +63,7 @@ const friendLinksIcon = isFriendLinks
 							]}
 						>
 							<img
-								src={config.author.avatar.url}
+								src={config.author.avatar.url.toString()}
 								alt={config.author.avatar.alt ?? 'avatar'}
 								class="rounded-full size-24 select-none"
 								transition:name="avatar"

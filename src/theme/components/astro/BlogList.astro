@@ -12,7 +12,7 @@ interface Props extends HTMLAttributes<'div'> {
 const { posts, class: className } = Astro.props
 
 function slugify(id: string) {
-	if (config.site.slugifyArticleUrl) {
+	if (config.slugifyArticleUrl) {
 		return slugifyBlogPostUrl(id)
 	}
 	return id

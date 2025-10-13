@@ -1,0 +1,123 @@
+---
+import type { ProgressiveImage } from '../../config'
+
+interface Props extends Omit<ProgressiveImage, 'type' | 'url'> {
+	url: string
+	thumbnailUrl: string
+	class?: string
+	imageClass?: string
+}
+
+const {
+	alt,
+	thumbnailUrl,
+	url,
+	loading,
+	class: className,
+	imageClass,
+} = Astro.props
+---
+
+<script>
+	import { defineCustomElement } from '../../utils/define-custom-element'
+
+	const documentLoaded = new Promise<void>((resolve) => {
+		if (document.readyState === 'complete') {
+			resolve()
+		}
+		function handleLoaded() {
+			window.removeEventListener('load', handleLoaded)
+			resolve()
+		}
+		window.addEventListener('load', handleLoaded)
+	})
+
+	class ProgressiveImageElement extends HTMLElement {
+		private loaded = false
+
+		get thumbnailImage() {
+			return this.querySelector('img')
+		}
+
+		get originalImageUrl() {
+			return this.dataset.url
+		}
+
+		get imageClass() {
+			return this.dataset.imageClass
+		}
+
+		handleLoaded = async () => {
+			this.thumbnailImage?.removeEventListener('load', this.handleLoaded)
+			this.thumbnailImage?.removeEventListener('error', this.handleLoaded)
+
+			await documentLoaded
+
+			const originalImageUrl = this.originalImageUrl
+			if (!originalImageUrl) {
+				throw new Error('need `data-url`')
+			}
+
+			const handleOriginalImageLoaded = (ev: Event) => {
+				this.loaded = true
+				originalImage.removeEventListener('load', handleOriginalImageLoaded)
+				originalImage.removeEventListener('error', handleOriginalImageLoaded)
+				if (ev.type === 'error' || ev instanceof ErrorEvent) {
+					return
+				}
+				originalImage.setAttribute(
+					'class',
+					`absolute inset-0 transition-opacity duration-1000 opacity-0 ${this.imageClass}`,
+				)
+
+				this.appendChild(originalImage)
+				setTimeout(() => {
+					originalImage.classList.add('opacity-100')
+				})
+			}
+
+			const originalImage = new Image()
+			originalImage.addEventListener('load', handleOriginalImageLoaded)
+			originalImage.addEventListener('error', handleOriginalImageLoaded)
+			originalImage.src = originalImageUrl
+		}
+		connectedCallback() {
+			if (this.loaded) {
+				return
+			}
+			if (this.thumbnailImage?.complete) {
+				this.handleLoaded()
+			} else {
+				this.thumbnailImage?.addEventListener('load', this.handleLoaded)
+				this.thumbnailImage?.addEventListener('error', this.handleLoaded)
+			}
+		}
+
+		disconnectedCallback() {
+			this.thumbnailImage?.removeEventListener('load', this.handleLoaded)
+			this.thumbnailImage?.removeEventListener('error', this.handleLoaded)
+		}
+	}
+
+	defineCustomElement('progressive-image', ProgressiveImageElement)
+</script>
+
+<progressive-image
+	data-url={url}
+	data-thumbnailUrl={thumbnailUrl}
+	data-image-class={imageClass}
+	class:list={['relative', className]}
+>
+	<img
+		src={thumbnailUrl}
+		alt={alt}
+		loading={loading}
+		class:list={['image-pixelated', imageClass]}
+	/>
+</progressive-image>
+
+<style>
+	progressive-image {
+		display: block;
+	}
+</style>

@@ -6,17 +6,20 @@ export default defineConfig({
 	prefetch: true,
 	integrations: [
 		theme({
-			site: {
-				title: 'Glass Craft Demo | Astro Theme',
-				backgroundUrl: '/background/xiaogou.webp',
-				slugifyArticleUrl: true,
+			title: 'Glass Craft Demo | Astro Theme',
+			backgroundImage: {
+				type: 'progressive',
+				url: new URL('./public/background/xiaogou.webp', import.meta.url),
 			},
+			slugifyArticleUrl: true,
+
 			author: {
 				name: 'Demo',
 				email: 'example@example.com',
 				signature: 'Beautiful glass craft.',
 				avatar: {
-					url: 'https://avatars.githubusercontent.com/u/62047803?v=4',
+					type: 'common',
+					url: new URL('https://avatars.githubusercontent.com/u/62047803?v=4'),
 					alt: 'Avatar',
 				},
 			},
@@ -33,7 +36,10 @@ export default defineConfig({
 				{
 					name: 'YangQiuyi',
 					avatar: {
-						url: 'https://avatars.githubusercontent.com/u/62047803?v=4',
+						type: 'common',
+						url: new URL(
+							'https://avatars.githubusercontent.com/u/62047803?v=4',
+						),
 					},
 					url: 'https://yangqiuyi.com',
 					description: 'To be a geek 😉',
@@ -41,7 +47,10 @@ export default defineConfig({
 				{
 					name: 'Kimbleex',
 					avatar: {
-						url: 'https://avatars.githubusercontent.com/u/173974903?v=4',
+						type: 'progressive',
+						url: new URL(
+							'https://avatars.githubusercontent.com/u/173974903?v=4',
+						),
 					},
 					url: 'https://blog.kimbleex.top/',
 					description: '丢掉幻想，准备斗争',
@@ -59,6 +68,7 @@ export default defineConfig({
 					inputPosition: 'top',
 					theme: 'preferred_color_scheme',
 					lang: 'zh-CN',
+					loading: 'eager',
 				},
 			},
 		}),

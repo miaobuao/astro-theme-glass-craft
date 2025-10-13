@@ -11,12 +11,6 @@
 	}
 }
 
-body {
-	background-attachment: fixed;
-	@apply min-h-screen bg-no-repeat bg-cover;
-	@apply dark:text-white;
-}
-
 @utility glassmorphism {
 	@apply bg-white/50 backdrop-blur-lg border border-white/60;
 	@apply dark:bg-black/50 border-black/10;
@@ -36,6 +30,10 @@ body {
 
 @utility col-gap-* {
 	column-gap: --spacing(--value(integer));
+}
+
+@utility image-pixelated {
+	image-rendering: pixelated;
 }
 
 .prose {
