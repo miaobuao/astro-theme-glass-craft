@@ -37,7 +37,7 @@ export interface FriendLinkType {
 	name: string
 	description?: string
 	url: string
-	avatar: CommonImage
+	avatar: UnionImageType
 }
 
 export interface ThemeConfig {
@@ -51,7 +51,7 @@ export interface ThemeConfig {
 	}
 	author: {
 		name: string
-		avatar: CommonImage
+		avatar: UnionImageType
 		email?: string
 		signature?: string
 	}

@@ -27,5 +27,5 @@ export async function getStaticPaths() {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>
 
 export const GET: APIRoute<Props> = async function ({ props }) {
-	return new Response(props.buffer)
+	return new Response(new Uint8Array(props.buffer))
 }

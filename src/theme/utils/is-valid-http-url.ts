@@ -1,8 +1,6 @@
-export function isValidHttpUrl(string: string) {
-	let url
-
+export function isValidHttpUrl(url: string | URL) {
 	try {
-		url = new URL(string)
+		url = new URL(url)
 	} catch (_) {
 		return false
 	}
