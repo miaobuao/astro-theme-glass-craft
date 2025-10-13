@@ -8,13 +8,11 @@ import {
 } from '../../../utils/thumbnail'
 
 export async function getStaticPaths() {
-	const backgroundImage = config.backgroundImage
-
-	if (!backgroundImage || backgroundImage.type !== 'progressive') {
+	if (!config.backgroundImage) {
 		return []
 	}
 
-	const bgUrl = new URL(backgroundImage.url)
+	const bgUrl = new URL(config.backgroundImage.url)
 
 	const [thumbnailId, originalId] = await Promise.all([
 		getBackgroundThumbnailImageId(bgUrl),

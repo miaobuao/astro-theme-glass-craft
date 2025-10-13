@@ -13,19 +13,13 @@ import {
 } from '../utils/thumbnail'
 
 export interface Props
-	extends Omit<HTMLAttributes<'body'>, 'style' | 'class:list'> {
+	extends Omit<HTMLAttributes<'body'>, 'style' | 'class:list' | 'class'> {
 	title?: string
 	description?: string
 	useBackground?: boolean
 }
 
-const {
-	title,
-	description,
-	useBackground,
-	class: bodyClassNames,
-	...bodyProps
-} = Astro.props
+const { title, description, useBackground, ...bodyProps } = Astro.props
 
 const canUseBackground = !!useBackground && !!config.backgroundImage
 const background = await (async () => {
@@ -34,28 +28,23 @@ const background = await (async () => {
 	}
 	if (config.backgroundImage.type === 'progressive') {
 		const backgroundInputUrl = new URL(config.backgroundImage.url)
-		if (backgroundInputUrl.protocol.toLowerCase() === 'file:') {
-			const thumbnailId =
-				await getBackgroundThumbnailImageId(backgroundInputUrl)
-			const originalId = await getBackgroundOriginalImageId(backgroundInputUrl)
-			const backgroundThumbnailUrl = await toAbsoluteBackgroundUrl(thumbnailId)
-			const backgroundOriginalUrl = await toAbsoluteBackgroundUrl(originalId)
-			return {
-				progressive: true,
-				backgroundOriginalUrl,
-				backgroundThumbnailUrl,
-			} as const
-		} else {
-			throw new Error(
-				`Progressive Image Only Support \`file:\` protocol: ${backgroundInputUrl}`,
-			)
-		}
+		const thumbnailId = await getBackgroundThumbnailImageId(backgroundInputUrl)
+		const originalId = await getBackgroundOriginalImageId(backgroundInputUrl)
+		const backgroundThumbnailUrl = await toAbsoluteBackgroundUrl(thumbnailId)
+		const backgroundOriginalUrl = await toAbsoluteBackgroundUrl(originalId)
+		return {
+			progressive: true,
+			backgroundOriginalUrl,
+			backgroundThumbnailUrl,
+		} as const
 	}
-	let backgroundOriginalUrl = config.backgroundImage.url.toString()
+	let backgroundOriginalUrl: string
 	if (config.backgroundImage.url.protocol.toLowerCase() === 'file:') {
 		backgroundOriginalUrl = await toAbsoluteBackgroundUrl(
 			await getBackgroundOriginalImageId(config.backgroundImage.url),
 		)
+	} else {
+		backgroundOriginalUrl = config.backgroundImage.url.toString()
 	}
 	return {
 		progressive: false,
@@ -86,21 +75,37 @@ const background = await (async () => {
 		<ClientRouter />
 	</head>
 
-	<body {...bodyProps} class:list={['relative', bodyClassNames]}>
+	<body class="dark:text-white">
 		{
 			canUseBackground && background ? (
-				<div class="absolute w-screen h-screen">
-					<ProgressiveImage
-						imageClass="object-cover object-center size-full"
-						url={background.backgroundOriginalUrl}
-						thumbnailUrl={background.backgroundThumbnailUrl}
-						class="size-full"
-					/>
-				</div>
+				background.progressive ? (
+					<div {...bodyProps} class:list={['relative h-screen']}>
+						<div class="absolute w-screen h-screen">
+							<ProgressiveImage
+								imageClass="object-cover object-center size-full"
+								url={background.backgroundOriginalUrl}
+								thumbnailUrl={background.backgroundThumbnailUrl}
+								class="size-full"
+							/>
+						</div>
+						<slot />
+					</div>
+				) : (
+					<div
+						{...bodyProps}
+						class="bg-cover bg-center bg-fixed h-screen"
+						style={{
+							backgroundImage: `url(${background.backgroundOriginalUrl})`,
+						}}
+					>
+						<slot />
+					</div>
+				)
 			) : (
-				<Fragment />
+				<div {...bodyProps}>
+					<slot />
+				</div>
 			)
 		}
-		<slot />
 	</body>
 </html>
