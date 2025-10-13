@@ -1,0 +1,51 @@
+---
+import type { UnionImageType } from '../../config'
+import { isValidHttpUrl } from '../../utils/is-valid-http-url'
+import {
+	getOriginalImageId,
+	getThumbnailImageId,
+	toAbsoluteUrl,
+} from '../../utils/thumbnail'
+import ProgressiveImage from './ProgressiveImage.astro'
+
+export type Props = UnionImageType & {
+	imageClass?: string
+}
+
+const props = Astro.props
+
+const image = await (async () => {
+	if (props.type === 'progressive') {
+		return {
+			progressive: true,
+			originalUrl: await toAbsoluteUrl(await getOriginalImageId(props.url)),
+			thumbnailUrl: await toAbsoluteUrl(await getThumbnailImageId(props.url)),
+		} as const
+	} else {
+		return {
+			progressive: false,
+			originalUrl: isValidHttpUrl(props.url)
+				? props.url
+				: await toAbsoluteUrl(await getOriginalImageId(props.url)),
+		} as const
+	}
+})()
+---
+
+{
+	image.progressive ? (
+		<ProgressiveImage
+			loading={props.loading}
+			url={image.originalUrl}
+			thumbnailUrl={image.thumbnailUrl}
+			imageClass={props.imageClass}
+		/>
+	) : (
+		<img
+			src={props.url.toString()}
+			alt={props.alt}
+			loading={props.loading}
+			class:list={[props.imageClass]}
+		/>
+	)
+}

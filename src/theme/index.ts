@@ -106,19 +106,10 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
-					pattern: '/avatar/[...id]',
+					pattern: '/images/[...id]',
 					entrypoint: resolve(
 						__dirname,
-						'src/theme/pages/public/avatar/[...id].ts',
-					),
-					prerender: true,
-				})
-
-				injectRoute({
-					pattern: '/bg/[...id]',
-					entrypoint: resolve(
-						__dirname,
-						'src/theme/pages/public/bg/[...id].ts',
+						'src/theme/pages/public/images/[...id].ts',
 					),
 					prerender: true,
 				})

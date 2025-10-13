@@ -1,5 +1,4 @@
 import { createHash } from 'crypto'
-import { extname } from 'path'
 import sharp from 'sharp'
 import { getImageBytesFromUrl } from './get-image-bytes-from-url'
 
@@ -9,9 +8,9 @@ function sha256Hex(buf: Uint8Array) {
 	return createHash('sha256').update(buf).digest('hex')
 }
 
-async function getThumbnailImageId(
+export async function getThumbnailImageId(
 	url: URL,
-	ext: string,
+	ext: string = '.webp',
 	size = DEFAULT_THUMBNAIL_SIZE,
 ) {
 	const buf = await getImageBytesFromUrl(url)
@@ -28,41 +27,16 @@ async function getThumbnailImageId(
 	return needsResize ? `${hashHex}_${size}x${ext}` : `${hashHex}${ext}`
 }
 
-export function getBackgroundThumbnailImageId(
-	url: URL,
-	ext: string = extname(url.pathname),
-) {
-	return getThumbnailImageId(url, ext, 48)
-}
-
-export function getAvatarThumbnailImageId(
-	url: URL,
-	ext: string = extname(url.pathname),
-) {
-	return getThumbnailImageId(url, ext, 48)
-}
-
-async function getOriginalImageId(url: URL, ext: string) {
+export async function getOriginalImageId(url: URL, ext: string = '.webp') {
 	const buf = await getImageBytesFromUrl(url)
 	const hashHex = sha256Hex(buf)
 	return `${hashHex}${ext}`
 }
 
-export function getBackgroundOriginalImageId(
+export async function getThumbnailImage(
 	url: URL,
-	ext: string = extname(url.pathname),
+	size = DEFAULT_THUMBNAIL_SIZE,
 ) {
-	return getOriginalImageId(url, ext)
-}
-
-export function getAvatarOriginalImageId(
-	url: URL,
-	ext: string = extname(url.pathname),
-) {
-	return getOriginalImageId(url, ext)
-}
-
-async function getThumbnailImage(url: URL, size = DEFAULT_THUMBNAIL_SIZE) {
 	const buf = await getImageBytesFromUrl(url)
 
 	const metadata = await sharp(buf).metadata()
@@ -85,32 +59,12 @@ async function getThumbnailImage(url: URL, size = DEFAULT_THUMBNAIL_SIZE) {
 	return resized
 }
 
-export function getBackgroundThumbnailImage(url: URL) {
-	return getThumbnailImage(url, 48)
-}
-
-export function getAvatarThumbnailImage(url: URL) {
-	return getThumbnailImage(url, 48)
-}
-
-async function getOriginalImage(url: URL) {
+export async function getOriginalImage(url: URL) {
 	const buf = await getImageBytesFromUrl(url)
 	// Convert to webp but keep original size
 	return sharp(buf).webp().toBuffer()
 }
 
-export function getBackgroundOriginalImage(url: URL) {
-	return getOriginalImage(url)
-}
-
-export function getAvatarOriginalImage(url: URL) {
-	return getOriginalImage(url)
-}
-
-export async function toAbsoluteAvatarUrl(id: string) {
-	return `/avatar/${id}`
-}
-
-export async function toAbsoluteBackgroundUrl(id: string) {
-	return `/bg/${id}`
+export async function toAbsoluteUrl(id: string) {
+	return `/images/${id}`
 }

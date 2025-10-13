@@ -7,9 +7,9 @@ import type { HTMLAttributes } from 'astro/types'
 
 import { config } from '../consts'
 import {
-	toAbsoluteBackgroundUrl,
-	getBackgroundOriginalImageId,
-	getBackgroundThumbnailImageId,
+	toAbsoluteUrl,
+	getOriginalImageId,
+	getThumbnailImageId,
 } from '../utils/thumbnail'
 
 export interface Props
@@ -28,10 +28,10 @@ const background = await (async () => {
 	}
 	if (config.backgroundImage.type === 'progressive') {
 		const backgroundInputUrl = new URL(config.backgroundImage.url)
-		const thumbnailId = await getBackgroundThumbnailImageId(backgroundInputUrl)
-		const originalId = await getBackgroundOriginalImageId(backgroundInputUrl)
-		const backgroundThumbnailUrl = await toAbsoluteBackgroundUrl(thumbnailId)
-		const backgroundOriginalUrl = await toAbsoluteBackgroundUrl(originalId)
+		const thumbnailId = await getThumbnailImageId(backgroundInputUrl)
+		const originalId = await getOriginalImageId(backgroundInputUrl)
+		const backgroundThumbnailUrl = await toAbsoluteUrl(thumbnailId)
+		const backgroundOriginalUrl = await toAbsoluteUrl(originalId)
 		return {
 			progressive: true,
 			backgroundOriginalUrl,
@@ -40,8 +40,8 @@ const background = await (async () => {
 	}
 	let backgroundOriginalUrl: string
 	if (config.backgroundImage.url.protocol.toLowerCase() === 'file:') {
-		backgroundOriginalUrl = await toAbsoluteBackgroundUrl(
-			await getBackgroundOriginalImageId(config.backgroundImage.url),
+		backgroundOriginalUrl = await toAbsoluteUrl(
+			await getOriginalImageId(config.backgroundImage.url),
 		)
 	} else {
 		backgroundOriginalUrl = config.backgroundImage.url.toString()

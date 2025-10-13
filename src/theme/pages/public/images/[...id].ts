@@ -1,10 +1,10 @@
 import type { APIRoute, InferGetStaticPropsType } from 'astro'
 import { config } from '../../../consts'
 import {
-	getAvatarOriginalImage,
-	getAvatarOriginalImageId,
-	getAvatarThumbnailImage,
-	getAvatarThumbnailImageId,
+	getOriginalImage,
+	getOriginalImageId,
+	getThumbnailImage,
+	getThumbnailImageId,
 } from '../../../utils/thumbnail'
 
 export async function getStaticPaths() {
@@ -15,8 +15,8 @@ export async function getStaticPaths() {
 
 	const avatarUrl = new URL(avatar.url)
 	const [thumbnailId, originalId] = await Promise.all([
-		getAvatarThumbnailImageId(avatarUrl),
-		getAvatarOriginalImageId(avatarUrl),
+		getThumbnailImageId(avatarUrl),
+		getOriginalImageId(avatarUrl),
 	])
 
 	paths.push(
@@ -35,8 +35,8 @@ export async function getStaticPaths() {
 		for (const friend of config.friends) {
 			const friendAvatarUrl = new URL(friend.avatar.url)
 			const [thumbnailId, originalId] = await Promise.all([
-				getAvatarThumbnailImageId(friendAvatarUrl),
-				getAvatarOriginalImageId(friendAvatarUrl),
+				getThumbnailImageId(friendAvatarUrl),
+				getOriginalImageId(friendAvatarUrl),
 			])
 
 			paths.push(
@@ -52,6 +52,27 @@ export async function getStaticPaths() {
 		}
 	}
 
+	// Background
+	if (config.backgroundImage) {
+		const bgUrl = new URL(config.backgroundImage.url)
+
+		const [thumbnailId, originalId] = await Promise.all([
+			getThumbnailImageId(bgUrl),
+			getOriginalImageId(bgUrl),
+		])
+
+		paths.push(
+			{
+				params: { id: thumbnailId },
+				props: { url: bgUrl, isThumbnail: true },
+			},
+			{
+				params: { id: originalId },
+				props: { url: bgUrl, isThumbnail: false },
+			},
+		)
+	}
+
 	return paths
 }
 
@@ -59,8 +80,8 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>
 
 export const GET: APIRoute<Props> = async function ({ props }) {
 	const buffer = props.isThumbnail
-		? await getAvatarThumbnailImage(props.url)
-		: await getAvatarOriginalImage(props.url)
+		? await getThumbnailImage(props.url)
+		: await getOriginalImage(props.url)
 
 	return new Response(new Uint8Array(buffer), {
 		headers: {

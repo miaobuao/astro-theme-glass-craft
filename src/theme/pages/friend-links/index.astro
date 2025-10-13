@@ -2,14 +2,15 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import { config } from '../../consts'
 import { isValidHttpUrl } from '../../utils/is-valid-http-url'
-import { getAvatarOriginalImageId } from '../../utils/thumbnail'
+import { getOriginalImageId } from '../../utils/thumbnail'
+import UnionImage from '../../components/astro/UnionImage.astro'
 
 const friends = await Promise.all(
 	config.friends?.map(async (f) => {
 		if (isValidHttpUrl(f.avatar.url)) {
 			return f
 		}
-		const slug = await getAvatarOriginalImageId(f.avatar.url)
+		const slug = await getOriginalImageId(f.avatar.url)
 		const avatarUrl = '/avatar/' + slug
 		return {
 			...f,
@@ -25,7 +26,7 @@ const friends = await Promise.all(
 <BaseLayout showAuthorInfo>
 	<div class="sm:columns-2 lg:columns-3 2xl:columns-4 col-gap-4">
 		{
-			friends?.map((f) => (
+			config.friends?.map((f) => (
 				<a
 					href={f.url}
 					target="_blank"
@@ -33,12 +34,7 @@ const friends = await Promise.all(
 				>
 					<div class="glassmorphism p-4 flex flex-col gap-4 rounded-md">
 						<div class="flex items-center gap-4">
-							<img
-								src={f.avatar.url.toString()}
-								alt={f.avatar.alt}
-								class="size-[3rem] rounded-full"
-								loading="lazy"
-							/>
+							<UnionImage {...f.avatar} imageClass="size-[3rem] rounded-full" />
 							<p class="truncate">{f.name}</p>
 						</div>
 						{f.description && <p class="break-all">{f.description}</p>}

@@ -47,7 +47,7 @@ export default defineConfig({
 				{
 					name: 'Kimbleex',
 					avatar: {
-						type: 'common',
+						type: 'progressive',
 						url: new URL(
 							'https://avatars.githubusercontent.com/u/173974903?v=4',
 						),
