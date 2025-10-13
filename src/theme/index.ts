@@ -106,15 +106,6 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
-					pattern: '/friend-links/avatar/[...slug]',
-					entrypoint: resolve(
-						__dirname,
-						'src/theme/pages/friend-links/avatar/[...slug].ts',
-					),
-					prerender: true,
-				})
-
-				injectRoute({
 					pattern: '/avatar/[...id]',
 					entrypoint: resolve(
 						__dirname,
