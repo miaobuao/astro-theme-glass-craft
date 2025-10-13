@@ -106,3 +106,11 @@ export function getBackgroundOriginalImage(url: URL) {
 export function getAvatarOriginalImage(url: URL) {
 	return getOriginalImage(url)
 }
+
+export async function toAbsoluteAvatarUrl(id: string) {
+	return `/avatar/${id}`
+}
+
+export async function toAbsoluteBackgroundUrl(id: string) {
+	return `/bg/${id}`
+}

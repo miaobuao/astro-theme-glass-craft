@@ -1,7 +1,8 @@
 ---
 import type { ProgressiveImage } from '../../config'
 
-interface Props extends ProgressiveImage {
+interface Props extends Omit<ProgressiveImage, 'type' | 'url'> {
+	url: string
 	thumbnailUrl: string
 	class?: string
 	imageClass?: string
@@ -35,7 +36,7 @@ const {
 		private loaded = false
 
 		get thumbnailImage() {
-			return this.querySelector('img')!
+			return this.querySelector('img')
 		}
 
 		get originalImageUrl() {
@@ -45,9 +46,10 @@ const {
 		get imageClass() {
 			return this.dataset.imageClass
 		}
-		async handleLoaded() {
-			this.thumbnailImage.removeEventListener('load', this.handleLoaded)
-			this.thumbnailImage.removeEventListener('error', this.handleLoaded)
+
+		handleLoaded = async () => {
+			this.thumbnailImage?.removeEventListener('load', this.handleLoaded)
+			this.thumbnailImage?.removeEventListener('error', this.handleLoaded)
 
 			await documentLoaded
 
@@ -63,19 +65,19 @@ const {
 				if (ev.type === 'error' || ev instanceof ErrorEvent) {
 					return
 				}
-				originalImage.classList.add(
-					'transition-all duration-1000 absolute top-0 left-0 opacity-0 w-full h-full',
-					...(this.imageClass?.split(' ') ?? []),
+				originalImage.setAttribute(
+					'class',
+					`transition-all duration-1000 absolute inset-0 opacity-0 ${this.imageClass}`,
 				)
 
 				this.appendChild(originalImage)
-				originalImage.classList.remove('opacity-0')
 
-				setTimeout(() => {
-					if (this.thumbnailImage && this.contains(this.thumbnailImage)) {
-						this.thumbnailImage.remove()
-					}
-				}, 1000)
+				requestAnimationFrame(() => {
+					originalImage.classList.remove('opacity-0')
+					setTimeout(() => {
+						this.thumbnailImage?.remove()
+					}, 1000)
+				})
 			}
 
 			const originalImage = new Image()
@@ -84,10 +86,15 @@ const {
 			originalImage.addEventListener('error', handleOriginalImageLoaded)
 		}
 		connectedCallback() {
-			if (this.loaded) return
-
-			this.thumbnailImage.addEventListener('load', this.handleLoaded)
-			this.thumbnailImage.addEventListener('error', this.handleLoaded)
+			if (this.loaded) {
+				return
+			}
+			if (this.thumbnailImage?.complete) {
+				this.handleLoaded()
+			} else {
+				this.thumbnailImage?.addEventListener('load', this.handleLoaded)
+				this.thumbnailImage?.addEventListener('error', this.handleLoaded)
+			}
 		}
 
 		disconnectedCallback() {
@@ -99,27 +106,16 @@ const {
 	defineCustomElement('progressive-image', ProgressiveImageElement)
 </script>
 
-{
-	thumbnailUrl === url.toString() ? (
-		<img
-			src={thumbnailUrl}
-			alt={alt}
-			loading={loading}
-			class:list={[imageClass]}
-		/>
-	) : (
-		<progressive-image
-			data-url={url}
-			data-thumbnailUrl={thumbnailUrl}
-			data-imageClass={imageClass}
-			class:list={['relative overflow-hidden', className]}
-		>
-			<img
-				src={thumbnailUrl}
-				alt={alt}
-				loading={loading}
-				class:list={['image-pixelated blur-md scale-105', imageClass]}
-			/>
-		</progressive-image>
-	)
-}
+<progressive-image
+	data-url={url}
+	data-thumbnailUrl={thumbnailUrl}
+	data-imageClass={imageClass}
+	class:list={['relative overflow-hidden', className]}
+>
+	<img
+		src={thumbnailUrl}
+		alt={alt}
+		loading={loading}
+		class:list={['image-pixelated blur-md scale-105', imageClass]}
+	/>
+</progressive-image>

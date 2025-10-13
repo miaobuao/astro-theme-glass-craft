@@ -19,7 +19,7 @@ export default defineConfig({
 				signature: 'Beautiful glass craft.',
 				avatar: {
 					type: 'common',
-					url: 'https://avatars.githubusercontent.com/u/62047803?v=4',
+					url: new URL('https://avatars.githubusercontent.com/u/62047803?v=4'),
 					alt: 'Avatar',
 				},
 			},
@@ -37,7 +37,9 @@ export default defineConfig({
 					name: 'YangQiuyi',
 					avatar: {
 						type: 'common',
-						url: 'https://avatars.githubusercontent.com/u/62047803?v=4',
+						url: new URL(
+							'https://avatars.githubusercontent.com/u/62047803?v=4',
+						),
 					},
 					url: 'https://yangqiuyi.com',
 					description: 'To be a geek 😉',
@@ -46,7 +48,9 @@ export default defineConfig({
 					name: 'Kimbleex',
 					avatar: {
 						type: 'common',
-						url: 'https://avatars.githubusercontent.com/u/173974903?v=4',
+						url: new URL(
+							'https://avatars.githubusercontent.com/u/173974903?v=4',
+						),
 					},
 					url: 'https://blog.kimbleex.top/',
 					description: '丢掉幻想，准备斗争',

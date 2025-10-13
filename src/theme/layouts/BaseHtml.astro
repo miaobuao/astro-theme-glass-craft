@@ -1,20 +1,68 @@
 ---
 import '../assets/css/global.css'
 
+import ProgressiveImage from '../components/astro/ProgressiveImage.astro'
 import { ClientRouter } from 'astro:transitions'
 import type { HTMLAttributes } from 'astro/types'
 
 import { config } from '../consts'
+import {
+	toAbsoluteBackgroundUrl,
+	getBackgroundOriginalImageId,
+	getBackgroundThumbnailImageId,
+} from '../utils/thumbnail'
 
-export interface Props extends Omit<HTMLAttributes<'body'>, 'style'> {
+export interface Props
+	extends Omit<HTMLAttributes<'body'>, 'style' | 'class:list'> {
 	title?: string
 	description?: string
 	useBackground?: boolean
 }
 
-const { title, description, useBackground, ...bodyProps } = Astro.props
+const {
+	title,
+	description,
+	useBackground,
+	class: bodyClassNames,
+	...bodyProps
+} = Astro.props
 
-const canUseBackground = useBackground && config.backgroundImage
+const canUseBackground = !!useBackground && !!config.backgroundImage
+const background = await (async () => {
+	if (!canUseBackground || !config.backgroundImage) {
+		return
+	}
+	if (config.backgroundImage.type === 'progressive') {
+		const backgroundInputUrl = new URL(config.backgroundImage.url)
+		if (backgroundInputUrl.protocol.toLowerCase() === 'file:') {
+			const thumbnailId =
+				await getBackgroundThumbnailImageId(backgroundInputUrl)
+			const originalId = await getBackgroundOriginalImageId(backgroundInputUrl)
+			const backgroundThumbnailUrl = await toAbsoluteBackgroundUrl(thumbnailId)
+			const backgroundOriginalUrl = await toAbsoluteBackgroundUrl(originalId)
+			return {
+				progressive: true,
+				backgroundOriginalUrl,
+				backgroundThumbnailUrl,
+			} as const
+		} else {
+			throw new Error(
+				`Progressive Image Only Support \`file:\` protocol: ${backgroundInputUrl}`,
+			)
+		}
+	}
+	let backgroundOriginalUrl = config.backgroundImage.url.toString()
+	if (config.backgroundImage.url.protocol.toLowerCase() === 'file:') {
+		backgroundOriginalUrl = await toAbsoluteBackgroundUrl(
+			await getBackgroundOriginalImageId(config.backgroundImage.url),
+		)
+	}
+	return {
+		progressive: false,
+		backgroundOriginalUrl: backgroundOriginalUrl,
+		backgroundThumbnailUrl: backgroundOriginalUrl,
+	} as const
+})()
 ---
 
 <html lang="zh-CN" class="no-scrollbar">
@@ -38,14 +86,20 @@ const canUseBackground = useBackground && config.backgroundImage
 		<ClientRouter />
 	</head>
 
-	<body
-		{...bodyProps}
-		style={canUseBackground
-			? {
-					backgroundImage: `url(${config.backgroundImage?.url})`,
-				}
-			: {}}
-	>
+	<body {...bodyProps} class:list={['relative', bodyClassNames]}>
+		{
+			canUseBackground && background ? (
+				<div class="absolute top-0 left-0 w-screen h-screen overflow-hidden">
+					<ProgressiveImage
+						imageClass="size-full object-cover object-center"
+						url={background.backgroundOriginalUrl}
+						thumbnailUrl={background.backgroundThumbnailUrl}
+					/>
+				</div>
+			) : (
+				<Fragment />
+			)
+		}
 		<slot />
 	</body>
 </html>

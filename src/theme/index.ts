@@ -115,7 +115,7 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
-					pattern: '/public/avatar/[...id]',
+					pattern: '/avatar/[...id]',
 					entrypoint: resolve(
 						__dirname,
 						'src/theme/pages/public/avatar/[...id].ts',
@@ -124,7 +124,7 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
-					pattern: '/public/bg/[...id]',
+					pattern: '/bg/[...id]',
 					entrypoint: resolve(
 						__dirname,
 						'src/theme/pages/public/bg/[...id].ts',
@@ -167,7 +167,7 @@ export default function ThemeIntegration(
 					},
 					load(id) {
 						if (id === resolvedVirtualModuleId) {
-							return `export default ${SuperJSON.serialize(userOpts)}`
+							return `export default ${JSON.stringify(SuperJSON.serialize(userOpts))}`
 						}
 					},
 				}
