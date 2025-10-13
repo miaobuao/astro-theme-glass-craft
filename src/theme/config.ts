@@ -48,6 +48,7 @@ export interface ThemeConfig {
 	lang?: 'zh' | 'en'
 	customPages?: {
 		aboutMe?: string
+		shareDirectory?: URL
 	}
 	author: {
 		name: string

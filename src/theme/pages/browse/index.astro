@@ -4,6 +4,9 @@ import { getAllFiles } from '../../utils/get-all-files'
 import { SHARE_DIR } from '../../consts'
 import { sortAbstractFiles } from '../../utils/sort-abstract-files'
 
+if (!SHARE_DIR) {
+	throw new Error('SHARE_DIR cannot be void')
+}
 const files = await getAllFiles(SHARE_DIR)
 ---
 

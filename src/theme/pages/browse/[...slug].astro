@@ -7,11 +7,14 @@ import BrowseLayout from '../../layouts/BrowseLayout.astro'
 import { sortAbstractFiles } from '../../utils/sort-abstract-files'
 
 export async function getStaticPaths() {
+	if (!SHARE_DIR) {
+		throw new Error('SHARE_DIR cannot be void')
+	}
 	const files = await getAllFiles(SHARE_DIR)
 	return flattenFiles(files)
 		.filter((f) => f.isDir && f.children)
 		.map((file) => ({
-			params: { slug: relative(SHARE_DIR, file.absPath) },
+			params: { slug: relative(SHARE_DIR!, file.absPath) },
 			props: file,
 		}))
 }

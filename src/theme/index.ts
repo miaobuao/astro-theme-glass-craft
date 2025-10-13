@@ -49,32 +49,43 @@ export default function ThemeIntegration(
 					prerender: true,
 				})
 
-				injectRoute({
-					pattern: '/share/files/[...slug]',
-					entrypoint: resolve(
-						__dirname,
-						'src/theme/pages/share/files/[...slug].ts',
-					),
-					prerender: true,
-				})
+				if (userOpts.customPages?.shareDirectory) {
+					injectRoute({
+						pattern: '/share/files/[...slug]',
+						entrypoint: resolve(
+							__dirname,
+							'src/theme/pages/share/files/[...slug].ts',
+						),
+						prerender: true,
+					})
 
-				injectRoute({
-					pattern: '/share/thumbnail/[...slug]',
-					entrypoint: resolve(
-						__dirname,
-						'src/theme/pages/share/thumbnail/[...slug].ts',
-					),
-					prerender: true,
-				})
+					injectRoute({
+						pattern: '/share/thumbnail/[...slug]',
+						entrypoint: resolve(
+							__dirname,
+							'src/theme/pages/share/thumbnail/[...slug].ts',
+						),
+						prerender: true,
+					})
 
-				injectRoute({
-					pattern: '/browse/[...slug]',
-					entrypoint: resolve(
-						__dirname,
-						'src/theme/pages/browse/[...slug].astro',
-					),
-					prerender: true,
-				})
+					injectRoute({
+						pattern: '/browse/[...slug]',
+						entrypoint: resolve(
+							__dirname,
+							'src/theme/pages/browse/[...slug].astro',
+						),
+						prerender: true,
+					})
+
+					injectRoute({
+						pattern: '/browse',
+						entrypoint: resolve(
+							__dirname,
+							'src/theme/pages/browse/index.astro',
+						),
+						prerender: true,
+					})
+				}
 
 				injectRoute({
 					pattern: '/gallery/[...slug]',
@@ -115,12 +126,6 @@ export default function ThemeIntegration(
 						__dirname,
 						'src/theme/pages/public/images/[...id].ts',
 					),
-					prerender: true,
-				})
-
-				injectRoute({
-					pattern: '/browse',
-					entrypoint: resolve(__dirname, 'src/theme/pages/browse/index.astro'),
 					prerender: true,
 				})
 

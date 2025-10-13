@@ -25,6 +25,7 @@ export default defineConfig({
 			},
 			customPages: {
 				aboutMe: '/about-me',
+				shareDirectory: new URL('./src/content/share', import.meta.url),
 			},
 			gallery: {
 				thumbnail: {

@@ -84,10 +84,14 @@ const friendLinksIcon = isFriendLinks
 						<i slot="icon" class:list={[timelineIcon, 'size-6 sm:size-8']}></i>
 						Timeline
 					</AdaptiveIconButton>
-					<AdaptiveIconButton active={isBrowse} href="/browse">
-						<i slot="icon" class:list={[browseIcon, 'size-6 sm:size-8']}></i>
-						Share
-					</AdaptiveIconButton>
+					{
+						config.customPages?.shareDirectory && (
+							<AdaptiveIconButton active={isBrowse} href="/browse">
+								<i slot="icon" class:list={[browseIcon, 'size-6 sm:size-8']} />
+								Share
+							</AdaptiveIconButton>
+						)
+					}
 					<AdaptiveIconButton active={isGallery} href="/gallery">
 						<i slot="icon" class:list={[galleryIcon, 'size-6 sm:size-8']}></i>
 						Gallery

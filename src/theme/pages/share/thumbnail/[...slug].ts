@@ -8,11 +8,14 @@ import { getAllFiles } from '../../../utils/get-all-files'
 import { isImageFilename } from '../../../utils/is-image-filename'
 
 export async function getStaticPaths() {
+	if (!SHARE_DIR) {
+		throw new Error('SHARE_DIR cannot be void')
+	}
 	const files = await getAllFiles(SHARE_DIR)
 	return flattenFiles(files)
 		.filter((f) => !f.isDir && isImageFilename(f.absPath))
 		.map((path) => ({
-			params: { slug: relative(SHARE_DIR, path.absPath) },
+			params: { slug: relative(SHARE_DIR!, path.absPath) },
 		}))
 }
 
@@ -20,6 +23,9 @@ export const GET: APIRoute = async function ({ params }) {
 	const { slug } = params
 	if (!slug) {
 		return new Response('Not Found', { status: 404 })
+	}
+	if (!SHARE_DIR) {
+		throw new Error('SHARE_DIR cannot be void')
 	}
 	const absPath = join(SHARE_DIR, slug)
 	const content = await readFile(absPath)
@@ -36,8 +42,8 @@ export const GET: APIRoute = async function ({ params }) {
 			.resize(thumbnailWidth, thumbnailHeight)
 			.webp({ quality: 100 })
 			.toBuffer()
-		return new Response(thumbnail)
+		return new Response(new Uint8Array(thumbnail))
 	} catch {
-		return new Response(content)
+		return new Response(new Uint8Array(content))
 	}
 }

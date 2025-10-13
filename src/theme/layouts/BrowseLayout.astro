@@ -19,6 +19,9 @@ function dir2Url(absPath: string) {
 }
 
 function abs2Rel(absPath: string) {
+	if (!SHARE_DIR) {
+		throw new Error('SHARE_DIR cannot be void')
+	}
 	return relative(SHARE_DIR, absPath)
 }
 
