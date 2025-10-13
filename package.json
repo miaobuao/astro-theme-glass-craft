@@ -9,7 +9,7 @@
 		"astro": "astro"
 	},
 	"exports": {
-		".": "./index.ts",
+		".": "./src/theme/index.ts",
 		"./pages/*": "./src/theme/pages/*",
 		"./layouts/*": "./src/theme/layouts/*"
 	},
