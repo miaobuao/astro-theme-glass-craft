@@ -2,6 +2,7 @@
 import BaseHtml, { type Props as BaseHtmlProps } from './BaseHtml.astro'
 import AdaptiveIconButton from '../components/astro/AdaptiveIconButton.astro'
 import { config } from '../consts'
+import { getCollection } from 'astro:content'
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
@@ -42,6 +43,8 @@ const galleryIcon = isGallery
 const friendLinksIcon = isFriendLinks
 	? 'icon-[icon-park-solid--friends-circle]'
 	: 'icon-[icon-park-outline--friends-circle]'
+
+const showGallery = (await getCollection('gallery')).length > 0
 ---
 
 <BaseHtml
@@ -92,10 +95,14 @@ const friendLinksIcon = isFriendLinks
 							</AdaptiveIconButton>
 						)
 					}
-					<AdaptiveIconButton active={isGallery} href="/gallery">
-						<i slot="icon" class:list={[galleryIcon, 'size-6 sm:size-8']}></i>
-						Gallery
-					</AdaptiveIconButton>
+					{
+						showGallery && (
+							<AdaptiveIconButton active={isGallery} href="/gallery">
+								<i slot="icon" class:list={[galleryIcon, 'size-6 sm:size-8']} />
+								Gallery
+							</AdaptiveIconButton>
+						)
+					}
 					<AdaptiveIconButton active={isFriendLinks} href="/friend-links/">
 						<i slot="icon" class:list={[friendLinksIcon, 'size-6 sm:size-8']}
 						></i>
