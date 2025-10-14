@@ -12,10 +12,10 @@
 }
 
 @utility glassmorphism {
-	@apply bg-white/50 backdrop-blur-lg border border-white/60;
+	@apply supports-[((backdrop-filter:blur(1px))or(-webkit-backdrop-filter:blur(1px)))]:bg-white/50 backdrop-blur-lg border border-white/60;
+	@apply supports-[((backdrop-filter:blur(1px))or(-webkit-backdrop-filter:blur(1px)))]:dark:bg-black/50 border-black/10;
 	@apply not-supports-[((backdrop-filter:blur(1px))or(-webkit-backdrop-filter:blur(1px)))]:bg-white/85;
 	@apply not-supports-[((backdrop-filter:blur(1px))or(-webkit-backdrop-filter:blur(1px)))]:dark:bg-black/85;
-	@apply dark:bg-black/50 border-black/10;
 }
 
 @utility no-glassmorphism {
