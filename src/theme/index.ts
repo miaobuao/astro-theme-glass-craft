@@ -49,6 +49,21 @@ export default function ThemeIntegration(
 					prerender: true,
 				})
 
+				injectRoute({
+					pattern: '/archive/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/archive/[...slug].astro',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/archive',
+					entrypoint: resolve(__dirname, 'src/theme/pages/archive/index.astro'),
+					prerender: true,
+				})
+
 				if (userOpts.customPages?.shareDirectory) {
 					injectRoute({
 						pattern: '/share/files/[...slug]',
