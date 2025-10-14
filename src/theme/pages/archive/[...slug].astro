@@ -1,0 +1,43 @@
+---
+import type { InferGetStaticPropsType } from 'astro'
+import { getCollection, render } from 'astro:content'
+import BlogPostLayout from '../../layouts/BlogPostLayout.astro'
+import { createFallbackBlogFrontMatterProcessor } from '../../utils/fallback-blog-frontmatter'
+import { config } from '../../consts'
+import { groupBy, map } from 'lodash-es'
+
+export async function getStaticPaths() {
+	const fallback = createFallbackBlogFrontMatterProcessor({
+		options: {
+			slugify: config.slugifyArticleUrl ?? true,
+		},
+	})
+	const posts = await getCollection('blog').then((posts) =>
+		Promise.all(posts.map(fallback)),
+	)
+
+	const paths = (function* () {
+		const years = groupBy(posts, (post) =>
+			post.frontMatter.publishDate.getUTCFullYear(),
+		)
+		for (const y in years) {
+			const g = years[y]
+			yield {
+				caption: y,
+				posts: g,
+			}
+			const months = groupBy(g, (p) => p.frontMatter.publishDate.getUTCMonth())
+			for (const m in months) {
+				yield {
+					caption: `${y}/${m + 1}`,
+					posts: months[m],
+				}
+			}
+		}
+	})()
+
+	return [...paths]
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+---
