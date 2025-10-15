@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import FinderButton from '../../components/astro/FinderButton.astro'
+
+const browseIcon = 'icon-[material-symbols--folder-open-outline]'
+const galleryIcon = 'icon-[material-symbols--image-outline]'
+const friendLinksIcon = 'icon-[icon-park-outline--friends-circle]'
+---
+
+<BaseLayout showAuthorInfo>
+	<div class="max-sm:glassmorphism flex flex-col rounded-lg gap-1 p-1">
+		<FinderButton href="/browse">
+			<i slot="icon" class:list={[browseIcon, 'size-6']}></i>
+			Share
+		</FinderButton>
+		<FinderButton href="/gallery">
+			<i slot="icon" class:list={[galleryIcon, 'size-6']}></i>
+			Gallery
+		</FinderButton>
+		<FinderButton href="/friend-links">
+			<i slot="icon" class:list={[friendLinksIcon, 'size-6']}></i>
+			Friends
+		</FinderButton>
+	</div>
+</BaseLayout>

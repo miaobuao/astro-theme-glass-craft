@@ -41,6 +41,12 @@ export default function ThemeIntegration(
 		hooks: {
 			'astro:config:setup': async ({ config, injectRoute, updateConfig }) => {
 				injectRoute({
+					pattern: '/',
+					entrypoint: resolve(__dirname, 'src/theme/pages/index.astro'),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/blog/[...slug]',
 					entrypoint: resolve(
 						__dirname,
@@ -52,6 +58,12 @@ export default function ThemeIntegration(
 				injectRoute({
 					pattern: '/archive',
 					entrypoint: resolve(__dirname, 'src/theme/pages/archive/index.astro'),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/finder',
+					entrypoint: resolve(__dirname, 'src/theme/pages/finder/index.astro'),
 					prerender: true,
 				})
 
@@ -108,12 +120,6 @@ export default function ThemeIntegration(
 						__dirname,
 						'src/theme/pages/gallery/_images/[...slug].ts',
 					),
-					prerender: true,
-				})
-
-				injectRoute({
-					pattern: '/',
-					entrypoint: resolve(__dirname, 'src/theme/pages/index.astro'),
 					prerender: true,
 				})
 

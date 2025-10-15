@@ -36,11 +36,17 @@ const { posts, class: className } = Astro.props
 							{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
 						</p>
 					</a>
-					{index !== posts.length - 1 && (
-						<span class="mx-auto my-2 w-[95%] h-[0.1px] bg-white/80" />
-					)}
+					{index !== posts.length - 1 && <span class="hr" />}
 				</Fragment>
 			)
 		})
 	}
 </div>
+
+<style scoped>
+	@reference "tailwindcss";
+
+	.hr {
+		@apply mx-auto my-2 w-[95%] h-[0.1px] bg-black/80 dark:bg-white/80;
+	}
+</style>

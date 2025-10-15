@@ -1,0 +1,25 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+export type Props = Omit<HTMLAttributes<'a'>, 'class:list'>
+
+const { class: className, ...props } = Astro.props
+---
+
+<a
+	class:list={[
+		'transition-all max-sm:active:glassmorphism hover:glassmorphism border-none! gap-4 flex rounded-sm p-2 items-center',
+		className,
+	]}
+	role="button"
+	tabindex="0"
+	{...props}
+>
+	<div class="flex justify-center items-center">
+		<slot name="icon" />
+	</div>
+	<div class="flex-1">
+		<slot />
+	</div>
+	<i class="icon-[uiw--right]"></i>
+</a>
