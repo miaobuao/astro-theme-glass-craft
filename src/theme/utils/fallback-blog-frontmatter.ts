@@ -5,6 +5,8 @@ import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toString } from 'mdast-util-to-string'
 import path from 'node:path'
 import getReadingTime from 'reading-time'
+import { remark } from 'remark'
+import * as visit from 'unist-util-visit'
 import { getFileCommitDates } from './git'
 import { readMap } from './read-map'
 import { slugifyBlogPostUrl } from './slugify-blog-post-url'
@@ -42,14 +44,26 @@ export interface ContentProcessorOptions {
 	isDraft: Fallback<boolean>
 }
 
-export function extractArticleExcerpt(markdown: string): string {
-	const moreRegex = /<!--\s*more\s*-->/i
-	const match = moreRegex.exec(markdown)
-	if (match) {
-		return markdown.substring(0, match.index)
+export function extractBeforeMore(markdown: string) {
+	const tree = remark().parse(markdown)
+	let foundMore = false
+	let offset = 0
+	const moreRegex = /^<!--\s*more\s*-->$/i
+	visit.visit(tree, (node) => {
+		if (node.type === 'root') return
+		if (node.type === 'html' && moreRegex.test(node.value.trim())) {
+			foundMore = true
+			offset = node.position?.start.offset ?? 0
+			return visit.EXIT
+		}
+	})
+
+	if (foundMore) {
+		return markdown.slice(0, offset)
 	}
 	return ''
 }
+
 export const defaultContentProcessorOptions: ContentProcessorOptions = {
 	title: (entry, { headings }) => {
 		const h1 = headings.find((h) => h.depth === 1)?.text
@@ -57,8 +71,7 @@ export const defaultContentProcessorOptions: ContentProcessorOptions = {
 		return entry.data.title ?? h1 ?? basename
 	},
 	description: (entry) =>
-		entry.data.description ??
-		(entry.body ? extractArticleExcerpt(entry.body) : ''),
+		entry.data.description ?? (entry.body ? extractBeforeMore(entry.body) : ''),
 	publishDate: async (entry) => {
 		const fromFrontmatter =
 			entry.data.date ??
