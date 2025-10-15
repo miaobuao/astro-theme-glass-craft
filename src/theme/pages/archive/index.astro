@@ -52,7 +52,10 @@ const postsGroupedByYear = sortBy(
 					<div class="flex flex-col gap-1">
 						{group.posts.map((post, index) => (
 							<Fragment>
-								<a href={`/blog/${post.frontMatter.slug}`} class="break-all">
+								<a
+									href={`/blog/${post.frontMatter.slug}`}
+									class="truncate p-1 rounded-sm transition-all duration-200 hover:glassmorphism border-none!"
+								>
 									<div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
 										<span class="shrink-0">
 											{moment(post.frontMatter.publishDate).format('MM-DD')}
