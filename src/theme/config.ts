@@ -44,7 +44,7 @@ export interface ThemeConfig {
 	title?: string
 	description?: string
 	backgroundImage?: UnionImageType | false
-	slugifyArticleUrl?: boolean
+	slugifyArticleUrl: boolean
 	lang?: 'zh' | 'en'
 	customPages?: {
 		aboutMe?: string

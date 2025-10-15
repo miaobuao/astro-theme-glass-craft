@@ -8,7 +8,7 @@ import { config } from '../consts'
 const blogPosts = await getCollection('blog')
 const fallback = createFallbackBlogFrontMatterProcessor({
 	options: {
-		slugify: config.slugifyArticleUrl ?? true,
+		slugify: config.slugifyArticleUrl,
 	},
 })
 const processedPosts = await Promise.all(blogPosts.map(fallback))

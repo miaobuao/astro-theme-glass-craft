@@ -85,16 +85,24 @@ const background = await (async () => {
 		{
 			canUseBackground && background ? (
 				background.progressive ? (
-					<div {...bodyProps} class:list={['relative h-screen']}>
-						<div class="absolute w-screen h-screen">
+					<div
+						{...bodyProps}
+						class:list={['relative h-screen pointer-events-none']}
+					>
+						<div
+							class="absolute w-screen h-screen pointer-events-none"
+							transition:persist
+						>
 							<ProgressiveImage
-								imageClass="object-cover object-center size-full"
+								imageClass="object-cover object-center size-full pointer-events-none"
 								url={background.backgroundOriginalUrl}
 								thumbnailUrl={background.backgroundThumbnailUrl}
-								class="size-full"
+								class="size-full pointer-events-none"
 							/>
 						</div>
-						<slot />
+						<div class="pointer-events-auto">
+							<slot />
+						</div>
 					</div>
 				) : (
 					<div

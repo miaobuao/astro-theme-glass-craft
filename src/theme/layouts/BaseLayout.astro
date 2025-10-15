@@ -2,6 +2,7 @@
 import BaseHtml, { type Props as BaseHtmlProps } from './BaseHtml.astro'
 import AdaptiveIconButton from '../components/astro/AdaptiveIconButton.astro'
 import { config } from '../consts'
+import { getCollection } from 'astro:content'
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
@@ -11,6 +12,9 @@ const { showAuthorInfo, title, description, ...otherProps } = Astro.props
 
 const isTimeline =
 	Astro.url.pathname === '/' || Astro.url.pathname.startsWith('/blog/')
+const isArchive =
+	Astro.url.pathname === '/archive' ||
+	Astro.url.pathname.startsWith('/archive/')
 const isBrowse =
 	Astro.url.pathname === '/browse' || Astro.url.pathname.startsWith('/browse/')
 const isAboutMe =
@@ -27,6 +31,10 @@ const timelineIcon = isTimeline
 	? 'icon-[material-symbols--nest-clock-farsight-analog]'
 	: 'icon-[material-symbols--nest-clock-farsight-analog-outline]'
 
+const archiveIcon = isArchive
+	? 'icon-[icon-park-solid--calendar]'
+	: 'icon-[icon-park-outline--calendar]'
+
 const browseIcon = isBrowse
 	? 'icon-[material-symbols--folder-open]'
 	: 'icon-[material-symbols--folder-open-outline]'
@@ -42,6 +50,8 @@ const galleryIcon = isGallery
 const friendLinksIcon = isFriendLinks
 	? 'icon-[icon-park-solid--friends-circle]'
 	: 'icon-[icon-park-outline--friends-circle]'
+
+const showGallery = (await getCollection('gallery')).length > 0
 ---
 
 <BaseHtml
@@ -84,6 +94,10 @@ const friendLinksIcon = isFriendLinks
 						<i slot="icon" class:list={[timelineIcon, 'size-6 sm:size-8']}></i>
 						Timeline
 					</AdaptiveIconButton>
+					<AdaptiveIconButton active={isArchive} href="/archive">
+						<i slot="icon" class:list={[archiveIcon, 'size-6 sm:size-8']}></i>
+						Archive
+					</AdaptiveIconButton>
 					{
 						config.customPages?.shareDirectory && (
 							<AdaptiveIconButton active={isBrowse} href="/browse">
@@ -92,10 +106,14 @@ const friendLinksIcon = isFriendLinks
 							</AdaptiveIconButton>
 						)
 					}
-					<AdaptiveIconButton active={isGallery} href="/gallery">
-						<i slot="icon" class:list={[galleryIcon, 'size-6 sm:size-8']}></i>
-						Gallery
-					</AdaptiveIconButton>
+					{
+						showGallery && (
+							<AdaptiveIconButton active={isGallery} href="/gallery">
+								<i slot="icon" class:list={[galleryIcon, 'size-6 sm:size-8']} />
+								Gallery
+							</AdaptiveIconButton>
+						)
+					}
 					<AdaptiveIconButton active={isFriendLinks} href="/friend-links/">
 						<i slot="icon" class:list={[friendLinksIcon, 'size-6 sm:size-8']}
 						></i>
