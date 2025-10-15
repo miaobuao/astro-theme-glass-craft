@@ -1,5 +1,75 @@
 ---
+import { getCollection } from 'astro:content'
+import { createFallbackBlogFrontMatterProcessor } from '../../utils/fallback-blog-frontmatter'
+import { config } from '../../consts'
+import { groupBy, sortBy } from 'lodash-es'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import moment from 'moment'
 
+export async function getPostsGroupByYear() {
+	const fallback = createFallbackBlogFrontMatterProcessor({
+		options: {
+			slugify: config.slugifyArticleUrl,
+		},
+	})
+	const posts = await getCollection('blog').then((posts) =>
+		Promise.all(posts.filter((p) => !p.data.draft).map(fallback)),
+	)
+	function* getGroups() {
+		const years = groupBy(posts, (post) =>
+			post.frontMatter.publishDate.getUTCFullYear(),
+		)
+		for (const y in years) {
+			const g = years[y]
+
+			yield {
+				year: y,
+				posts: g.sort((a, b) => {
+					return a.frontMatter.publishDate > b.frontMatter.publishDate
+						? -1
+						: a.frontMatter.publishDate < b.frontMatter.publishDate
+							? 1
+							: 0
+				}),
+			}
+		}
+	}
+	return [...getGroups()]
+}
+
+const postsGroupedByYear = sortBy(
+	await getPostsGroupByYear(),
+	(p) => p.year,
+).reverse()
 ---
 
-<div>archive</div>
+<BaseLayout showAuthorInfo title="Archive">
+	<div class="flex flex-col gap-4 max-sm:glassmorphism rounded-lg">
+		{
+			postsGroupedByYear.map((group) => (
+				<div class="flex flex-col gap-4">
+					<h2 class="text-3xl font-bold">{group.year}</h2>
+					<div class="flex flex-col gap-1">
+						{group.posts.map((post, index) => (
+							<Fragment>
+								<a href={`/blog/${post.frontMatter.slug}`} class="break-all">
+									<div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
+										<span class="shrink-0">
+											{moment(post.frontMatter.publishDate).format('MM-DD')}
+										</span>
+										<div class="flex-1">
+											<h3 class="font-semibold">{post.frontMatter.title}</h3>
+										</div>
+									</div>
+								</a>
+								{index !== group.posts.length - 1 && (
+									<span class="mx-auto w-[95%] h-[0.1px]" />
+								)}
+							</Fragment>
+						))}
+					</div>
+				</div>
+			))
+		}
+	</div>
+</BaseLayout>

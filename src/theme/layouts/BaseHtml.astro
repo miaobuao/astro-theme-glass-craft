@@ -100,7 +100,9 @@ const background = await (async () => {
 								class="size-full pointer-events-none"
 							/>
 						</div>
-						<slot />
+						<div class="pointer-events-auto">
+							<slot />
+						</div>
 					</div>
 				) : (
 					<div
