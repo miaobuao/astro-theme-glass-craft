@@ -10,13 +10,6 @@ interface Props extends HTMLAttributes<'div'> {
 }
 
 const { posts, class: className } = Astro.props
-
-function slugify(id: string) {
-	if (config.slugifyArticleUrl) {
-		return slugifyBlogPostUrl(id)
-	}
-	return id
-}
 ---
 
 <div
@@ -28,10 +21,7 @@ function slugify(id: string) {
 	{
 		posts.map((post, index) => (
 			<Fragment>
-				<a
-					href={`/blog/${slugify(post.frontMatter.slug)}`}
-					class="p-4 md:p-6 break-all"
-				>
+				<a href={`/blog/${post.frontMatter.slug}`} class="p-4 md:p-6 break-all">
 					<h2 class="text-lg md:text-2xl font-bold mb-2">
 						{post.frontMatter.title}
 					</h2>
