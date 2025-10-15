@@ -1,57 +1,15 @@
 ---
+import type { HTMLAttributes } from 'astro/types'
 import '../assets/css/global.css'
 
-import ProgressiveImage from '../components/astro/ProgressiveImage.astro'
 import { ClientRouter } from 'astro:transitions'
-import type { HTMLAttributes } from 'astro/types'
 
-import { config } from '../consts'
-import {
-	toAbsoluteUrl,
-	getOriginalImageId,
-	getThumbnailImageId,
-} from '../utils/thumbnail'
-
-export interface Props
-	extends Omit<HTMLAttributes<'body'>, 'style' | 'class:list' | 'class'> {
+export interface Props extends HTMLAttributes<'body'> {
 	title?: string
 	description?: string
-	useBackground?: boolean
 }
 
-const { title, description, useBackground, ...bodyProps } = Astro.props
-
-const canUseBackground = !!useBackground && !!config.backgroundImage
-const background = await (async () => {
-	if (!canUseBackground || !config.backgroundImage) {
-		return
-	}
-	if (config.backgroundImage.type === 'progressive') {
-		const backgroundInputUrl = new URL(config.backgroundImage.url)
-		const thumbnailId = await getThumbnailImageId(backgroundInputUrl)
-		const originalId = await getOriginalImageId(backgroundInputUrl)
-		const backgroundThumbnailUrl = await toAbsoluteUrl(thumbnailId)
-		const backgroundOriginalUrl = await toAbsoluteUrl(originalId)
-		return {
-			progressive: true,
-			backgroundOriginalUrl,
-			backgroundThumbnailUrl,
-		} as const
-	}
-	let backgroundOriginalUrl: string
-	if (config.backgroundImage.url.protocol.toLowerCase() === 'file:') {
-		backgroundOriginalUrl = await toAbsoluteUrl(
-			await getOriginalImageId(config.backgroundImage.url),
-		)
-	} else {
-		backgroundOriginalUrl = config.backgroundImage.url.toString()
-	}
-	return {
-		progressive: false,
-		backgroundOriginalUrl: backgroundOriginalUrl,
-		backgroundThumbnailUrl: backgroundOriginalUrl,
-	} as const
-})()
+const { title, description, ...others } = Astro.props
 ---
 
 <html lang="zh-CN" class="no-scrollbar">
@@ -81,45 +39,7 @@ const background = await (async () => {
 		<ClientRouter />
 	</head>
 
-	<body class="dark:text-white">
-		{
-			canUseBackground && background ? (
-				background.progressive ? (
-					<div
-						{...bodyProps}
-						class:list={['relative h-screen pointer-events-none']}
-					>
-						<div
-							class="absolute w-screen h-screen pointer-events-none"
-							transition:persist
-						>
-							<ProgressiveImage
-								imageClass="object-cover object-center size-full pointer-events-none"
-								url={background.backgroundOriginalUrl}
-								thumbnailUrl={background.backgroundThumbnailUrl}
-								class="size-full pointer-events-none"
-							/>
-						</div>
-						<div class="pointer-events-auto">
-							<slot />
-						</div>
-					</div>
-				) : (
-					<div
-						{...bodyProps}
-						class="bg-cover bg-center bg-fixed h-screen"
-						style={{
-							backgroundImage: `url(${background.backgroundOriginalUrl})`,
-						}}
-					>
-						<slot />
-					</div>
-				)
-			) : (
-				<div {...bodyProps}>
-					<slot />
-				</div>
-			)
-		}
+	<body {...others}>
+		<slot />
 	</body>
 </html>
