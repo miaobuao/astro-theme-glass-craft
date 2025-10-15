@@ -9,7 +9,7 @@ import { groupBy, map } from 'lodash-es'
 export async function getStaticPaths() {
 	const fallback = createFallbackBlogFrontMatterProcessor({
 		options: {
-			slugify: config.slugifyArticleUrl ?? true,
+			slugify: config.slugifyArticleUrl,
 		},
 	})
 	const posts = await getCollection('blog').then((posts) =>

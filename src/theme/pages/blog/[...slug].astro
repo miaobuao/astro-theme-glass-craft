@@ -6,7 +6,7 @@ import { createFallbackBlogFrontMatterProcessor } from '../../utils/fallback-blo
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog')
-	const fallback = createFallbackBlogFrontMatterProcessor({
+	const slugifyFallback = createFallbackBlogFrontMatterProcessor({
 		options: {
 			slugify: true,
 		},
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 			slugify: false,
 		},
 	})
-	const slugifyPosts = await Promise.all(posts.map(fallback))
+	const slugifyPosts = await Promise.all(posts.map(slugifyFallback))
 	const unslugifyPosts = await Promise.all(posts.map(unslugifyFallback))
 
 	const paths = [
