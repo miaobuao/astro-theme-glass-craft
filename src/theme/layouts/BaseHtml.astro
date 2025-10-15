@@ -89,7 +89,10 @@ const background = await (async () => {
 						{...bodyProps}
 						class:list={['relative h-screen pointer-events-none']}
 					>
-						<div class="absolute w-screen h-screen pointer-events-none">
+						<div
+							class="absolute w-screen h-screen pointer-events-none"
+							transition:persist
+						>
 							<ProgressiveImage
 								imageClass="object-cover object-center size-full pointer-events-none"
 								url={background.backgroundOriginalUrl}
