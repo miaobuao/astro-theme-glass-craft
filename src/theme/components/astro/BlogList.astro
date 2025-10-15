@@ -1,8 +1,7 @@
 ---
 import moment from 'moment'
 import type { HTMLAttributes } from 'astro/types'
-import { config } from '../../consts'
-import { slugifyBlogPostUrl } from '../../utils/slugify-blog-post-url'
+import { marked } from 'marked'
 import type { ProcessedPost } from '../../utils/fallback-blog-frontmatter'
 
 interface Props extends HTMLAttributes<'div'> {
@@ -19,21 +18,29 @@ const { posts, class: className } = Astro.props
 	]}
 >
 	{
-		posts.map((post, index) => (
-			<Fragment>
-				<a href={`/blog/${post.frontMatter.slug}`} class="p-4 md:p-6 break-all">
-					<h2 class="text-lg md:text-2xl font-bold mb-2">
-						{post.frontMatter.title}
-					</h2>
-					<p class="mb-2 md:mb-4">{post.frontMatter.description}</p>
-					<p class="text-sm">
-						{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
-					</p>
-				</a>
-				{index !== posts.length - 1 && (
-					<span class="mx-auto my-2 w-[95%] h-[0.1px] bg-white/80" />
-				)}
-			</Fragment>
-		))
+		posts.map(async (post, index) => {
+			const description = await marked(post.frontMatter.description)
+			return (
+				<Fragment>
+					<a
+						href={`/blog/${post.frontMatter.slug}`}
+						class="p-4 md:p-6 break-all"
+					>
+						<h2 class="text-lg md:text-2xl font-bold mb-2">
+							{post.frontMatter.title}
+						</h2>
+						<div class="mb-2 md:mb-4">
+							<Fragment set:html={description} />
+						</div>
+						<p class="text-sm">
+							{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
+						</p>
+					</a>
+					{index !== posts.length - 1 && (
+						<span class="mx-auto my-2 w-[95%] h-[0.1px] bg-white/80" />
+					)}
+				</Fragment>
+			)
+		})
 	}
 </div>
