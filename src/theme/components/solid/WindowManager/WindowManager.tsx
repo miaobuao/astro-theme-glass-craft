@@ -12,9 +12,26 @@ export function WindowManager() {
 		wmEmitter.on('appendWindow', (win) => {
 			const clientWidth = window.innerWidth
 			const clientHeight = window.innerHeight
-			const width =
+			let width =
 				clientWidth > 1000 ? 438 : clientWidth >= 768 ? 375 : clientWidth
-			const height = Math.min(clientHeight, 768)
+			let height = Math.min(clientHeight, 768)
+			let x = clientWidth - width
+			let y = 0
+			function updateGeometry() {
+				for (const win of windows) {
+					if (
+						win.geometry.x === x &&
+						win.geometry.y === y &&
+						win.geometry.width === width
+					) {
+						y += 32
+						x -= 32
+						return true
+					}
+				}
+				return false
+			}
+			while (updateGeometry()) {}
 			setWindows([
 				...windows,
 				{
@@ -22,8 +39,8 @@ export function WindowManager() {
 					id: ++id,
 					status: 'normal',
 					geometry: {
-						x: clientWidth - width,
-						y: 0,
+						x,
+						y,
 						width,
 						height,
 						aspectRatio: width / height,
