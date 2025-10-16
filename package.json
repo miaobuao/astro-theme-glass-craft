@@ -36,6 +36,7 @@
 		"mdast-util-from-markdown": "^2.0.2",
 		"mdast-util-to-string": "^4.0.0",
 		"mime-types": "^3.0.1",
+		"mitt": "^3.0.1",
 		"moment": "^2.30.1",
 		"pagefind": "^1.3.0",
 		"quick-lru": "^7.3.0",
