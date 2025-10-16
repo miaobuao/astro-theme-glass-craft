@@ -1,4 +1,5 @@
 ---
+import { WindowManager } from '../components/solid/WindowManager/WindowManager'
 import BaseHtml, { type Props as BaseHtmlProps } from './BaseHtml.astro'
 import AdaptiveIconButton from '../components/astro/AdaptiveIconButton.astro'
 import { config } from '../consts'
@@ -257,6 +258,11 @@ const background = await (async () => {
 			)
 		}
 	}
+
+	<WindowManager
+		class:list={['md:visible invisible not-md:pointer-events-none']}
+		client:only="solid-js"
+	/>
 </BaseHtml>
 
 <script defer>

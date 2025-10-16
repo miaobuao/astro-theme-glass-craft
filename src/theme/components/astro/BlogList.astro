@@ -11,11 +11,34 @@ interface Props extends HTMLAttributes<'div'> {
 const { posts, class: className } = Astro.props
 ---
 
+<script>
+	import { resolveUrl } from '../../utils/resolve-url'
+	import { wmEmitter } from '../solid/WindowManager/emitter'
+
+	document.getElementById('blog-list')?.childNodes.forEach((node) => {
+		node.addEventListener('click', (e) => {
+			if (window.innerWidth < 768) {
+				return
+			}
+			if (node instanceof HTMLAnchorElement) {
+				const url = resolveUrl(node.dataset.embed ?? node.href)
+				e.stopImmediatePropagation()
+				e.preventDefault()
+				wmEmitter.emit('appendWindow', {
+					title: node.querySelector('h2')?.textContent ?? '',
+					url: url,
+				})
+			}
+		})
+	})
+</script>
+
 <div
 	class:list={[
 		'flex flex-col gap-2 max-sm:glassmorphism rounded-lg',
 		className,
 	]}
+	id="blog-list"
 >
 	{
 		posts.map(async (post, index) => {
@@ -24,6 +47,7 @@ const { posts, class: className } = Astro.props
 				<Fragment>
 					<a
 						href={`/blog/${post.frontMatter.slug}`}
+						data-embed={`/embed/blog/${post.frontMatter.slug}`}
 						class="p-4 md:p-6 break-all"
 					>
 						<h2 class="text-lg md:text-2xl font-bold mb-2">

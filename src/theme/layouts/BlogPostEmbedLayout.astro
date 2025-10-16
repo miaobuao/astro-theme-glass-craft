@@ -31,23 +31,15 @@ const description = getValue('description')
 
 <BaseHtml {title} {description} class="dark:text-white">
 	<div class="flex flex-col rounded-lg">
-		<header class="p-4 gap-3 flex items-center">
-			<img
-				src={config.author.avatar.url.toString()}
-				alt={config.author.avatar.alt}
-				class="size-[3rem] rounded-full select-none"
-				transition:name="avatar"
-			/>
-			<div class="flex flex-col">
-				<p class="break-all text-lg md:text-xl font-bold">
-					{title}
-				</p>
-				<p class="text-sm">
-					{config.author.name}
-					{pubDate ? '·' : ''}
-					{pubDate ? moment(pubDate).format('YYYY-MM-DD') : ''}
-				</p>
-			</div>
+		<header class="p-4 flex flex-col">
+			<p class="break-all text-lg md:text-xl font-bold">
+				{title}
+			</p>
+			<p class="text-sm">
+				{config.author.name}
+				{pubDate ? '·' : ''}
+				{pubDate ? moment(pubDate).format('YYYY-MM-DD') : ''}
+			</p>
 		</header>
 		<article
 			class:list={[
