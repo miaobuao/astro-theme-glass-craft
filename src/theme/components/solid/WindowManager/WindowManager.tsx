@@ -69,11 +69,11 @@ export function WindowManager() {
 								(g) => ({ ...g, x, y }),
 							)
 						}}
-						onResize={(width, height) => {
+						onResize={(geometry) => {
 							setWindows(
 								(w) => w.id === win.id,
 								'geometry',
-								(g) => ({ ...g, width, height }),
+								(g) => ({ ...geometry }),
 							)
 						}}
 						onFullscreen={() => {

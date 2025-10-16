@@ -4,7 +4,7 @@ import type { WindowProps } from './emitter'
 
 export function Window(
 	props: WindowProps & {
-		onResize: (width: number, height: number) => void
+		onResize: (geometry: WindowProps['geometry']) => void
 		onFullscreen: () => void
 		onDock: () => void
 		onMove: (x: number, y: number) => void
@@ -75,7 +75,7 @@ export function Window(
 				top: props.geometry.y + 'px',
 			}}
 		>
-			<div class="h-full w-full flex flex-col glassmorphism rounded-sm p-0.5">
+			<div class="h-full w-full flex flex-col glassmorphism rounded-sm m-0.5 relative">
 				<section
 					class="flex justify-around items-center p-1 select-none pointer-events-auto"
 					on:mousedown={handleDragStart}
@@ -118,6 +118,11 @@ export function Window(
 						src={props.url.toString()}
 					></iframe>
 				</div>
+
+				<div class="absolute w-full h-1 -top-1 hover:cursor-ns-resize"></div>
+				<div class="absolute w-full h-1 -bottom-1 hover:cursor-ns-resize"></div>
+				<div class="absolute h-full w-1 -left-1 hover:cursor-ew-resize"></div>
+				<div class="absolute h-full w-1 -right-1 hover:cursor-ew-resize"></div>
 			</div>
 		</div>
 	)
