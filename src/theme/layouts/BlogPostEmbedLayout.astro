@@ -1,0 +1,65 @@
+---
+import moment from 'moment'
+import { config } from '../consts'
+import Giscus from '../components/astro/Giscus.astro'
+import BaseHtml from './BaseHtml.astro'
+
+interface Frontmatter {
+	title?: string
+	description?: string
+	pubDate?: Date
+}
+
+interface Props extends Frontmatter {
+	frontmatter?: Frontmatter
+}
+
+const props = Astro.props
+
+function getValue<T extends keyof Frontmatter = any>(key: T) {
+	return (props.frontmatter?.[key] || props[key]) as Frontmatter[T]
+}
+
+const title = getValue('title')
+const pubDate = getValue('pubDate')
+const description = getValue('description')
+---
+
+<script>
+	import 'giscus'
+</script>
+
+<BaseHtml {title} {description} class="dark:text-white">
+	<div class="flex flex-col rounded-lg">
+		<header class="p-4 gap-3 flex items-center">
+			<img
+				src={config.author.avatar.url.toString()}
+				alt={config.author.avatar.alt}
+				class="size-[3rem] rounded-full select-none"
+				transition:name="avatar"
+			/>
+			<div class="flex flex-col">
+				<p class="break-all text-lg md:text-xl font-bold">
+					{title}
+				</p>
+				<p class="text-sm">
+					{config.author.name}
+					{pubDate ? '·' : ''}
+					{pubDate ? moment(pubDate).format('YYYY-MM-DD') : ''}
+				</p>
+			</div>
+		</header>
+		<article
+			class:list={[
+				'prose max-sm:prose-sm dark:prose-invert text-inherit max-w-full',
+				'py-4 px-4 md:px-8',
+			]}
+		>
+			<slot />
+		</article>
+	</div>
+	<div class="mt-8 p-2">
+		{config.comment?.giscus && <Giscus {...config.comment.giscus} />}
+	</div>
+	<div class="h-16 sm:h-0"></div>
+</BaseHtml>
