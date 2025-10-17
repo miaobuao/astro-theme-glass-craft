@@ -1,11 +1,14 @@
-import { For, onMount } from 'solid-js'
-import { createStore } from 'solid-js/store'
-import { wmEmitter, type WindowProps } from './emitter'
+import { For } from 'solid-js'
+import {
+	setWindowOrder,
+	setWindows,
+	windowOrder,
+	windows,
+	type WindowProps,
+} from './emitter'
 import { Window } from './Window'
 
 export function WindowManager() {
-	const [windows, setWindows] = createStore<WindowProps[]>([])
-	const [windowOrder, setWindowOrder] = createStore<number[]>([])
 	const lastGeometryMap = new Map<number, WindowProps['geometry']>()
 	const animationRafMap = new Map<number, number>()
 
@@ -95,53 +98,6 @@ export function WindowManager() {
 		const rafId = requestAnimationFrame(animate)
 		animationRafMap.set(winId, rafId)
 	}
-	onMount(() => {
-		wmEmitter.on('appendWindow', (win) => {
-			const clientWidth = window.innerWidth
-			const clientHeight = window.innerHeight
-
-			// Use provided width/height or calculate defaults
-			let width = win.width ?? (clientWidth > 1000 ? 438 : clientWidth >= 768 ? 375 : clientWidth)
-			let height = win.height ?? Math.min(clientHeight, 768)
-
-			// Ensure window fits within viewport
-			width = Math.min(width, clientWidth)
-			height = Math.min(height, clientHeight)
-
-			let x = clientWidth - width
-			let y = 0
-			function updateGeometry() {
-				for (const win of windows) {
-					if (
-						win.geometry.x === x &&
-						win.geometry.y === y &&
-						win.geometry.width === width
-					) {
-						y += 32
-						return true
-					}
-				}
-				return false
-			}
-			while (updateGeometry()) {}
-			const newId = ++id
-			const newWindow: WindowProps = {
-				...win,
-				id: newId,
-				status: 'normal' as const,
-				geometry: {
-					x,
-					y,
-					width,
-					height,
-					aspectRatio: width / height,
-				},
-				zIndex: windows.length + 1, // New window gets highest z-index
-			}
-			setWindows([...windows, newWindow])
-			setWindowOrder([...windowOrder, newId])
-		})
-	})
 
 	return (
 		<div>

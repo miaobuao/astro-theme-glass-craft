@@ -1,5 +1,6 @@
 import { clamp } from 'lodash-es'
-import { type JSX, Show, children, createSignal } from 'solid-js'
+import { type JSX, Show, children, createEffect, createSignal } from 'solid-js'
+import { activeElement } from '../activeElement'
 import { DraggableLine } from './DraggableLine'
 import type { WindowProps } from './emitter'
 
@@ -112,9 +113,17 @@ export function WindowShell(props: WindowShellProps) {
 	const windowId = `window-${props.id}`
 	const titleId = `window-title-${props.id}`
 
+	let container: HTMLDivElement | undefined
+
+	createEffect(() => {
+		if (container?.contains(activeElement())) {
+			props.onFocus()
+		}
+	})
+
 	return (
 		<div
-			id={windowId}
+			ref={container}
 			class="fixed p-1"
 			style={{
 				width: props.geometry.width + 'px',
