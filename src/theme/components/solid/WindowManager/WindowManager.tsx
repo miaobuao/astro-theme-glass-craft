@@ -20,6 +20,30 @@ export function WindowManager() {
 		return start + (end - start) * t
 	}
 
+	// Handle window focus - move to end of array for top z-index
+	function handleFocus(winId: number) {
+		const currentIndex = windows.findIndex((w) => w.id === winId)
+		if (currentIndex === -1 || currentIndex === windows.length - 1) {
+			return // Already on top or not found
+		}
+
+		// Get max z-index from the top window
+		const maxZIndex = windows[windows.length - 1].zIndex
+
+		// Update only the focused window's z-index
+		setWindows((w) => w.id === winId, 'zIndex', maxZIndex + 1)
+
+		// Move window to end of array
+		setWindows((prev) => {
+			const windowToMove = prev[currentIndex]
+			return [
+				...prev.slice(0, currentIndex),
+				...prev.slice(currentIndex + 1),
+				windowToMove,
+			]
+		})
+	}
+
 	// Animate geometry changes with RAF
 	function animateGeometry(
 		winId: number,
@@ -84,29 +108,26 @@ export function WindowManager() {
 						win.geometry.width === width
 					) {
 						y += 32
-						x -= 32
 						return true
 					}
 				}
 				return false
 			}
 			while (updateGeometry()) {}
-			setWindows([
-				...windows,
-				{
-					...win,
-					id: ++id,
-					status: 'normal',
-					geometry: {
-						x,
-						y,
-						width,
-						height,
-						aspectRatio: width / height,
-					},
-					zIndex: 0,
+			const newWindow: WindowProps = {
+				...win,
+				id: ++id,
+				status: 'normal' as const,
+				geometry: {
+					x,
+					y,
+					width,
+					height,
+					aspectRatio: width / height,
 				},
-			])
+				zIndex: windows.length + 1, // New window gets highest z-index
+			}
+			setWindows([...windows, newWindow])
 		})
 	})
 
@@ -116,6 +137,7 @@ export function WindowManager() {
 				{(win) => (
 					<Window
 						{...win}
+						onFocus={() => handleFocus(win.id)}
 						onClose={() => {
 							setWindows((prevWindows) =>
 								prevWindows.filter(({ id }) => id !== win.id),

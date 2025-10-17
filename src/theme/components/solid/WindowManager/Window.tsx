@@ -10,10 +10,17 @@ export function Window(
 		onDock: () => void
 		onMove: (x: number, y: number) => void
 		onClose: () => void
+		onFocus: () => void
 	},
 ) {
 	let [isDragging, setIsDragging] = createSignal(false)
 	let [isResizing, setIsResizing] = createSignal(false)
+
+	function handleKeyDown(e: KeyboardEvent) {
+		if (e.key === 'Escape') {
+			props.onClose()
+		}
+	}
 
 	let offsetX = 0
 	let offsetY = 0
@@ -99,15 +106,26 @@ export function Window(
 		window.removeEventListener('pointerup', handleDragEnd)
 	}
 
+	const windowId = `window-${props.id}`
+	const titleId = `window-title-${props.id}`
+
 	return (
 		<div
+			id={windowId}
 			class="fixed p-1"
 			style={{
 				width: props.geometry.width + 'px',
 				height: props.geometry.height + 'px',
 				left: props.geometry.x + 'px',
 				top: props.geometry.y + 'px',
+				'z-index': props.zIndex,
 			}}
+			role="dialog"
+			aria-modal="false"
+			aria-labelledby={titleId}
+			tabindex={-1}
+			onFocus={props.onFocus}
+			onKeyDown={handleKeyDown}
 		>
 			<div class="h-full w-full flex flex-col glassmorphism rounded-sm m-0.5 relative">
 				<section
@@ -118,27 +136,43 @@ export function Window(
 					}
 				>
 					<span class="w-16"></span>
-					<span class="flex-1 text-center truncate">{props.title}</span>
-					<span class="flex gap-2">
-						<i class="icon-[mdi--minimize] cursor-pointer"></i>
+					<h2 id={titleId} class="flex-1 text-center truncate m-0 font-normal text-base">
+						{props.title}
+					</h2>
+					<span class="flex gap-2" role="group" aria-label="Window controls">
+						<button
+							type="button"
+							class="icon-[mdi--minimize] cursor-pointer bg-transparent border-none p-0"
+							aria-label="Minimize window"
+							tabindex={0}
+						></button>
 						<Show
 							when={props.status === 'normal'}
 							fallback={
-								<i
-									class="icon-[mdi--dock-window] cursor-pointer"
+								<button
+									type="button"
+									class="icon-[mdi--dock-window] cursor-pointer bg-transparent border-none p-0"
 									onClick={props.onDock}
-								></i>
+									aria-label="Restore window"
+									tabindex={0}
+								></button>
 							}
 						>
-							<i
-								class="icon-[mdi--maximize] cursor-pointer"
+							<button
+								type="button"
+								class="icon-[mdi--maximize] cursor-pointer bg-transparent border-none p-0"
 								onClick={props.onFullscreen}
-							></i>
+								aria-label="Maximize window"
+								tabindex={0}
+							></button>
 						</Show>
-						<i
-							class="icon-[mdi--close] cursor-pointer"
+						<button
+							type="button"
+							class="icon-[mdi--close] cursor-pointer bg-transparent border-none p-0"
 							onClick={props.onClose}
-						></i>
+							aria-label="Close window"
+							tabindex={0}
+						></button>
 					</span>
 				</section>
 
@@ -149,6 +183,7 @@ export function Window(
 					<iframe
 						class={`h-full w-full rounded-inherit ${isDragging() || isResizing() ? 'select-none' : ''}`}
 						src={props.url.toString()}
+						title={props.title}
 					></iframe>
 				</div>
 
