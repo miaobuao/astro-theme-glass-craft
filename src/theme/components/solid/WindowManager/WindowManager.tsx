@@ -132,7 +132,7 @@ export function WindowManager(props: WindowManagerProps) {
 								() => ({ ...geometry }),
 							)
 						}}
-						onFullscreen={() => {
+						onMaximize={() => {
 							lastGeometryMap.set(win.id, { ...win.geometry })
 							const targetGeometry = {
 								width: window.innerWidth,
@@ -148,6 +148,13 @@ export function WindowManager(props: WindowManagerProps) {
 									() => 'maximum' as const,
 								)
 							})
+						}}
+						onMinimize={() => {
+							setWindows(
+								(w) => w.id === win.id,
+								'status',
+								() => 'minimum' as const,
+							)
 						}}
 						onDock={() => {
 							const geometry = lastGeometryMap.get(win.id)!

@@ -1,16 +1,6 @@
-import type { WindowProps } from './emitter'
-import { WindowShell } from './WindowShell'
+import { WindowShell, type WindowShellProps } from './WindowShell'
 
-export function Window(
-	props: WindowProps & {
-		onResize: (geometry: WindowProps['geometry']) => void
-		onFullscreen: () => void
-		onDock: () => void
-		onMove: (x: number, y: number) => void
-		onClose: () => void
-		onFocus: () => void
-	},
-) {
+export function Window(props: Omit<WindowShellProps, 'children'>) {
 	return (
 		<WindowShell {...props}>
 			<iframe

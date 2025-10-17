@@ -6,7 +6,8 @@ import type { WindowProps } from './emitter'
 
 export interface WindowShellProps extends WindowProps {
 	onResize: (geometry: WindowProps['geometry']) => void
-	onFullscreen: () => void
+	onMaximize: () => void
+	onMinimize: () => void
 	onDock: () => void
 	onMove: (x: number, y: number) => void
 	onClose: () => void
@@ -121,7 +122,7 @@ export function WindowShell(props: WindowShellProps) {
 	return (
 		<div
 			ref={container}
-			class="fixed p-1"
+			class={`fixed p-1 ${props.status === 'minimum' ? 'pointer-events-none invisible' : ''}`}
 			style={{
 				width: props.geometry.width + 'px',
 				height: props.geometry.height + 'px',
@@ -140,7 +141,7 @@ export function WindowShell(props: WindowShellProps) {
 					class="flex justify-around items-center p-1 select-none pointer-events-auto text-[1.25rem]"
 					onPointerDown={handleDragStart}
 					onDblClick={() =>
-						props.status === 'maximum' ? props.onDock() : props.onFullscreen()
+						props.status === 'maximum' ? props.onDock() : props.onMaximize()
 					}
 				>
 					<span class="w-16"></span>
@@ -150,6 +151,7 @@ export function WindowShell(props: WindowShellProps) {
 					<span class="flex gap-2" role="group" aria-label="Window controls">
 						<i
 							class="icon-[mdi--minimize] cursor-pointer"
+							onClick={props.onMinimize}
 							aria-label="Minimize window"
 							tabindex={0}
 						></i>
@@ -166,7 +168,7 @@ export function WindowShell(props: WindowShellProps) {
 						>
 							<i
 								class="icon-[mdi--maximize] cursor-pointer"
-								onClick={props.onFullscreen}
+								onClick={props.onMaximize}
 								aria-label="Maximize window"
 								tabindex={0}
 							></i>
