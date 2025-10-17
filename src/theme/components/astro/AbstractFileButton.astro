@@ -13,16 +13,6 @@ interface Props {
 const { url, isDir, name, thumbnailUrl, imageDimensions } = Astro.props
 ---
 
-<abstract-file-button
-	data-url={url}
-	data-is-dir={isDir}
-	data-name={name}
-	data-thumbnail-url={thumbnailUrl}
-	data-image-width={imageDimensions?.width}
-	data-image-height={imageDimensions?.height}
->
-</abstract-file-button>
-
 <script>
 	import { wmEmitter } from '../solid/WindowManager/emitter'
 	import { resolveUrl } from '../../utils/resolve-url'
@@ -100,29 +90,30 @@ const { url, isDir, name, thumbnailUrl, imageDimensions } = Astro.props
 			link.appendChild(iconElement)
 			link.appendChild(nameElement)
 
-			// Add click handler for images
-			if (hasImage) {
+			if (!isDir && hasImage) {
 				link.addEventListener('click', (e) => {
 					// Only use WindowManager on desktop
-					if (window.innerWidth < 768) {
+					if (isDir || window.innerWidth < 768) {
 						return
 					}
 
 					e.stopImmediatePropagation()
 					e.preventDefault()
 
+					let width: number | undefined
+					let height: number | undefined
+					let windowUrl: URL
+
 					// Build viewer URL with image URL as query parameter
-					const viewerUrl = resolveUrl(
-						`/viewer/image?url=${encodeURIComponent(url)}`,
-					)
+					windowUrl = resolveUrl(`/viewer/image?url=${encodeURIComponent(url)}`)
 
 					// Calculate window dimensions (scale down if too large)
-					let width = imageWidth ? parseInt(imageWidth) : 800
-					let height = imageHeight ? parseInt(imageHeight) : 600
+					width = imageWidth ? parseInt(imageWidth) : 800
+					height = imageHeight ? parseInt(imageHeight) : 600
 
 					// Scale down large images to fit better in the window
-					const maxWidth = Math.min(window.innerWidth * 0.8, 1200)
-					const maxHeight = Math.min(window.innerHeight * 0.8, 900)
+					const maxWidth = Math.min(window.innerWidth * 0.5, 768)
+					const maxHeight = Math.min(window.innerHeight * 0.5, 800)
 
 					if (width > maxWidth || height > maxHeight) {
 						const scale = Math.min(maxWidth / width, maxHeight / height)
@@ -132,7 +123,7 @@ const { url, isDir, name, thumbnailUrl, imageDimensions } = Astro.props
 
 					wmEmitter.emit('appendWindow', {
 						title: name,
-						url: viewerUrl,
+						url: windowUrl,
 						width,
 						height,
 					})
@@ -145,3 +136,13 @@ const { url, isDir, name, thumbnailUrl, imageDimensions } = Astro.props
 
 	customElements.define('abstract-file-button', AbstractFileButton)
 </script>
+
+<abstract-file-button
+	data-url={url}
+	data-is-dir={isDir}
+	data-name={name}
+	data-thumbnail-url={thumbnailUrl}
+	data-image-width={imageDimensions?.width}
+	data-image-height={imageDimensions?.height}
+>
+</abstract-file-button>
