@@ -113,6 +113,7 @@ const background = await (async () => {
 	<WindowManager
 		class:list={['md:visible invisible not-md:pointer-events-none']}
 		client:only="solid-js"
+		transition:persist="wm"
 	/>
 	{
 		() => {
@@ -125,12 +126,12 @@ const background = await (async () => {
 									class:list={[
 										'hidden sm:flex flex-col gap-1 justify-center items-center p-4',
 									]}
+									transition:persist="author-info"
 								>
 									<img
 										src={config.author.avatar.url.toString()}
 										alt={config.author.avatar.alt ?? 'avatar'}
 										class="rounded-full size-24 select-none"
-										transition:name="avatar"
 										loading="lazy"
 									/>
 									<p class="text-2xl font-bold">{config.author.name}</p>
@@ -236,7 +237,7 @@ const background = await (async () => {
 					<div class:list={['relative h-screen pointer-events-none']}>
 						<div
 							class="absolute w-screen h-screen pointer-events-none"
-							transition:persist
+							transition:persist="bg"
 						>
 							<ProgressiveImage
 								imageClass="object-cover object-center size-full pointer-events-none"
