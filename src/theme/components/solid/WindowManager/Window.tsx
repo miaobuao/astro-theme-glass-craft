@@ -144,10 +144,10 @@ export function Window(
 
 				<div class="flex-1 rounded-inherit relative">
 					<Show when={isDragging() || isResizing()}>
-						<div class="absolute inset-0"></div>
+						<div class="absolute inset-0 select-none"></div>
 					</Show>
 					<iframe
-						class="h-full w-full rounded-inherit"
+						class={`h-full w-full rounded-inherit ${isDragging() || isResizing() ? 'select-none' : ''}`}
 						src={props.url.toString()}
 					></iframe>
 				</div>
