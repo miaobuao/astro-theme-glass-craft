@@ -29,7 +29,7 @@ const description = getValue('description')
 	import 'giscus'
 </script>
 
-<BaseHtml {title} {description} class="dark:text-white">
+<BaseHtml {title} {description} class="dark:text-white max-w-prose mx-auto">
 	<div class="flex flex-col rounded-lg">
 		<header class="p-4 flex flex-col">
 			<p class="break-all text-lg md:text-xl font-bold">
@@ -44,14 +44,18 @@ const description = getValue('description')
 		<article
 			class:list={[
 				'prose max-sm:prose-sm dark:prose-invert text-inherit max-w-full',
-				'py-4 px-4 md:px-8',
+				'py-4 px-4',
 			]}
 		>
 			<slot />
 		</article>
 	</div>
-	<div class="mt-8 p-2">
-		{config.comment?.giscus && <Giscus {...config.comment.giscus} />}
-	</div>
+	{
+		config.comment?.giscus && (
+			<div class="mt-8 p-2">
+				<Giscus {...config.comment.giscus} />
+			</div>
+		)
+	}
 	<div class="h-16 sm:h-0"></div>
 </BaseHtml>
