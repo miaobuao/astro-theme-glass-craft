@@ -157,6 +157,12 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/viewer/image',
+					entrypoint: resolve(__dirname, 'src/theme/pages/viewer/image.astro'),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: 'robots.txt',
 					entrypoint: resolve(__dirname, 'src/theme/pages/robots.txt.ts'),
 					prerender: true,
