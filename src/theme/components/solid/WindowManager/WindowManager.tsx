@@ -5,6 +5,7 @@ import { Window } from './Window'
 
 export function WindowManager() {
 	const [windows, setWindows] = createStore<WindowProps[]>([])
+	const [windowOrder, setWindowOrder] = createStore<number[]>([])
 	const lastGeometryMap = new Map<number, WindowProps['geometry']>()
 	const animationRafMap = new Map<number, number>()
 
@@ -20,27 +21,30 @@ export function WindowManager() {
 		return start + (end - start) * t
 	}
 
-	// Handle window focus - move to end of array for top z-index
+	// Handle window focus - reorder and reassign z-index
 	function handleFocus(winId: number) {
-		const currentIndex = windows.findIndex((w) => w.id === winId)
-		if (currentIndex === -1 || currentIndex === windows.length - 1) {
+		const orderIndex = windowOrder.findIndex((id) => id === winId)
+		if (orderIndex === -1 || orderIndex === windowOrder.length - 1) {
 			return // Already on top or not found
 		}
 
-		// Get max z-index from the top window
-		const maxZIndex = windows[windows.length - 1].zIndex
+		// Calculate new order
+		const newOrder = [
+			...windowOrder.slice(0, orderIndex),
+			...windowOrder.slice(orderIndex + 1),
+			winId,
+		]
 
-		// Update only the focused window's z-index
-		setWindows((w) => w.id === winId, 'zIndex', maxZIndex + 1)
+		// Update window order
+		setWindowOrder(newOrder)
 
-		// Move window to end of array
-		setWindows((prev) => {
-			const windowToMove = prev[currentIndex]
-			return [
-				...prev.slice(0, currentIndex),
-				...prev.slice(currentIndex + 1),
-				windowToMove,
-			]
+		// Reassign z-index to all windows based on new order
+		newOrder.forEach((id, index) => {
+			setWindows(
+				(w) => w.id === id,
+				'zIndex',
+				() => index + 1,
+			)
 		})
 	}
 
@@ -114,9 +118,10 @@ export function WindowManager() {
 				return false
 			}
 			while (updateGeometry()) {}
+			const newId = ++id
 			const newWindow: WindowProps = {
 				...win,
-				id: ++id,
+				id: newId,
 				status: 'normal' as const,
 				geometry: {
 					x,
@@ -128,6 +133,7 @@ export function WindowManager() {
 				zIndex: windows.length + 1, // New window gets highest z-index
 			}
 			setWindows([...windows, newWindow])
+			setWindowOrder([...windowOrder, newId])
 		})
 	})
 
@@ -141,6 +147,9 @@ export function WindowManager() {
 						onClose={() => {
 							setWindows((prevWindows) =>
 								prevWindows.filter(({ id }) => id !== win.id),
+							)
+							setWindowOrder((prevOrder) =>
+								prevOrder.filter((id) => id !== win.id),
 							)
 						}}
 						onMove={(x, y) => {

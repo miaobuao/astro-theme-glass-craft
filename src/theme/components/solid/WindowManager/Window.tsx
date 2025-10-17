@@ -136,43 +136,43 @@ export function Window(
 					}
 				>
 					<span class="w-16"></span>
-					<h2 id={titleId} class="flex-1 text-center truncate m-0 font-normal text-base">
+					<h2
+						id={titleId}
+						class="flex-1 text-center truncate m-0 font-normal text-base"
+					>
 						{props.title}
 					</h2>
 					<span class="flex gap-2" role="group" aria-label="Window controls">
 						<button
 							type="button"
-							class="icon-[mdi--minimize] cursor-pointer bg-transparent border-none p-0"
+							class="icon-[mdi--minimize] cursor-pointer"
 							aria-label="Minimize window"
 							tabindex={0}
 						></button>
 						<Show
 							when={props.status === 'normal'}
 							fallback={
-								<button
-									type="button"
-									class="icon-[mdi--dock-window] cursor-pointer bg-transparent border-none p-0"
+								<i
+									class="icon-[mdi--dock-window] cursor-pointer"
 									onClick={props.onDock}
 									aria-label="Restore window"
 									tabindex={0}
-								></button>
+								></i>
 							}
 						>
-							<button
-								type="button"
-								class="icon-[mdi--maximize] cursor-pointer bg-transparent border-none p-0"
+							<i
+								class="icon-[mdi--maximize] cursor-pointer"
 								onClick={props.onFullscreen}
 								aria-label="Maximize window"
 								tabindex={0}
-							></button>
+							></i>
 						</Show>
-						<button
-							type="button"
-							class="icon-[mdi--close] cursor-pointer bg-transparent border-none p-0"
+						<i
+							class="icon-[mdi--close] cursor-pointer"
 							onClick={props.onClose}
 							aria-label="Close window"
 							tabindex={0}
-						></button>
+						></i>
 					</span>
 				</section>
 
