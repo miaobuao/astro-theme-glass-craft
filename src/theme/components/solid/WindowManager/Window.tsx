@@ -176,6 +176,30 @@ export function Window(
 					onResize={props.onResize}
 					onResizingChange={setIsResizing}
 				/>
+				<DraggableLine
+					edge="top-left"
+					geometry={props.geometry}
+					onResize={props.onResize}
+					onResizingChange={setIsResizing}
+				/>
+				<DraggableLine
+					edge="top-right"
+					geometry={props.geometry}
+					onResize={props.onResize}
+					onResizingChange={setIsResizing}
+				/>
+				<DraggableLine
+					edge="bottom-left"
+					geometry={props.geometry}
+					onResize={props.onResize}
+					onResizingChange={setIsResizing}
+				/>
+				<DraggableLine
+					edge="bottom-right"
+					geometry={props.geometry}
+					onResize={props.onResize}
+					onResizingChange={setIsResizing}
+				/>
 			</div>
 		</div>
 	)
