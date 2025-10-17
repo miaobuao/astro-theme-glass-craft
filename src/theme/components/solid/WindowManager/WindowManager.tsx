@@ -99,9 +99,15 @@ export function WindowManager() {
 		wmEmitter.on('appendWindow', (win) => {
 			const clientWidth = window.innerWidth
 			const clientHeight = window.innerHeight
-			let width =
-				clientWidth > 1000 ? 438 : clientWidth >= 768 ? 375 : clientWidth
-			let height = Math.min(clientHeight, 768)
+
+			// Use provided width/height or calculate defaults
+			let width = win.width ?? (clientWidth > 1000 ? 438 : clientWidth >= 768 ? 375 : clientWidth)
+			let height = win.height ?? Math.min(clientHeight, 768)
+
+			// Ensure window fits within viewport
+			width = Math.min(width, clientWidth)
+			height = Math.min(height, clientHeight)
+
 			let x = clientWidth - width
 			let y = 0
 			function updateGeometry() {

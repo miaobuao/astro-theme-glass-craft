@@ -3,6 +3,8 @@ import mitt from 'mitt'
 export interface WindowInitialStatus {
 	url: URL
 	title: string
+	width?: number
+	height?: number
 }
 
 export interface WindowProps {

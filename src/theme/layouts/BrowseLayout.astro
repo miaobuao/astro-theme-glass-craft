@@ -7,6 +7,7 @@ import { basename } from 'path'
 import { relative } from 'path'
 import { SHARE_DIR } from '../consts'
 import { isImageFilename } from '../utils/is-image-filename'
+import { getImageDimensions } from '../utils/get-image-dimensions'
 
 interface Props {
 	files: AbstractFile[]
@@ -43,8 +44,13 @@ function file2ThumbnailUrl(absPath: string) {
 		]}
 	>
 		{
-			files.map(async (file) =>
-				file.isDir ? (
+			files.map(async (file) => {
+				// Get image dimensions for image files
+				const dimensions = isImageFilename(file.absPath)
+					? await getImageDimensions(file.absPath)
+					: undefined
+
+				return file.isDir ? (
 					<AbstractFileButton
 						isDir={true}
 						url={dir2Url(file.absPath)}
@@ -56,6 +62,7 @@ function file2ThumbnailUrl(absPath: string) {
 						url={file2Url(file.absPath)}
 						name={basename(file.absPath)}
 						thumbnailUrl={file2ThumbnailUrl(file.absPath)}
+						imageDimensions={dimensions}
 					/>
 				) : (
 					<AbstractFileButton
@@ -63,8 +70,8 @@ function file2ThumbnailUrl(absPath: string) {
 						url={file2Url(file.absPath)}
 						name={basename(file.absPath)}
 					/>
-				),
-			)
+				)
+			})
 		}
 	</div>
 </BaseLayout>
