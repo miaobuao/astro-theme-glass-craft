@@ -109,7 +109,7 @@ const { url, isDir, name, thumbnailUrl, imageDimensions } = Astro.props
 
 					// Calculate window dimensions (scale down if too large)
 					width = imageWidth ? parseInt(imageWidth) : 800
-					height = imageHeight ? parseInt(imageHeight) : 600
+					height = (imageHeight ? parseInt(imageHeight) : 600) + 32
 
 					// Scale down large images to fit better in the window
 					const maxWidth = Math.min(window.innerWidth * 0.5, 768)

@@ -8,7 +8,11 @@ import {
 } from './emitter'
 import { Window } from './Window'
 
-export function WindowManager() {
+export interface WindowManagerProps {
+	class?: string
+}
+
+export function WindowManager(props: WindowManagerProps) {
 	const lastGeometryMap = new Map<number, WindowProps['geometry']>()
 	const animationRafMap = new Map<number, number>()
 
@@ -100,7 +104,7 @@ export function WindowManager() {
 	}
 
 	return (
-		<div>
+		<div class={props.class}>
 			<For each={windows}>
 				{(win) => (
 					<Window

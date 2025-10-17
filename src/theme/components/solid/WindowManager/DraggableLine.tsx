@@ -2,7 +2,15 @@ import { clamp } from 'lodash-es'
 import { createSignal } from 'solid-js'
 import type { WindowProps } from './emitter'
 
-type EdgeType = 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+type EdgeType =
+	| 'top'
+	| 'bottom'
+	| 'left'
+	| 'right'
+	| 'top-left'
+	| 'top-right'
+	| 'bottom-left'
+	| 'bottom-right'
 
 interface DraggableLineProps {
 	edge: EdgeType
@@ -17,7 +25,7 @@ export function DraggableLine(props: DraggableLineProps) {
 	const [isResizing, setIsResizing] = createSignal(false)
 
 	const minWidth = props.minWidth ?? 300
-	const minHeight = props.minHeight ?? 200
+	const minHeight = props.minHeight ?? 400
 
 	let startX = 0
 	let startY = 0

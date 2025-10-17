@@ -110,9 +110,6 @@ export function WindowShell(props: WindowShellProps) {
 		window.removeEventListener('pointerup', handleDragEnd)
 	}
 
-	const windowId = `window-${props.id}`
-	const titleId = `window-title-${props.id}`
-
 	let container: HTMLDivElement | undefined
 
 	createEffect(() => {
@@ -134,7 +131,6 @@ export function WindowShell(props: WindowShellProps) {
 			}}
 			role="dialog"
 			aria-modal="false"
-			aria-labelledby={titleId}
 			tabindex={-1}
 			onFocus={props.onFocus}
 			onKeyDown={handleKeyDown}
@@ -148,10 +144,7 @@ export function WindowShell(props: WindowShellProps) {
 					}
 				>
 					<span class="w-16"></span>
-					<h2
-						id={titleId}
-						class="flex-1 text-center truncate m-0 font-normal text-base"
-					>
+					<h2 class="flex-1 text-center truncate m-0 font-normal text-base">
 						{props.title}
 					</h2>
 					<span class="flex gap-2" role="group" aria-label="Window controls">
@@ -187,7 +180,7 @@ export function WindowShell(props: WindowShellProps) {
 					</span>
 				</section>
 
-				<div class="flex-1 rounded-inherit relative">
+				<div class="flex-1 rounded-inherit relative overflow-hidden">
 					<Show when={isDragging() || isResizing()}>
 						<div class="absolute inset-0 select-none"></div>
 					</Show>

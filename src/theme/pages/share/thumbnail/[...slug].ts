@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro'
 import { readFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 import sharp from 'sharp'
-import { SHARE_DIR } from '../../../consts'
+import { SHARE_DIR, SHARE_THUMBNAIL_SIZE } from '../../../consts'
 import { flattenFiles } from '../../../utils/flatten-files'
 import { getAllFiles } from '../../../utils/get-all-files'
 import { isImageFilename } from '../../../utils/is-image-filename'
@@ -32,10 +32,10 @@ export const GET: APIRoute = async function ({ params }) {
 	try {
 		const { width, height } = await sharp(content).metadata()
 		if (width > height) {
-			var thumbnailWidth = Math.min(256, width)
+			var thumbnailWidth = Math.min(SHARE_THUMBNAIL_SIZE, width)
 			var thumbnailHeight = Math.round((height * thumbnailWidth) / width)
 		} else {
-			var thumbnailHeight = Math.min(256, height)
+			var thumbnailHeight = Math.min(SHARE_THUMBNAIL_SIZE, height)
 			var thumbnailWidth = Math.round((width * thumbnailHeight) / height)
 		}
 		const thumbnail = await sharp(content)

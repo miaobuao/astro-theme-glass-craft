@@ -1,4 +1,6 @@
+import { clamp } from 'lodash-es'
 import mitt from 'mitt'
+import { batch } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
 export interface WindowInitialStatus {
@@ -82,4 +84,44 @@ wmEmitter.on('appendWindow', (win) => {
 	}
 	setWindows([...windows, newWindow])
 	setWindowOrder([...windowOrder, newId])
+})
+
+export function isOuterWindow(win: WindowProps) {
+	const { x, y, width, height } = win.geometry
+	return (
+		x + width > window.innerWidth ||
+		y + height > window.innerHeight ||
+		x < 0 ||
+		y < 0
+	)
+}
+
+window.addEventListener('resize', () => {
+	const MIN_WIDTH = Math.min(window.innerWidth, 300)
+	const MIN_HEIGHT = Math.min(window.innerHeight, 400)
+
+	batch(() => {
+		for (const win of windows) {
+			if (!isOuterWindow(win)) {
+				continue
+			}
+			let { x, y, width, height } = win.geometry
+			const maxWidth = clamp(width, MIN_WIDTH, window.innerWidth)
+			const maxHeight = clamp(height, MIN_HEIGHT, window.innerHeight)
+			const scale = Math.min(maxWidth / width, maxHeight / height)
+			width = Math.floor(scale * width)
+			height = Math.floor(scale * height)
+			if (x + width / 2 > window.innerWidth) {
+				x = Math.max(0, window.innerWidth - width / 2)
+			}
+			if (y > window.innerHeight - 48) {
+				y = clamp(y, 0, window.innerHeight - 48)
+			}
+			setWindows(
+				(w) => w.id === win.id,
+				'geometry',
+				(g) => ({ ...g, x, y, width, height }),
+			)
+		}
+	})
 })
