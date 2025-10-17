@@ -132,7 +132,7 @@ export function WindowShell(props: WindowShellProps) {
 		>
 			<div class="h-full w-full flex flex-col glassmorphism rounded-sm m-0.5 relative">
 				<section
-					class="flex justify-around items-center p-1 select-none pointer-events-auto"
+					class="flex justify-around items-center p-1 select-none pointer-events-auto text-[1.25rem]"
 					onPointerDown={handleDragStart}
 					onDblClick={() =>
 						props.status === 'maximum' ? props.onDock() : props.onFullscreen()
@@ -146,12 +146,11 @@ export function WindowShell(props: WindowShellProps) {
 						{props.title}
 					</h2>
 					<span class="flex gap-2" role="group" aria-label="Window controls">
-						<button
-							type="button"
+						<i
 							class="icon-[mdi--minimize] cursor-pointer"
 							aria-label="Minimize window"
 							tabindex={0}
-						></button>
+						></i>
 						<Show
 							when={props.status === 'normal'}
 							fallback={
