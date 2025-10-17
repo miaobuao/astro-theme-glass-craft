@@ -110,6 +110,10 @@ const background = await (async () => {
 	description={description ?? config.description}
 	class="dark:text-white"
 >
+	<WindowManager
+		class:list={['md:visible invisible not-md:pointer-events-none']}
+		client:only="solid-js"
+	/>
 	{
 		() => {
 			const content = (
@@ -258,11 +262,6 @@ const background = await (async () => {
 			)
 		}
 	}
-
-	<WindowManager
-		class:list={['md:visible invisible not-md:pointer-events-none']}
-		client:only="solid-js"
-	/>
 </BaseHtml>
 
 <script defer>
