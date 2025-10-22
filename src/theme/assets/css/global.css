@@ -6,11 +6,6 @@
 	--radius-inherit: inherit;
 }
 
-:root {
-	@media (prefers-color-scheme: dark) {
-	}
-}
-
 @utility glassmorphism {
 	@apply bg-white/50 backdrop-blur-lg border border-white/60;
 	@apply dark:bg-black/50 border-black/10;
@@ -67,5 +62,25 @@
 			content: '';
 			@apply block border-b opacity-80;
 		}
+	}
+}
+
+.directive {
+	@apply p-2 rounded-md my-6;
+
+	p {
+		@apply my-2;
+	}
+
+	&.info {
+		@apply bg-[#d9edf7cc] text-[#31708f];
+	}
+
+	&.warning {
+		@apply bg-[#fcf8e3cc] text-[#8a6d3b];
+	}
+
+	&.error {
+		@apply bg-[#f2dedecc] text-[#a94442];
 	}
 }

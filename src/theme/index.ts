@@ -11,7 +11,8 @@ import type {
 } from 'astro'
 import pagefind from 'astro-pagefind'
 import rehypeAstroRelativeMarkdownLinks from 'astro-rehype-relative-markdown-links'
-import { uniq } from 'lodash-es'
+import { h } from 'hastscript'
+import { isString, uniq } from 'lodash-es'
 import { spawn } from 'node:child_process'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -22,10 +23,11 @@ import remarkDirective from 'remark-directive'
 import remarkFootnotesExtra from 'remark-footnotes-extra'
 import remarkGithubAdmonitionsToDirectives from 'remark-github-admonitions-to-directives'
 import remarkMath from 'remark-math'
+import remarkParse from 'remark-parse'
 import SuperJSON from 'superjson'
+import { visit } from 'unist-util-visit'
 import packageJson from '../../package.json'
 import type { ThemeConfig } from './config'
-
 const packageName = packageJson.name
 const __dirname = resolve(import.meta.dirname, '../../')
 
@@ -221,13 +223,35 @@ export default function ThemeIntegration(
 						},
 						gfm: config.markdown.gfm,
 						remarkPlugins: uniq([
+							remarkParse,
+							remarkDirective,
+							function remarkDirectiveRehype() {
+								return function (tree: any) {
+									visit(tree, function (node) {
+										if (
+											node.type === 'containerDirective' ||
+											node.type === 'leafDirective' ||
+											node.type === 'textDirective'
+										) {
+											const data = node.data || (node.data = {})
+											const hast = h(node.name, node.attributes || {})
+											if ('properties' in hast) {
+												data.hProperties = hast.properties
+											}
+											if ('tagName' in hast && isString(hast.tagName)) {
+												data.hName =
+													'directive-box-' + hast.tagName.toLowerCase()
+											}
+										}
+									})
+								}
+							},
 							[
 								remarkFootnotesExtra,
 								{
 									breakLink: true,
 								},
 							],
-							remarkDirective,
 							remarkGithubAdmonitionsToDirectives,
 							remarkMath,
 							...(config.markdown?.remarkPlugins ?? []),
