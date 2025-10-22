@@ -11,9 +11,19 @@ export const GET: APIRoute = async function (context) {
 		},
 	})
 
-	const posts = await getCollection('blog').then((posts) =>
-		Promise.all(posts.map(fallback)),
-	)
+	const posts = await getCollection('blog')
+		.then((posts) => Promise.all(posts.map(fallback)))
+		.then((posts) =>
+			posts
+				.filter((post) => post.frontMatter.isDraft === false)
+				.toSorted((a, b) => {
+					return a.frontMatter.publishDate > b.frontMatter.publishDate
+						? -1
+						: a.frontMatter.publishDate < b.frontMatter.publishDate
+							? 1
+							: 0
+				}),
+		)
 
 	return rss({
 		title: config?.title ?? '',
