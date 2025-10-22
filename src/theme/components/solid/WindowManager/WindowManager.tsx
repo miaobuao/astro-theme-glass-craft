@@ -1,12 +1,7 @@
 import { For } from 'solid-js'
-import {
-	setWindowOrder,
-	setWindows,
-	windowOrder,
-	windows,
-	type WindowProps,
-} from './emitter'
+import { wmEmitter, type WindowProps } from './emitter'
 import { Window } from './Window'
+import { setWindows, windows } from './windows'
 
 export interface WindowManagerProps {
 	class?: string
@@ -26,33 +21,6 @@ export function WindowManager(props: WindowManagerProps) {
 	// Lerp helper for interpolating between values
 	function lerp(start: number, end: number, t: number): number {
 		return start + (end - start) * t
-	}
-
-	// Handle window focus - reorder and reassign z-index
-	function handleFocus(winId: number) {
-		const orderIndex = windowOrder.findIndex((id) => id === winId)
-		if (orderIndex === -1 || orderIndex === windowOrder.length - 1) {
-			return // Already on top or not found
-		}
-
-		// Calculate new order
-		const newOrder = [
-			...windowOrder.slice(0, orderIndex),
-			...windowOrder.slice(orderIndex + 1),
-			winId,
-		]
-
-		// Update window order
-		setWindowOrder(newOrder)
-
-		// Reassign z-index to all windows based on new order
-		newOrder.forEach((id, index) => {
-			setWindows(
-				(w) => w.id === id,
-				'zIndex',
-				() => index + 1,
-			)
-		})
 	}
 
 	// Animate geometry changes with RAF
@@ -109,14 +77,15 @@ export function WindowManager(props: WindowManagerProps) {
 				{(win) => (
 					<Window
 						{...win}
-						onFocus={() => handleFocus(win.id)}
+						onFocus={() =>
+							wmEmitter.emit('focusWindow', {
+								id: win.id,
+							})
+						}
 						onClose={() => {
-							setWindows((prevWindows) =>
-								prevWindows.filter(({ id }) => id !== win.id),
-							)
-							setWindowOrder((prevOrder) =>
-								prevOrder.filter((id) => id !== win.id),
-							)
+							wmEmitter.emit('closeWindow', {
+								id: win.id,
+							})
 						}}
 						onMove={(x, y) => {
 							setWindows(
