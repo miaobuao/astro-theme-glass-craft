@@ -1,0 +1,47 @@
+---
+import type { InferGetStaticPropsType } from 'astro'
+import { getCollection, render } from 'astro:content'
+import { createFallbackBlogFrontMatterProcessor } from '../../../utils/fallback-blog-frontmatter'
+import BlogPostEmbedLayout from '../../../layouts/BlogPostEmbedLayout.astro'
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog')
+	const slugifyFallback = createFallbackBlogFrontMatterProcessor({
+		options: {
+			slugify: true,
+		},
+	})
+	const unslugifyFallback = createFallbackBlogFrontMatterProcessor({
+		options: {
+			slugify: false,
+		},
+	})
+	const slugifyPosts = await Promise.all(posts.map(slugifyFallback))
+	const unslugifyPosts = await Promise.all(posts.map(unslugifyFallback))
+
+	const paths = [
+		...slugifyPosts.map((post) => ({
+			params: { slug: post.frontMatter.slug },
+			props: { post, slugify: true },
+		})),
+		...unslugifyPosts.map((post) => ({
+			params: { slug: post.frontMatter.slug },
+			props: { post, slugify: false },
+		})),
+	]
+	return paths
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+const { post } = Astro.props
+
+const { Content } = await render(post.entry)
+
+const title = post.frontMatter.title
+const description = post.frontMatter.description
+const pubDate = post.frontMatter.publishDate
+---
+
+<BlogPostEmbedLayout {title} {description} {pubDate}>
+	<Content />
+</BlogPostEmbedLayout>

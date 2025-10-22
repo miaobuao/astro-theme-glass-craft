@@ -1,0 +1,48 @@
+---
+import BaseHtml from '../../layouts/BaseHtml.astro'
+---
+
+<script>
+	class ImageViewer extends HTMLElement {
+		constructor() {
+			super()
+		}
+
+		connectedCallback() {
+			const params = new URLSearchParams(window.location.search)
+			const imageUrl = params.get('url') || params.get('src')
+
+			if (!imageUrl) {
+				this.innerHTML = `
+					<div class="text-white text-center p-4">
+						<p class="text-xl mb-2">No image URL provided</p>
+						<p class="text-sm text-gray-400">Please add ?url=YOUR_IMAGE_URL to the URL</p>
+					</div>
+				`
+				return
+			}
+
+			const img = document.createElement('img')
+			img.src = imageUrl
+			img.className = 'max-w-full max-h-screen object-contain select-none'
+
+			img.onerror = () => {
+				this.innerHTML = `
+					<div class="text-white text-center p-4">
+						<p class="text-xl mb-2">Failed to load image</p>
+						<p class="text-sm text-gray-400">${imageUrl}</p>
+					</div>
+				`
+			}
+
+			this.appendChild(img)
+		}
+	}
+
+	customElements.define('image-viewer', ImageViewer)
+</script>
+
+<BaseHtml title="Image Viewer">
+	<image-viewer class="h-screen w-screen flex items-center justify-center">
+	</image-viewer>
+</BaseHtml>

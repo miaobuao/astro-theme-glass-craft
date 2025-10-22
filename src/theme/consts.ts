@@ -15,3 +15,4 @@ export const GALLERY_THUMBNAIL_CONFIG = {
 	size: config.gallery?.thumbnail?.size ?? 384,
 	format: config.gallery?.thumbnail?.format ?? 'webp',
 }
+export const SHARE_THUMBNAIL_SIZE = 80

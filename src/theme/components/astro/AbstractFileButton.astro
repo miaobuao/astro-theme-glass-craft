@@ -4,60 +4,145 @@ interface Props {
 	isDir: boolean
 	name: string
 	thumbnailUrl?: string
-}
-
-const { url, isDir, name, thumbnailUrl } = Astro.props
-
-const ext = name.split('.').pop() ?? ''
-const icon = isDir
-	? 'icon-[vscode-icons--default-folder]'
-	: getIconFromExtName(ext)
-
-function getIconFromExtName(ext: string) {
-	switch (ext.toLowerCase()) {
-		case 'md':
-			return 'icon-[vscode-icons--file-type-markdown]'
-		case 'html':
-			return 'icon-[vscode-icons--file-type-html]'
-		case 'ts':
-			return 'icon-[vscode-icons--file-type-typescript-official]'
-		case 'css':
-			return 'icon-[vscode-icons--file-type-css]'
-		case 'json':
-			return 'icon-[vscode-icons--file-type-json]'
-		case 'png':
-		case 'jpg':
-			return 'icon-[vscode-icons--file-type-image]'
-		case 'svg':
-			return 'icon-[vscode-icons--file-type-svg]'
-		case 'text':
-			return 'icon-[vscode-icons--file-type-text]'
-		default:
-			return 'icon-[vscode-icons--default-file]'
+	imageDimensions?: {
+		width: number
+		height: number
 	}
 }
+
+const { url, isDir, name, thumbnailUrl, imageDimensions } = Astro.props
 ---
 
-<a
-	href={url}
-	class:list={[
-		'transition-all flex items-center gap-2 p-2 rounded-md glassmorphism',
-	]}
-	target={isDir ? '_self' : '_blank'}
->
-	{
-		thumbnailUrl ? (
-			<i
-				class:list={['rounded-sm size-12 bg-center bg-cover']}
-				style={{
-					backgroundImage: `url(${thumbnailUrl})`,
-				}}
-			/>
-		) : (
-			<i class:list={[icon, 'size-12']} />
-		)
+<script>
+	import { wmEmitter } from '../solid/WindowManager/emitter'
+	import { resolveUrl } from '../../utils/resolve-url'
+
+	function getIconFromExtName(ext: string): string {
+		switch (ext.toLowerCase()) {
+			case 'md':
+				return 'icon-[vscode-icons--file-type-markdown]'
+			case 'html':
+				return 'icon-[vscode-icons--file-type-html]'
+			case 'ts':
+				return 'icon-[vscode-icons--file-type-typescript-official]'
+			case 'css':
+				return 'icon-[vscode-icons--file-type-css]'
+			case 'json':
+				return 'icon-[vscode-icons--file-type-json]'
+			case 'png':
+			case 'jpg':
+			case 'jpeg':
+			case 'gif':
+			case 'webp':
+				return 'icon-[vscode-icons--file-type-image]'
+			case 'svg':
+				return 'icon-[vscode-icons--file-type-svg]'
+			case 'text':
+			case 'txt':
+				return 'icon-[vscode-icons--file-type-text]'
+			default:
+				return 'icon-[vscode-icons--default-file]'
+		}
 	}
-	<p class="flex-1 truncate" title={name}>
-		{name}
-	</p>
-</a>
+
+	class AbstractFileButton extends HTMLElement {
+		connectedCallback() {
+			const url = this.dataset.url
+			const isDir = this.dataset.isDir === 'true'
+			const name = this.dataset.name
+			const thumbnailUrl = this.dataset.thumbnailUrl
+			const imageWidth = this.dataset.imageWidth
+			const imageHeight = this.dataset.imageHeight
+
+			if (!url || !name) {
+				return
+			}
+
+			const ext = name.split('.').pop() ?? ''
+			const icon = isDir
+				? 'icon-[vscode-icons--default-folder]'
+				: getIconFromExtName(ext)
+
+			const hasImage = !!imageWidth && !!imageHeight
+
+			// Create link element
+			const link = document.createElement('a')
+			link.href = url
+			link.className = `transition-all flex items-center gap-2 p-2 rounded-md glassmorphism ${hasImage ? 'file-with-image' : ''}`
+			link.target = isDir ? '_self' : '_blank'
+
+			// Create icon or thumbnail
+			const iconElement = document.createElement('i')
+			if (thumbnailUrl) {
+				iconElement.className = 'rounded-sm size-12 bg-center bg-cover'
+				iconElement.style.backgroundImage = `url(${thumbnailUrl})`
+			} else {
+				iconElement.className = `${icon} size-12`
+			}
+
+			// Create name text
+			const nameElement = document.createElement('p')
+			nameElement.className = 'flex-1 truncate'
+			nameElement.title = name
+			nameElement.textContent = name
+
+			// Assemble elements
+			link.appendChild(iconElement)
+			link.appendChild(nameElement)
+
+			if (!isDir && hasImage) {
+				link.addEventListener('click', (e) => {
+					// Only use WindowManager on desktop
+					if (isDir || window.innerWidth < 768) {
+						return
+					}
+
+					e.stopImmediatePropagation()
+					e.preventDefault()
+
+					let width: number | undefined
+					let height: number | undefined
+					let windowUrl: URL
+
+					// Build viewer URL with image URL as query parameter
+					windowUrl = resolveUrl(`/viewer/image?url=${encodeURIComponent(url)}`)
+
+					// Calculate window dimensions (scale down if too large)
+					width = imageWidth ? parseInt(imageWidth) : 800
+					height = (imageHeight ? parseInt(imageHeight) : 600) + 32
+
+					// Scale down large images to fit better in the window
+					const maxWidth = Math.min(window.innerWidth * 0.5, 768)
+					const maxHeight = Math.min(window.innerHeight * 0.5, 800)
+
+					if (width > maxWidth || height > maxHeight) {
+						const scale = Math.min(maxWidth / width, maxHeight / height)
+						width = Math.floor(width * scale)
+						height = Math.floor(height * scale)
+					}
+
+					wmEmitter.emit('appendWindow', {
+						title: name,
+						url: windowUrl,
+						width,
+						height,
+					})
+				})
+			}
+
+			this.appendChild(link)
+		}
+	}
+
+	customElements.define('abstract-file-button', AbstractFileButton)
+</script>
+
+<abstract-file-button
+	data-url={url}
+	data-is-dir={isDir}
+	data-name={name}
+	data-thumbnail-url={thumbnailUrl}
+	data-image-width={imageDimensions?.width}
+	data-image-height={imageDimensions?.height}
+>
+</abstract-file-button>

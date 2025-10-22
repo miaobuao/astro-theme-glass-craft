@@ -56,6 +56,15 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/embed/blog/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/embed/blog/[...slug].astro',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/archive',
 					entrypoint: resolve(__dirname, 'src/theme/pages/archive/index.astro'),
 					prerender: true,
@@ -144,6 +153,12 @@ export default function ThemeIntegration(
 				injectRoute({
 					pattern: '/gallery',
 					entrypoint: resolve(__dirname, 'src/theme/pages/gallery/index.astro'),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/viewer/image',
+					entrypoint: resolve(__dirname, 'src/theme/pages/viewer/image.astro'),
 					prerender: true,
 				})
 

@@ -1,4 +1,5 @@
 ---
+import { WindowManager } from '../components/solid/WindowManager/WindowManager'
 import BaseHtml, { type Props as BaseHtmlProps } from './BaseHtml.astro'
 import AdaptiveIconButton from '../components/astro/AdaptiveIconButton.astro'
 import { config } from '../consts'
@@ -9,6 +10,7 @@ import {
 	getThumbnailImageId,
 	toAbsoluteUrl,
 } from '../utils/thumbnail'
+import { WindowsList } from '../components/solid/WindowManager/WindowsList'
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
@@ -114,18 +116,18 @@ const background = await (async () => {
 			const content = (
 				<div class="absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2">
 					<div class="sm:glassmorphism size-full rounded-md flex flex-row gap-2">
-						<div class="fixed w-full sm:w-fit sm:max-w-48 lg:max-w-52 bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:p-2 sm:overflow-auto no-scrollbar gap-2">
+						<div class="fixed w-full sm:w-50 lg:w-52 bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:overflow-auto no-scrollbar gap-2">
 							{showAuthorInfo && (
 								<div
 									class:list={[
 										'hidden sm:flex flex-col gap-1 justify-center items-center p-4',
 									]}
+									transition:persist="author-info"
 								>
 									<img
 										src={config.author.avatar.url.toString()}
 										alt={config.author.avatar.alt ?? 'avatar'}
 										class="rounded-full size-24 select-none"
-										transition:name="avatar"
 										loading="lazy"
 									/>
 									<p class="text-2xl font-bold">{config.author.name}</p>
@@ -135,7 +137,7 @@ const background = await (async () => {
 								</div>
 							)}
 
-							<div class="flex flex-row sm:flex-col w-full justify-around border-none max-sm:glassmorphism">
+							<div class="flex flex-row sm:flex-col w-full justify-around border-none max-sm:glassmorphism sm:p-2">
 								<AdaptiveIconButton active={isTimeline} href="/">
 									<i
 										slot="icon"
@@ -212,6 +214,11 @@ const background = await (async () => {
 									</AdaptiveIconButton>
 								)}
 							</div>
+
+							<WindowsList
+								client:only="solid-js"
+								className="flex-1 hidden sm:flex flex-col gap-1 overflow-auto px-2"
+							/>
 						</div>
 
 						<main
@@ -231,7 +238,7 @@ const background = await (async () => {
 					<div class:list={['relative h-screen pointer-events-none']}>
 						<div
 							class="absolute w-screen h-screen pointer-events-none"
-							transition:persist
+							transition:persist="bg"
 						>
 							<ProgressiveImage
 								imageClass="object-cover object-center size-full pointer-events-none"
@@ -257,6 +264,11 @@ const background = await (async () => {
 			)
 		}
 	}
+	<WindowManager
+		class="invisible md:visible not-md:pointer-events-none"
+		client:only="solid-js"
+		transition:persist="wm"
+	/>
 </BaseHtml>
 
 <script defer>
