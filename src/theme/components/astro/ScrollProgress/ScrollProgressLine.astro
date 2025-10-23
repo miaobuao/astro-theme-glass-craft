@@ -1,0 +1,25 @@
+---
+interface Props {
+	selector: string
+	class?: string
+}
+
+const { selector, class: className } = Astro.props
+---
+
+<script>
+	import { ScrollProgressBase } from './base'
+	import { defineCustomElement } from '../../../utils/define-custom-element'
+
+	class ScrollProgressLine extends ScrollProgressBase {
+		attributeChangedCallback() {
+			const percentage = this.percentage
+		}
+	}
+
+	defineCustomElement('scroll-progress-line', ScrollProgressLine)
+</script>
+
+<scroll-progress-line data-selector={selector} class:list={[className]}>
+	<div class="relative size-full"></div>
+</scroll-progress-line>
