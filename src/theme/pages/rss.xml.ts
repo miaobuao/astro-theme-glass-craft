@@ -32,6 +32,7 @@ export const GET: APIRoute = async function (context) {
 		items: posts.map((post) => ({
 			author: config.author.name,
 			...post.entry.data,
+			description: config.rss?.description ? post.entry.data.description : undefined,
 			pubDate: post.frontMatter.publishDate,
 			updatedDate: post.frontMatter.updateDate,
 			link: `/blog/${post.frontMatter.slug}/`,

@@ -71,5 +71,6 @@ export interface ThemeConfig {
 	}
 	rss?: {
 		content?: boolean
+		description?: boolean
 	}
 }
