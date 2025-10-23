@@ -1,0 +1,109 @@
+---
+interface Props {
+	selector: string
+	strokeWidth?: number
+	class?: string
+}
+
+const { selector, strokeWidth = 4, class: className } = Astro.props
+---
+
+<script>
+	import { ScrollProgressBase } from './base'
+	import { defineCustomElement } from '../../../utils/define-custom-element'
+
+	class ScrollProgressBall extends ScrollProgressBase {
+		get strokeWidth() {
+			return Number(this.dataset.strokeWidth)
+		}
+
+		get circleRadius() {
+			return (this.svg.getBoundingClientRect().width - this.strokeWidth) / 2
+		}
+
+		get circumference() {
+			return (
+				Number(
+					(this.svg.getBoundingClientRect().width - this.strokeWidth) * Math.PI,
+				) || 0
+			)
+		}
+
+		get progressCircle() {
+			return this.querySelector('.progress-circle') as SVGCircleElement
+		}
+
+		get percentageText() {
+			return this.querySelector('.percentage') as HTMLDivElement
+		}
+
+		get svg() {
+			return this.querySelector('svg') as SVGSVGElement
+		}
+
+		private updateSvgSize() {
+			const r = this.circleRadius
+			const size = r * 2 + this.strokeWidth
+			this.svg.setAttribute('width', size.toString())
+			this.svg.setAttribute('height', size.toString())
+			this.querySelectorAll('circle').forEach((circle) => {
+				circle.setAttribute('r', r.toString())
+				circle.setAttribute('cx', (size / 2).toString())
+				circle.setAttribute('cy', (size / 2).toString())
+			})
+			this.progressCircle.setAttribute(
+				'stroke-dasharray',
+				this.circumference.toString(),
+			)
+		}
+
+		attributeChangedCallback() {
+			if (!this.targetElement || !this.progressCircle || !this.percentageText) {
+				return
+			}
+
+			this.updateSvgSize()
+
+			const percentage = this.percentage
+
+			// Update circle progress
+			const offset =
+				this.circumference - (percentage / 100) * this.circumference
+			this.progressCircle.style.strokeDashoffset = String(offset)
+
+			// Update percentage text
+			this.percentageText.textContent = Math.round(percentage).toString()
+		}
+	}
+
+	defineCustomElement('scroll-progress-ball', ScrollProgressBall)
+</script>
+
+<scroll-progress-ball
+	data-selector={selector}
+	data-stroke-width={strokeWidth}
+	class:list={[className]}
+>
+	<div class:list={['relative']}>
+		<svg class="rotate-[-90deg] size-full">
+			<!-- Background circle -->
+			<circle
+				fill="none"
+				stroke="currentColor"
+				stroke-width={strokeWidth}
+				class="opacity-20"></circle>
+			<!-- Progress circle -->
+			<circle
+				class="progress-circle transition-[stroke-dashoffset] duration-200"
+				fill="none"
+				stroke="currentColor"
+				stroke-width={strokeWidth}
+				stroke-linecap="round"></circle>
+		</svg>
+		<div
+			class="percentage absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-semibold select-none pointer-events-none after:content-['%']"
+		>
+			0
+		</div>
+	</div>
+</scroll-progress-ball>

@@ -11,13 +11,20 @@ import {
 } from '../utils/thumbnail'
 import { WindowsList } from '../components/solid/WindowManager/WindowsList'
 import { getNavigationConditions } from '../utils/navigation'
-import ScrollProgress from '../components/astro/ScrollProgress.astro'
+import ScrollProgressBall from '../components/astro/ScrollProgress/ScrollProgressBall.astro'
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
+	showScrollProgress?: boolean
 }
 
-const { showAuthorInfo, title, description, ...otherProps } = Astro.props
+const {
+	showAuthorInfo,
+	showScrollProgress,
+	title,
+	description,
+	...otherProps
+} = Astro.props
 
 const isTimeline =
 	Astro.url.pathname === '/' || Astro.url.pathname.startsWith('/blog/')
@@ -232,10 +239,12 @@ const background = await (async () => {
 						</main>
 					</div>
 
-					<ScrollProgress
-						selector="#main-scroll-container"
-						class="fixed bottom-4 right-4 z-50"
-					/>
+					{showScrollProgress && (
+						<ScrollProgressBall
+							selector="#main-scroll-container"
+							class="transition-all fixed bottom-32 2xl:bottom-12 right-4 z-50 glassmorphism rounded-full size-14 p-0.5 sm:size-17 sm:p-1"
+						/>
+					)}
 				</div>
 			)
 
