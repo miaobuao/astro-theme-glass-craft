@@ -35,6 +35,7 @@ export const GET: APIRoute = async function (context) {
 			pubDate: post.frontMatter.publishDate,
 			updatedDate: post.frontMatter.updateDate,
 			link: `/blog/${post.frontMatter.slug}/`,
+			content: config.rss?.content ? post.entry.rendered?.html : undefined,
 		})),
 	})
 }

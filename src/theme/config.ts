@@ -69,4 +69,7 @@ export interface ThemeConfig {
 	comment?: {
 		giscus?: GiscusConfig
 	}
+	rss?: {
+		content?: boolean
+	}
 }
