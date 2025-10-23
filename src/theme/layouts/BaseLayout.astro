@@ -4,13 +4,13 @@ import BaseHtml, { type Props as BaseHtmlProps } from './BaseHtml.astro'
 import AdaptiveIconButton from '../components/astro/AdaptiveIconButton.astro'
 import { config } from '../consts'
 import ProgressiveImage from '../components/astro/ProgressiveImage.astro'
-import { getCollection } from 'astro:content'
 import {
 	getOriginalImageId,
 	getThumbnailImageId,
 	toAbsoluteUrl,
 } from '../utils/thumbnail'
 import { WindowsList } from '../components/solid/WindowManager/WindowsList'
+import { getNavigationConditions } from '../utils/navigation'
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
@@ -66,10 +66,8 @@ const finderIcon = isFinder
 	? 'icon-[ix--navigation-filled]'
 	: 'icon-[ix--navigation]'
 
-const showGallery = (await getCollection('gallery')).length > 0
-const showArchive = (await getCollection('blog')).length > 0
-const showFriendLinks = !!config.friends && config.friends.length > 0
-const showShare = !!config.customPages?.shareDirectory
+const { showGallery, showArchive, showFriendLinks, showShare, showFinder } =
+	await getNavigationConditions()
 
 const canUseBackground = !!config.backgroundImage
 
@@ -193,17 +191,19 @@ const background = await (async () => {
 										Friends
 									</AdaptiveIconButton>
 								)}
-								<AdaptiveIconButton
-									class="max-sm:flex hidden"
-									active={isFinder}
-									href="/finder"
-								>
-									<i
-										slot="icon"
-										class:list={[finderIcon, 'size-6 sm:size-8']}
-									/>
-									Finder
-								</AdaptiveIconButton>
+								{showFinder && (
+									<AdaptiveIconButton
+										class="max-sm:flex hidden"
+										active={isFinder}
+										href="/finder"
+									>
+										<i
+											slot="icon"
+											class:list={[finderIcon, 'size-6 sm:size-8']}
+										/>
+										Finder
+									</AdaptiveIconButton>
+								)}
 								{config.customPages?.aboutMe && (
 									<AdaptiveIconButton
 										active={isAboutMe}
