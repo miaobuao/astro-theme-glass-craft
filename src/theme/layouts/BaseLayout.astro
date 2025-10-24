@@ -12,10 +12,11 @@ import {
 import { WindowsList } from '../components/solid/WindowManager/WindowsList'
 import { getNavigationConditions } from '../utils/navigation'
 import ScrollProgressBall from '../components/astro/ScrollProgress/ScrollProgressBall.astro'
+import ScrollProgressLine from '../components/astro/ScrollProgress/ScrollProgressLine.astro'
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
-	showScrollProgress?: boolean
+	showScrollProgress?: 'ball' | 'line' | 'auto' | boolean
 }
 
 const {
@@ -109,6 +110,10 @@ const background = await (async () => {
 		backgroundThumbnailUrl: backgroundOriginalUrl,
 	} as const
 })()
+
+// Normalize scroll progress type
+const scrollProgressType =
+	showScrollProgress === true ? 'line' : showScrollProgress
 ---
 
 <BaseHtml
@@ -239,10 +244,24 @@ const background = await (async () => {
 						</main>
 					</div>
 
-					{showScrollProgress && (
+					{(scrollProgressType === 'ball' || scrollProgressType === 'auto') && (
 						<ScrollProgressBall
 							selector="#main-scroll-container"
-							class="transition-all fixed bottom-32 2xl:bottom-4 right-4 z-50 glassmorphism rounded-full size-14 p-0.5 sm:size-17 sm:p-1"
+							class:list={[
+								'transition-all fixed bottom-32 2xl:bottom-4 right-4 z-50 glassmorphism rounded-full size-14 p-0.5 sm:size-17 sm:p-1',
+								scrollProgressType === 'auto' && 'hidden lg:block',
+							]}
+						/>
+					)}
+					{(scrollProgressType === 'line' || scrollProgressType === 'auto') && (
+						<ScrollProgressLine
+							selector="#main-scroll-container"
+							class:list={[
+								'transition-all fixed top-0 left-0 right-0 z-50 text-primary',
+								scrollProgressType === 'auto' && 'block lg:hidden',
+							]}
+							stroke-width={3}
+							linecap="butt"
 						/>
 					)}
 				</div>
