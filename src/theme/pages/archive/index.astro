@@ -43,7 +43,11 @@ const postsGroupedByYear = sortBy(
 ).reverse()
 ---
 
-<BaseLayout showAuthorInfo title="Archive">
+<BaseLayout
+	showAuthorInfo
+	showScrollProgress={config.scrollProgress}
+	title="Archive"
+>
 	<div class="flex flex-col gap-4 max-sm:glassmorphism max-sm:p-2 rounded-lg">
 		{
 			postsGroupedByYear.map((group) => (

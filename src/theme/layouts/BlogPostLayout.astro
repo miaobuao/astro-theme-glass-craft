@@ -32,7 +32,12 @@ const description = getValue('description')
 	import '../components/astro/directive/box/error'
 </script>
 
-<BaseLayout showAuthorInfo showScrollProgress {title} {description}>
+<BaseLayout
+	showAuthorInfo
+	showScrollProgress={config.scrollProgress}
+	{title}
+	{description}
+>
 	<div class="flex flex-col glassmorphism rounded-lg">
 		<header class="p-4 gap-3 flex items-center sm:hidden">
 			<img

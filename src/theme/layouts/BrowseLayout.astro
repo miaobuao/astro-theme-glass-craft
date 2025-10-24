@@ -5,7 +5,7 @@ import type { AbstractFile } from '../utils/abstract-file'
 import BaseLayout from './BaseLayout.astro'
 import { basename } from 'path'
 import { relative } from 'path'
-import { SHARE_DIR } from '../consts'
+import { SHARE_DIR, config } from '../consts'
 import { isImageFilename } from '../utils/is-image-filename'
 import { getImageDimensions } from '../utils/get-image-dimensions'
 
@@ -34,7 +34,7 @@ function file2ThumbnailUrl(absPath: string) {
 }
 ---
 
-<BaseLayout showAuthorInfo>
+<BaseLayout showAuthorInfo showScrollProgress={config.scrollProgress}>
 	<div
 		class:list={[
 			'grid gap-2',

@@ -4,6 +4,7 @@ interface Props {
 	strokeWidth?: number
 	showPercentage?: boolean
 	linecap?: 'round' | 'butt' | 'square'
+	orientation?: 'horizontal' | 'vertical'
 	class?: string
 }
 
@@ -12,6 +13,7 @@ const {
 	strokeWidth = 4,
 	showPercentage = false,
 	linecap = 'butt',
+	orientation = 'horizontal',
 	class: className,
 } = Astro.props
 ---
@@ -22,7 +24,13 @@ const {
 
 	class ScrollProgressLine extends ScrollProgressBase {
 		static get observedAttributes() {
-			return ['percentage', 'stroke-width', 'show-percentage', 'linecap']
+			return [
+				'percentage',
+				'stroke-width',
+				'show-percentage',
+				'linecap',
+				'orientation',
+			]
 		}
 
 		get strokeWidth() {
@@ -37,8 +45,13 @@ const {
 			return this.getAttribute('linecap') || 'butt'
 		}
 
+		get orientation() {
+			return this.getAttribute('orientation') || 'horizontal'
+		}
+
 		get lineLength() {
-			return this.svg.getBoundingClientRect().width
+			const rect = this.svg.getBoundingClientRect()
+			return this.orientation === 'vertical' ? rect.height : rect.width
 		}
 
 		get progressLine() {
@@ -57,18 +70,34 @@ const {
 			const length = this.lineLength
 			const strokeWidth = this.strokeWidth
 			const linecap = this.linecap
-			const y = strokeWidth / 2
+			const orientation = this.orientation
+			const offset = strokeWidth / 2
 
-			this.svg.setAttribute('height', strokeWidth.toString())
+			if (orientation === 'vertical') {
+				this.svg.setAttribute('width', strokeWidth.toString())
+				this.svg.setAttribute('height', '100%')
 
-			this.querySelectorAll('line').forEach((line) => {
-				line.setAttribute('x1', '0')
-				line.setAttribute('y1', y.toString())
-				line.setAttribute('x2', length.toString())
-				line.setAttribute('y2', y.toString())
-				line.setAttribute('stroke-width', strokeWidth.toString())
-				line.setAttribute('stroke-linecap', linecap)
-			})
+				this.querySelectorAll('line').forEach((line) => {
+					line.setAttribute('x1', offset.toString())
+					line.setAttribute('y1', '0')
+					line.setAttribute('x2', offset.toString())
+					line.setAttribute('y2', length.toString())
+					line.setAttribute('stroke-width', strokeWidth.toString())
+					line.setAttribute('stroke-linecap', linecap)
+				})
+			} else {
+				this.svg.setAttribute('width', '100%')
+				this.svg.setAttribute('height', strokeWidth.toString())
+
+				this.querySelectorAll('line').forEach((line) => {
+					line.setAttribute('x1', '0')
+					line.setAttribute('y1', offset.toString())
+					line.setAttribute('x2', length.toString())
+					line.setAttribute('y2', offset.toString())
+					line.setAttribute('stroke-width', strokeWidth.toString())
+					line.setAttribute('stroke-linecap', linecap)
+				})
+			}
 
 			this.progressLine.setAttribute(
 				'stroke-dasharray',
@@ -84,6 +113,7 @@ const {
 			this.updateSvgSize()
 
 			const percentage = this.percentage
+			const orientation = this.orientation
 
 			// Update line progress
 			const offset = this.lineLength - (percentage / 100) * this.lineLength
@@ -109,10 +139,21 @@ const {
 	stroke-width={strokeWidth}
 	show-percentage={showPercentage}
 	linecap={linecap}
+	orientation={orientation}
 	class:list={[className]}
 >
-	<div class:list={['relative w-full']}>
-		<svg class="w-full overflow-visible">
+	<div
+		class:list={[
+			'relative',
+			orientation === 'vertical' ? 'h-full' : 'w-full',
+		]}
+	>
+		<svg
+			class:list={[
+				'overflow-visible',
+				orientation === 'vertical' ? 'h-full' : 'w-full',
+			]}
+		>
 			<!-- Background line -->
 			<line stroke="currentColor" class="opacity-20"></line>
 			<!-- Progress line -->
@@ -121,7 +162,13 @@ const {
 				stroke="currentColor"></line>
 		</svg>
 		<div
-			class="percentage absolute top-1/2 right-0 -translate-y-1/2 translate-x-full ml-2 text-xs font-semibold select-none pointer-events-none after:content-['%']"
+			class:list={[
+				'percentage text-xs font-semibold select-none pointer-events-none after:content-["%"]',
+				'absolute',
+				orientation === 'vertical'
+					? 'bottom-0 left-1/2 -translate-x-1/2 translate-y-full mt-2'
+					: 'top-1/2 right-0 -translate-y-1/2 translate-x-full ml-2',
+			]}
 			style={showPercentage ? '' : 'display: none'}
 		>
 			0
