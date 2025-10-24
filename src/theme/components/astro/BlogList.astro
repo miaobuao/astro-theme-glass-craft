@@ -35,6 +35,14 @@ const { posts, class: className } = Astro.props
 			})
 		})
 	}
+
+	// Handle tag clicks
+	document.addEventListener('click', (e) => {
+		const target = e.target as HTMLElement
+		if (target.classList.contains('tag-link')) {
+			e.stopPropagation()
+		}
+	})
 </script>
 
 <div
@@ -53,7 +61,7 @@ const { posts, class: className } = Astro.props
 					<a
 						href={`/blog/${post.frontMatter.slug}`}
 						data-embed={`/embed/blog/${post.frontMatter.slug}`}
-						class="p-4 md:p-6 break-all"
+						class="p-4 md:p-6 break-all blog-item"
 					>
 						<h2 class="text-lg md:text-2xl font-bold mb-2">
 							{post.frontMatter.title}
@@ -61,9 +69,24 @@ const { posts, class: className } = Astro.props
 						<div class="mb-2 md:mb-4">
 							<Fragment set:html={description} />
 						</div>
-						<p class="text-sm">
-							{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
-						</p>
+						<div class="flex flex-wrap items-center gap-2 text-sm">
+							<p>
+								{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
+							</p>
+							{post.frontMatter.tags.length > 0 && (
+								<div class="flex flex-wrap gap-1.5">
+									{post.frontMatter.tags.map((tag) => (
+										<a
+											href={`/tags/${tag}`}
+											class="tag tag-link"
+											onclick="event.stopPropagation()"
+										>
+											#{tag}
+										</a>
+									))}
+								</div>
+							)}
+						</div>
 					</a>
 					{index !== posts.length - 1 && <span class="hr" />}
 				</Fragment>
@@ -77,5 +100,11 @@ const { posts, class: className } = Astro.props
 
 	.hr {
 		@apply mx-auto my-2 w-[95%] h-[0.1px] bg-black/80 dark:bg-white/80;
+	}
+
+	.tag {
+		@apply px-2 py-0.5 rounded text-xs bg-primary-500/10 dark:bg-primary-400/10 text-primary-600 dark:text-primary-300;
+		@apply transition-colors hover:bg-primary-500/20 dark:hover:bg-primary-400/20;
+		@apply no-underline;
 	}
 </style>

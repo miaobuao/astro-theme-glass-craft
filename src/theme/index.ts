@@ -73,6 +73,18 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/tags',
+					entrypoint: resolve(__dirname, 'src/theme/pages/tags/index.astro'),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/tags/[...slug]',
+					entrypoint: resolve(__dirname, 'src/theme/pages/tags/[...slug].astro'),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/finder',
 					entrypoint: resolve(__dirname, 'src/theme/pages/finder/index.astro'),
 					prerender: true,
