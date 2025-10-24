@@ -254,7 +254,7 @@ const background = await (async () => {
 					{showScrollProgress === 'line' && (
 						<ScrollProgressLine
 							selector="#main-scroll-container"
-							class="transition-all fixed bottom-0 left-0 right-0 z-50"
+							class="scroll-progress-line-shadow transition-all fixed bottom-0 left-0 right-0 z-50"
 							stroke-width={3}
 							linecap="butt"
 							dynamicColor
@@ -300,6 +300,14 @@ const background = await (async () => {
 		transition:persist="wm"
 	/>
 </BaseHtml>
+
+<style>
+	.scroll-progress-line-shadow {
+		filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.2))
+			drop-shadow(0 -4px 5px rgba(0, 0, 0, 0.14))
+			drop-shadow(0 -1px 10px rgba(0, 0, 0, 0.12));
+	}
+</style>
 
 <script defer>
 	window.addEventListener(
