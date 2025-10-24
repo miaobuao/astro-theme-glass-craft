@@ -5,6 +5,7 @@ interface Props {
 	showPercentage?: boolean
 	linecap?: 'round' | 'butt' | 'square'
 	orientation?: 'horizontal' | 'vertical'
+	dynamicColor?: boolean
 	class?: string
 }
 
@@ -14,6 +15,7 @@ const {
 	showPercentage = false,
 	linecap = 'butt',
 	orientation = 'horizontal',
+	dynamicColor = true,
 	class: className,
 } = Astro.props
 ---
@@ -30,6 +32,7 @@ const {
 				'show-percentage',
 				'linecap',
 				'orientation',
+				'dynamic-color',
 			]
 		}
 
@@ -47,6 +50,10 @@ const {
 
 		get orientation() {
 			return this.getAttribute('orientation') || 'horizontal'
+		}
+
+		get dynamicColor() {
+			return this.getAttribute('dynamic-color') !== 'false'
 		}
 
 		get lineLength() {
@@ -113,11 +120,21 @@ const {
 			this.updateSvgSize()
 
 			const percentage = this.percentage
-			const orientation = this.orientation
 
 			// Update line progress
 			const offset = this.lineLength - (percentage / 100) * this.lineLength
 			this.progressLine.style.strokeDashoffset = String(offset)
+
+			// Update line color based on percentage
+			if (this.dynamicColor) {
+				if (percentage < 50) {
+					this.progressLine.style.stroke = '#eab308' // yellow-500
+				} else {
+					this.progressLine.style.stroke = '#22c55e' // green-500
+				}
+			} else {
+				this.progressLine.style.stroke = ''
+			}
 
 			// Update percentage text visibility and content
 			if (this.percentageText) {
@@ -140,6 +157,7 @@ const {
 	show-percentage={showPercentage}
 	linecap={linecap}
 	orientation={orientation}
+	dynamic-color={dynamicColor}
 	class:list={[className]}
 >
 	<div
@@ -158,7 +176,7 @@ const {
 			<line stroke="currentColor" class="opacity-20"></line>
 			<!-- Progress line -->
 			<line
-				class="progress-line transition-[stroke-dashoffset] duration-200"
+				class="progress-line transition-[stroke-dashoffset,stroke] duration-200"
 				stroke="currentColor"></line>
 		</svg>
 		<div

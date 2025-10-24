@@ -73,5 +73,5 @@ export interface ThemeConfig {
 		content?: boolean
 		description?: boolean
 	}
-	scrollProgress?: 'ball' | 'line' | 'auto' | false
+	scrollProgress?: 'ball' | 'line' | false
 }

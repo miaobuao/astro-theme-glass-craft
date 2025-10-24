@@ -2,10 +2,18 @@
 interface Props {
 	selector: string
 	strokeWidth?: number
+	showPercentage?: boolean
+	dynamicColor?: boolean
 	class?: string
 }
 
-const { selector, strokeWidth = 4, class: className } = Astro.props
+const {
+	selector,
+	strokeWidth = 4,
+	showPercentage = true,
+	dynamicColor = true,
+	class: className,
+} = Astro.props
 ---
 
 <script>
@@ -14,11 +22,19 @@ const { selector, strokeWidth = 4, class: className } = Astro.props
 
 	class ScrollProgressBall extends ScrollProgressBase {
 		static get observedAttributes() {
-			return ['percentage', 'stroke-width']
+			return ['percentage', 'stroke-width', 'show-percentage', 'dynamic-color']
 		}
 
 		get strokeWidth() {
 			return Number(this.getAttribute('stroke-width') || 4)
+		}
+
+		get showPercentage() {
+			return this.getAttribute('show-percentage') !== 'false'
+		}
+
+		get dynamicColor() {
+			return this.getAttribute('dynamic-color') !== 'false'
 		}
 
 		get circleRadius() {
@@ -65,7 +81,7 @@ const { selector, strokeWidth = 4, class: className } = Astro.props
 		}
 
 		attributeChangedCallback() {
-			if (!this.targetElement || !this.progressCircle || !this.percentageText) {
+			if (!this.targetElement || !this.progressCircle) {
 				return
 			}
 
@@ -78,8 +94,26 @@ const { selector, strokeWidth = 4, class: className } = Astro.props
 				this.circumference - (percentage / 100) * this.circumference
 			this.progressCircle.style.strokeDashoffset = String(offset)
 
-			// Update percentage text
-			this.percentageText.textContent = Math.round(percentage).toString()
+			// Update circle color based on percentage
+			if (this.dynamicColor) {
+				if (percentage < 50) {
+					this.progressCircle.style.stroke = '#eab308' // yellow-500
+				} else {
+					this.progressCircle.style.stroke = '#22c55e' // green-500
+				}
+			} else {
+				this.progressCircle.style.stroke = ''
+			}
+
+			// Update percentage text visibility and content
+			if (this.percentageText) {
+				if (this.showPercentage) {
+					this.percentageText.style.display = ''
+					this.percentageText.textContent = Math.round(percentage).toString()
+				} else {
+					this.percentageText.style.display = 'none'
+				}
+			}
 		}
 	}
 
@@ -89,6 +123,8 @@ const { selector, strokeWidth = 4, class: className } = Astro.props
 <scroll-progress-ball
 	data-selector={selector}
 	stroke-width={strokeWidth}
+	show-percentage={showPercentage}
+	dynamic-color={dynamicColor}
 	class:list={[className]}
 >
 	<div class:list={['relative']}>
@@ -100,13 +136,14 @@ const { selector, strokeWidth = 4, class: className } = Astro.props
 				class="opacity-20"></circle>
 			<!-- Progress circle -->
 			<circle
-				class="progress-circle transition-[stroke-dashoffset] duration-200"
+				class="progress-circle transition-[stroke-dashoffset,stroke] duration-200"
 				fill="none"
 				stroke="currentColor"
 				stroke-linecap="round"></circle>
 		</svg>
 		<div
 			class="percentage absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-semibold select-none pointer-events-none after:content-['%']"
+			style={showPercentage ? '' : 'display: none'}
 		>
 			0
 		</div>

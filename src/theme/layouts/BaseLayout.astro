@@ -16,7 +16,7 @@ import ScrollProgressLine from '../components/astro/ScrollProgress/ScrollProgres
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
-	showScrollProgress?: 'ball' | 'line' | 'auto' | boolean
+	showScrollProgress?: 'ball' | 'line' | false
 }
 
 const {
@@ -110,10 +110,6 @@ const background = await (async () => {
 		backgroundThumbnailUrl: backgroundOriginalUrl,
 	} as const
 })()
-
-// Normalize scroll progress type
-const scrollProgressType =
-	showScrollProgress === true ? 'line' : showScrollProgress
 ---
 
 <BaseHtml
@@ -125,7 +121,12 @@ const scrollProgressType =
 	{
 		() => {
 			const content = (
-				<div class="absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2">
+				<div
+					class:list={[
+						'absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2',
+						showScrollProgress === 'line' && 'sm:pb-4',
+					]}
+				>
 					<div class="sm:glassmorphism size-full rounded-md flex flex-row gap-2">
 						<div class="fixed w-full sm:w-50 lg:w-52 bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:overflow-auto no-scrollbar gap-2">
 							{showAuthorInfo && (
@@ -244,24 +245,19 @@ const scrollProgressType =
 						</main>
 					</div>
 
-					{(scrollProgressType === 'ball' || scrollProgressType === 'auto') && (
+					{showScrollProgress === 'ball' && (
 						<ScrollProgressBall
 							selector="#main-scroll-container"
-							class:list={[
-								'transition-all fixed bottom-32 2xl:bottom-4 right-4 z-50 glassmorphism rounded-full size-14 p-0.5 sm:size-17 sm:p-1',
-								scrollProgressType === 'auto' && 'hidden lg:block',
-							]}
+							class="transition-all fixed bottom-32 2xl:bottom-4 right-4 z-50 glassmorphism rounded-full size-14 p-0.5 sm:size-17 sm:p-1"
 						/>
 					)}
-					{(scrollProgressType === 'line' || scrollProgressType === 'auto') && (
+					{showScrollProgress === 'line' && (
 						<ScrollProgressLine
 							selector="#main-scroll-container"
-							class:list={[
-								'transition-all fixed bottom-0 left-0 right-0 z-50 text-primary',
-								scrollProgressType === 'auto' && 'block lg:hidden',
-							]}
+							class="transition-all fixed bottom-0 left-0 right-0 z-50"
 							stroke-width={3}
 							linecap="butt"
+							dynamicColor
 						/>
 					)}
 				</div>
