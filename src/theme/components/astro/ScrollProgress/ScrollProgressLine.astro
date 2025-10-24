@@ -73,6 +73,9 @@ const {
 			return this.querySelector('svg') as SVGSVGElement
 		}
 
+		private isHovering = false
+		private currentHoverPercentage = 0
+
 		private updateSvgSize() {
 			const length = this.lineLength
 			const strokeWidth = this.strokeWidth
@@ -112,6 +115,84 @@ const {
 			)
 		}
 
+		connectedCallback() {
+			super.connectedCallback()
+
+			// Add click event listener
+			this.svg.addEventListener('click', this.handleClick)
+
+			// Add hover event listeners
+			this.svg.addEventListener('mousemove', this.handleMouseMove)
+			this.svg.addEventListener('mouseleave', this.handleMouseLeave)
+
+			// Make the svg cursor pointer
+			this.svg.style.cursor = 'pointer'
+		}
+
+		disconnectedCallback() {
+			super.disconnectedCallback()
+
+			// Remove event listeners
+			this.svg.removeEventListener('click', this.handleClick)
+			this.svg.removeEventListener('mousemove', this.handleMouseMove)
+			this.svg.removeEventListener('mouseleave', this.handleMouseLeave)
+		}
+
+		private handleClick = (event: MouseEvent) => {
+			const percentage = this.getPercentageFromEvent(event)
+			this.scrollToPercentage(percentage)
+		}
+
+		private handleMouseMove = (event: MouseEvent) => {
+			const percentage = this.getPercentageFromEvent(event)
+			this.isHovering = true
+			this.currentHoverPercentage = percentage
+			this.updatePercentageDisplay()
+		}
+
+		private handleMouseLeave = () => {
+			this.isHovering = false
+			this.updatePercentageDisplay()
+		}
+
+		private getPercentageFromEvent(event: MouseEvent): number {
+			const rect = this.svg.getBoundingClientRect()
+			let percentage: number
+
+			if (this.orientation === 'vertical') {
+				const y = event.clientY - rect.top
+				percentage = (y / rect.height) * 100
+			} else {
+				const x = event.clientX - rect.left
+				percentage = (x / rect.width) * 100
+			}
+
+			return Math.min(100, Math.max(0, percentage))
+		}
+
+		private scrollToPercentage(percentage: number) {
+			if (!this.targetElement) return
+
+			const { scrollHeight, clientHeight } = this.targetElement
+			const maxScroll = scrollHeight - clientHeight
+			const targetScroll = (percentage / 100) * maxScroll
+
+			this.targetElement.scrollTo({
+				top: targetScroll,
+				behavior: 'smooth'
+			})
+		}
+
+		private updatePercentageDisplay() {
+			if (!this.percentageText || !this.showPercentage) return
+
+			const displayPercentage = this.isHovering
+				? this.currentHoverPercentage
+				: this.percentage
+
+			this.percentageText.textContent = Math.round(displayPercentage).toString()
+		}
+
 		attributeChangedCallback() {
 			if (!this.targetElement || !this.progressLine) {
 				return
@@ -140,7 +221,7 @@ const {
 			if (this.percentageText) {
 				if (this.showPercentage) {
 					this.percentageText.style.display = ''
-					this.percentageText.textContent = Math.round(percentage).toString()
+					this.updatePercentageDisplay()
 				} else {
 					this.percentageText.style.display = 'none'
 				}
@@ -184,7 +265,7 @@ const {
 				'percentage text-xs font-semibold select-none pointer-events-none after:content-["%"]',
 				'absolute',
 				orientation === 'vertical'
-					? 'bottom-0 left-1/2 -translate-x-1/2 translate-y-full mt-2'
+					? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90'
 					: 'top-1/2 right-0 -translate-y-1/2 translate-x-full ml-2',
 			]}
 			style={showPercentage ? '' : 'display: none'}
