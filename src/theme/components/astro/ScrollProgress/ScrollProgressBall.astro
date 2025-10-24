@@ -13,8 +13,12 @@ const { selector, strokeWidth = 4, class: className } = Astro.props
 	import { defineCustomElement } from '../../../utils/define-custom-element'
 
 	class ScrollProgressBall extends ScrollProgressBase {
+		static get observedAttributes() {
+			return ['percentage', 'stroke-width']
+		}
+
 		get strokeWidth() {
-			return Number(this.dataset.strokeWidth)
+			return Number(this.getAttribute('stroke-width') || 4)
 		}
 
 		get circleRadius() {
@@ -44,12 +48,15 @@ const { selector, strokeWidth = 4, class: className } = Astro.props
 		private updateSvgSize() {
 			const r = this.circleRadius
 			const size = r * 2 + this.strokeWidth
+			const strokeWidth = this.strokeWidth
+
 			this.svg.setAttribute('width', size.toString())
 			this.svg.setAttribute('height', size.toString())
 			this.querySelectorAll('circle').forEach((circle) => {
 				circle.setAttribute('r', r.toString())
 				circle.setAttribute('cx', (size / 2).toString())
 				circle.setAttribute('cy', (size / 2).toString())
+				circle.setAttribute('stroke-width', strokeWidth.toString())
 			})
 			this.progressCircle.setAttribute(
 				'stroke-dasharray',
@@ -81,7 +88,7 @@ const { selector, strokeWidth = 4, class: className } = Astro.props
 
 <scroll-progress-ball
 	data-selector={selector}
-	data-stroke-width={strokeWidth}
+	stroke-width={strokeWidth}
 	class:list={[className]}
 >
 	<div class:list={['relative']}>
@@ -90,14 +97,12 @@ const { selector, strokeWidth = 4, class: className } = Astro.props
 			<circle
 				fill="none"
 				stroke="currentColor"
-				stroke-width={strokeWidth}
 				class="opacity-20"></circle>
 			<!-- Progress circle -->
 			<circle
 				class="progress-circle transition-[stroke-dashoffset] duration-200"
 				fill="none"
 				stroke="currentColor"
-				stroke-width={strokeWidth}
 				stroke-linecap="round"></circle>
 		</svg>
 		<div

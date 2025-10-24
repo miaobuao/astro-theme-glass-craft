@@ -1,10 +1,19 @@
 ---
 interface Props {
 	selector: string
+	strokeWidth?: number
+	showPercentage?: boolean
+	linecap?: 'round' | 'butt' | 'square'
 	class?: string
 }
 
-const { selector, class: className } = Astro.props
+const {
+	selector,
+	strokeWidth = 4,
+	showPercentage = false,
+	linecap = 'butt',
+	class: className,
+} = Astro.props
 ---
 
 <script>
@@ -12,14 +21,110 @@ const { selector, class: className } = Astro.props
 	import { defineCustomElement } from '../../../utils/define-custom-element'
 
 	class ScrollProgressLine extends ScrollProgressBase {
+		static get observedAttributes() {
+			return ['percentage', 'stroke-width', 'show-percentage', 'linecap']
+		}
+
+		get strokeWidth() {
+			return Number(this.getAttribute('stroke-width') || 4)
+		}
+
+		get showPercentage() {
+			return this.getAttribute('show-percentage') === 'true'
+		}
+
+		get linecap() {
+			return this.getAttribute('linecap') || 'butt'
+		}
+
+		get lineLength() {
+			return this.svg.getBoundingClientRect().width
+		}
+
+		get progressLine() {
+			return this.querySelector('.progress-line') as SVGLineElement
+		}
+
+		get percentageText() {
+			return this.querySelector('.percentage') as HTMLDivElement | null
+		}
+
+		get svg() {
+			return this.querySelector('svg') as SVGSVGElement
+		}
+
+		private updateSvgSize() {
+			const length = this.lineLength
+			const strokeWidth = this.strokeWidth
+			const linecap = this.linecap
+			const y = strokeWidth / 2
+
+			this.svg.setAttribute('height', strokeWidth.toString())
+
+			this.querySelectorAll('line').forEach((line) => {
+				line.setAttribute('x1', '0')
+				line.setAttribute('y1', y.toString())
+				line.setAttribute('x2', length.toString())
+				line.setAttribute('y2', y.toString())
+				line.setAttribute('stroke-width', strokeWidth.toString())
+				line.setAttribute('stroke-linecap', linecap)
+			})
+
+			this.progressLine.setAttribute(
+				'stroke-dasharray',
+				length.toString(),
+			)
+		}
+
 		attributeChangedCallback() {
+			if (!this.targetElement || !this.progressLine) {
+				return
+			}
+
+			this.updateSvgSize()
+
 			const percentage = this.percentage
+
+			// Update line progress
+			const offset = this.lineLength - (percentage / 100) * this.lineLength
+			this.progressLine.style.strokeDashoffset = String(offset)
+
+			// Update percentage text visibility and content
+			if (this.percentageText) {
+				if (this.showPercentage) {
+					this.percentageText.style.display = ''
+					this.percentageText.textContent = Math.round(percentage).toString()
+				} else {
+					this.percentageText.style.display = 'none'
+				}
+			}
 		}
 	}
 
 	defineCustomElement('scroll-progress-line', ScrollProgressLine)
 </script>
 
-<scroll-progress-line data-selector={selector} class:list={[className]}>
-	<div class="relative size-full"></div>
+<scroll-progress-line
+	data-selector={selector}
+	stroke-width={strokeWidth}
+	show-percentage={showPercentage}
+	linecap={linecap}
+	class:list={[className]}
+>
+	<div class:list={['relative w-full']}>
+		<svg class="w-full overflow-visible">
+			<!-- Background line -->
+			<line stroke="currentColor" class="opacity-20"></line>
+			<!-- Progress line -->
+			<line
+				class="progress-line transition-[stroke-dashoffset] duration-200"
+				stroke="currentColor"></line>
+		</svg>
+		<div
+			class="percentage absolute top-1/2 right-0 -translate-y-1/2 translate-x-full ml-2 text-xs font-semibold select-none pointer-events-none after:content-['%']"
+			style={showPercentage ? '' : 'display: none'}
+		>
+			0
+		</div>
+	</div>
 </scroll-progress-line>
