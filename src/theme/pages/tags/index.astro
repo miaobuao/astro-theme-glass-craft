@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content'
+import { createFallbackBlogFrontMatterProcessor } from '../../utils/fallback-blog-frontmatter'
+import { config } from '../../consts'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+
+export async function getAllTags() {
+	const fallback = createFallbackBlogFrontMatterProcessor({
+		options: {
+			slugify: config.slugifyArticleUrl,
+		},
+	})
+	const posts = await getCollection('blog').then((posts) =>
+		Promise.all(posts.filter((p) => !p.data.draft).map(fallback)),
+	)
+
+	// Count posts for each tag
+	const tagCounts = new Map<string, number>()
+	for (const post of posts) {
+		for (const tag of post.frontMatter.tags) {
+			tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1)
+		}
+	}
+
+	// Convert to array and sort by tag name
+	return Array.from(tagCounts.entries())
+		.map(([tag, count]) => ({ tag, count }))
+		.sort((a, b) => a.tag.localeCompare(b.tag))
+}
+
+const allTags = await getAllTags()
+---
+
+<BaseLayout
+	showAuthorInfo
+	showScrollProgress={config.scrollProgress}
+	title="Tags"
+>
+	<div class="flex flex-col gap-4 max-sm:glassmorphism max-sm:p-2 rounded-lg">
+		<h1 class="p-1 text-2xl sm:text-4xl font-bold">All Tags</h1>
+		<div class="flex flex-wrap gap-2 sm:gap-3">
+			{
+				allTags.map((item) => (
+					<a
+						href={`/tags/${item.tag}`}
+						class="tag-link"
+					>
+						<span class="tag-name">#{item.tag}</span>
+						<span class="tag-count">({item.count})</span>
+					</a>
+				))
+			}
+		</div>
+	</div>
+</BaseLayout>
+
+<style scoped>
+	@reference "tailwindcss";
+
+	.tag-link {
+		@apply px-3 py-2 rounded-lg transition-all;
+		@apply bg-primary-500/10 dark:bg-primary-400/10;
+		@apply hover:bg-primary-500/20 dark:hover:bg-primary-400/20;
+		@apply border border-primary-500/20 dark:border-primary-400/20;
+		@apply hover:border-primary-500/40 dark:hover:border-primary-400/40;
+		@apply no-underline;
+	}
+
+	.tag-name {
+		@apply text-primary-600 dark:text-primary-300 font-medium;
+	}
+
+	.tag-count {
+		@apply text-sm opacity-60 ml-1;
+	}
+</style>

@@ -72,6 +72,7 @@ export default defineConfig({
 					loading: 'eager',
 				},
 			},
+			scrollProgress: 'line',
 		}),
 	],
 	devToolbar: { enabled: false },

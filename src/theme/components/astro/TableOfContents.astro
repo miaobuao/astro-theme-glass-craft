@@ -1,0 +1,279 @@
+---
+interface Props {
+	selector: string
+	scrollContainer?: string
+	includeH1?: boolean
+	title?: string
+	class?: string
+}
+
+const {
+	selector,
+	scrollContainer = '#main-scroll-container',
+	includeH1 = false,
+	title,
+	class: className,
+} = Astro.props
+---
+
+<script>
+	import { defineCustomElement } from '../../utils/define-custom-element'
+
+	interface HeadingItem {
+		id: string
+		text: string
+		level: number
+		element: HTMLElement
+	}
+
+	class TableOfContents extends HTMLElement {
+		private contentElement: HTMLElement | null = null
+		private scrollContainer: HTMLElement | null = null
+		private headings: HeadingItem[] = []
+		private observer: IntersectionObserver | null = null
+		private activeId: string | null = null
+
+		get selector() {
+			return this.dataset.selector
+		}
+
+		get scrollContainerSelector() {
+			return this.dataset.scrollContainer
+		}
+
+		get includeH1() {
+			return this.dataset.includeH1 === 'true'
+		}
+
+		get #title() {
+			return this.dataset.title
+		}
+
+		connectedCallback() {
+			if (!this.selector) {
+				console.error('TableOfContents: selector is required')
+				return
+			}
+
+			this.contentElement = document.querySelector(this.selector)
+			if (!this.contentElement) {
+				console.error(
+					`TableOfContents: element not found for selector "${this.selector}"`,
+				)
+				return
+			}
+
+			if (this.scrollContainerSelector) {
+				this.scrollContainer = document.querySelector(
+					this.scrollContainerSelector,
+				)
+			}
+
+			this.extractHeadings()
+			this.render()
+			this.setupIntersectionObserver()
+			this.setupClickHandlers()
+		}
+
+		disconnectedCallback() {
+			if (this.observer) {
+				this.observer.disconnect()
+			}
+		}
+
+		private extractHeadings() {
+			if (!this.contentElement) return
+
+			const headingSelector = this.includeH1
+				? 'h1, h2, h3, h4, h5, h6'
+				: 'h2, h3, h4, h5, h6'
+
+			const headingElements =
+				this.contentElement.querySelectorAll(headingSelector)
+
+			this.headings = Array.from(headingElements).map((heading) => {
+				const element = heading as HTMLElement
+				// Auto-generate an id if the heading doesn't have one
+				if (!element.id) {
+					element.id =
+						element.textContent
+							?.toLowerCase()
+							.replace(/[^\w\s-]/g, '')
+							.replace(/\s+/g, '-') || ''
+				}
+
+				return {
+					id: element.id,
+					text: element.textContent || '',
+					level: parseInt(element.tagName.substring(1)),
+					element: element,
+				}
+			})
+
+			// If includeH1 is true but no h1 is found, and title is provided, add a virtual h1
+			if (this.includeH1 && this.#title) {
+				const hasH1 = this.headings.some((h) => h.level === 1)
+				if (!hasH1) {
+					// Create a virtual h1 entry pointing to the document top
+					this.headings.unshift({
+						id: 'top',
+						text: this.#title,
+						level: 1,
+						element: this.contentElement!,
+					})
+				}
+			}
+		}
+
+		private render() {
+			if (this.headings.length === 0) {
+				this.innerHTML =
+					'<div class="text-sm opacity-50">No headings found</div>'
+				return
+			}
+
+			const tocList = document.createElement('nav')
+			tocList.className = 'toc-list'
+
+			const ul = document.createElement('ul')
+			ul.className = 'space-y-1'
+
+			// Get all unique heading levels present and sort them
+			const uniqueLevels = Array.from(
+				new Set(this.headings.map((h) => h.level)),
+			).sort((a, b) => a - b)
+
+			// Create a map from heading level to indentation level
+			const levelToIndentMap = new Map<number, number>()
+			uniqueLevels.forEach((level, index) => {
+				levelToIndentMap.set(level, index)
+			})
+
+			this.headings.forEach((heading) => {
+				const li = document.createElement('li')
+				// Calculate indentation based on position in the unique levels array
+				// This ignores missing heading levels (e.g., if only h2, h4, h6 exist,
+				// they will be indented as 0, 1, 2 levels instead of 0, 2, 4)
+				const indentLevel = levelToIndentMap.get(heading.level) || 0
+				li.style.paddingLeft = `${indentLevel * 0.75}rem`
+
+				const a = document.createElement('a')
+				a.href = `#${heading.id}`
+				a.textContent = heading.text
+				a.dataset.headingId = heading.id
+				a.className =
+					'block py-1 px-2 rounded text-sm transition-colors hover:bg-black/5 dark:hover:bg-white/5'
+
+				li.appendChild(a)
+				ul.appendChild(li)
+			})
+
+			tocList.appendChild(ul)
+			this.innerHTML = ''
+			this.appendChild(tocList)
+		}
+
+		private setupIntersectionObserver() {
+			this.observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							const id = entry.target.id
+							this.setActiveHeading(id)
+						}
+					})
+				},
+				{
+					root: this.scrollContainer,
+					rootMargin: '-16px 0px -95% 0px',
+					threshold: 0,
+				},
+			)
+
+			this.headings.forEach((heading) => {
+				this.observer?.observe(heading.element)
+			})
+		}
+
+		private setActiveHeading(id: string) {
+			if (this.activeId === id) return
+
+			this.activeId = id
+
+			// Remove all active states
+			this.querySelectorAll('a').forEach((link) => {
+				link.classList.remove('toc-active')
+			})
+
+			// Add active state to current heading
+			const activeLink = this.querySelector(`a[data-heading-id="${id}"]`)
+			if (activeLink) {
+				activeLink.classList.add('toc-active')
+				activeLink.scrollIntoView({
+					behavior: 'smooth',
+				})
+			}
+		}
+
+		private highlightHeading(element: HTMLElement) {
+			if (element.classList.contains('underline')) {
+				return
+			}
+			element.classList.add('underline')
+
+			setTimeout(() => {
+				element.classList.remove('underline')
+			}, 3000)
+		}
+
+		private setupClickHandlers() {
+			this.addEventListener('click', (e) => {
+				const target = e.target as HTMLElement
+				if (target.tagName === 'A') {
+					e.preventDefault()
+					const href = target.getAttribute('href')
+					if (href) {
+						const id = href.substring(1)
+						const element = document.getElementById(id)
+						if (element && this.scrollContainer) {
+							// Scroll to element position
+							const elementTop =
+								element.offsetTop - this.scrollContainer.offsetTop
+							this.scrollContainer.scrollTo({
+								top: elementTop - 16,
+								behavior: 'smooth',
+							})
+							// Update URL without triggering page jump
+							history.pushState(null, '', href)
+
+							this.highlightHeading(element)
+						}
+					}
+				}
+			})
+		}
+	}
+
+	defineCustomElement('table-of-contents', TableOfContents)
+</script>
+
+<table-of-contents
+	data-selector={selector}
+	data-scroll-container={scrollContainer}
+	data-include-h1={includeH1}
+	data-title={title}
+	class:list={[className]}
+>
+	<div class="animate-pulse">
+		<div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+		<div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2"></div>
+		<div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+	</div>
+</table-of-contents>
+
+<style>
+	@reference "tailwindcss";
+	:global(.toc-active) {
+		@apply font-semibold;
+	}
+</style>

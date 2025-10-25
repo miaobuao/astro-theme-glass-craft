@@ -4,19 +4,28 @@ import BaseHtml, { type Props as BaseHtmlProps } from './BaseHtml.astro'
 import AdaptiveIconButton from '../components/astro/AdaptiveIconButton.astro'
 import { config } from '../consts'
 import ProgressiveImage from '../components/astro/ProgressiveImage.astro'
-import { getCollection } from 'astro:content'
 import {
 	getOriginalImageId,
 	getThumbnailImageId,
 	toAbsoluteUrl,
 } from '../utils/thumbnail'
 import { WindowsList } from '../components/solid/WindowManager/WindowsList'
+import { getNavigationConditions } from '../utils/navigation'
+import ScrollProgressBall from '../components/astro/ScrollProgress/ScrollProgressBall.astro'
+import ScrollProgressLine from '../components/astro/ScrollProgress/ScrollProgressLine.astro'
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
+	showScrollProgress?: 'ball' | 'line' | false
 }
 
-const { showAuthorInfo, title, description, ...otherProps } = Astro.props
+const {
+	showAuthorInfo,
+	showScrollProgress,
+	title,
+	description,
+	...otherProps
+} = Astro.props
 
 const isTimeline =
 	Astro.url.pathname === '/' || Astro.url.pathname.startsWith('/blog/')
@@ -66,10 +75,8 @@ const finderIcon = isFinder
 	? 'icon-[ix--navigation-filled]'
 	: 'icon-[ix--navigation]'
 
-const showGallery = (await getCollection('gallery')).length > 0
-const showArchive = (await getCollection('blog')).length > 0
-const showFriendLinks = !!config.friends && config.friends.length > 0
-const showShare = !!config.customPages?.shareDirectory
+const { showGallery, showArchive, showFriendLinks, showShare, showFinder } =
+	await getNavigationConditions()
 
 const canUseBackground = !!config.backgroundImage
 
@@ -114,9 +121,14 @@ const background = await (async () => {
 	{
 		() => {
 			const content = (
-				<div class="absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2">
+				<div
+					class:list={[
+						'absolute size-full max-w-7xl left-0 right-0 mx-auto sm:p-2',
+						showScrollProgress === 'line' && 'sm:pb-4',
+					]}
+				>
 					<div class="sm:glassmorphism size-full rounded-md flex flex-row gap-2">
-						<div class="fixed w-full sm:w-50 lg:w-52 bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:overflow-auto no-scrollbar gap-2">
+						<div class="fixed w-full sm:w-48 md:w-52 bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:overflow-auto no-scrollbar gap-2">
 							{showAuthorInfo && (
 								<div
 									class:list={[
@@ -193,17 +205,19 @@ const background = await (async () => {
 										Friends
 									</AdaptiveIconButton>
 								)}
-								<AdaptiveIconButton
-									class="max-sm:flex hidden"
-									active={isFinder}
-									href="/finder"
-								>
-									<i
-										slot="icon"
-										class:list={[finderIcon, 'size-6 sm:size-8']}
-									/>
-									Finder
-								</AdaptiveIconButton>
+								{showFinder && (
+									<AdaptiveIconButton
+										class="max-sm:flex hidden"
+										active={isFinder}
+										href="/finder"
+									>
+										<i
+											slot="icon"
+											class:list={[finderIcon, 'size-6 sm:size-8']}
+										/>
+										Finder
+									</AdaptiveIconButton>
+								)}
 								{config.customPages?.aboutMe && (
 									<AdaptiveIconButton
 										active={isAboutMe}
@@ -229,7 +243,25 @@ const background = await (async () => {
 								<slot />
 							</div>
 						</main>
+
+						<slot name="aside" />
 					</div>
+
+					{showScrollProgress === 'ball' && (
+						<ScrollProgressBall
+							selector="#main-scroll-container"
+							class="transition-all fixed bottom-32 2xl:bottom-4 right-4 z-50 glassmorphism rounded-full size-14 p-0.5 sm:size-17 sm:p-1"
+						/>
+					)}
+					{showScrollProgress === 'line' && (
+						<ScrollProgressLine
+							selector="#main-scroll-container"
+							class="scroll-progress-line-shadow transition-all fixed bottom-0 left-0 right-0 z-50"
+							stroke-width={3}
+							linecap="butt"
+							dynamicColor
+						/>
+					)}
 				</div>
 			)
 
@@ -270,6 +302,14 @@ const background = await (async () => {
 		transition:persist="wm"
 	/>
 </BaseHtml>
+
+<style>
+	.scroll-progress-line-shadow {
+		filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.2))
+			drop-shadow(0 -4px 5px rgba(0, 0, 0, 0.14))
+			drop-shadow(0 -1px 10px rgba(0, 0, 0, 0.12));
+	}
+</style>
 
 <script defer>
 	window.addEventListener(

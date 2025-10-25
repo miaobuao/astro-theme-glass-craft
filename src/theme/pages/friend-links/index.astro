@@ -23,7 +23,7 @@ const friends = await Promise.all(
 )
 ---
 
-<BaseLayout showAuthorInfo>
+<BaseLayout showAuthorInfo showScrollProgress={config.scrollProgress}>
 	<div class="sm:columns-2 lg:columns-3 2xl:columns-4 col-gap-4">
 		{
 			config.friends?.map((f) => (

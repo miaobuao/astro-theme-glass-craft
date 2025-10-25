@@ -2,7 +2,7 @@ import { createHash } from 'crypto'
 import sharp from 'sharp'
 import { getImageBytesFromUrl } from './get-image-bytes-from-url'
 
-const DEFAULT_THUMBNAIL_SIZE = 48
+const DEFAULT_THUMBNAIL_SIZE = 12
 
 function sha256Hex(buf: Uint8Array) {
 	return createHash('sha256').update(buf).digest('hex')

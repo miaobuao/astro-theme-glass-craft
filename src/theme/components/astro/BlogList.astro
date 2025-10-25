@@ -35,6 +35,14 @@ const { posts, class: className } = Astro.props
 			})
 		})
 	}
+
+	// Handle tag clicks
+	document.addEventListener('click', (e) => {
+		const target = e.target as HTMLElement
+		if (target.classList.contains('tag-link')) {
+			e.stopPropagation()
+		}
+	})
 </script>
 
 <div
@@ -50,21 +58,33 @@ const { posts, class: className } = Astro.props
 			const description = await marked(post.frontMatter.description)
 			return (
 				<Fragment>
-					<a
-						href={`/blog/${post.frontMatter.slug}`}
-						data-embed={`/embed/blog/${post.frontMatter.slug}`}
-						class="p-4 md:p-6 break-all"
-					>
-						<h2 class="text-lg md:text-2xl font-bold mb-2">
-							{post.frontMatter.title}
-						</h2>
-						<div class="mb-2 md:mb-4">
-							<Fragment set:html={description} />
+					<div class="flex flex-col gap-3 p-4 md:p-6 pb-0!">
+						<a
+							href={`/blog/${post.frontMatter.slug}`}
+							data-embed={`/embed/blog/${post.frontMatter.slug}`}
+							class="blog-item break-all hover:underline"
+						>
+							<h2 class="text-lg md:text-2xl font-bold mb-2">
+								{post.frontMatter.title}
+							</h2>
+							<div set:html={description} />
+						</a>
+						{post.frontMatter.tags.length > 0 && (
+							<div class="flex flex-wrap gap-2 text-xs">
+								{post.frontMatter.tags.map((tag) => (
+									<a href={`/tags/${tag}`} class="tag tag-link">
+										{tag}
+									</a>
+								))}
+							</div>
+						)}
+						<div class="flex flex-wrap items-center gap-4 text-xs">
+							<span>
+								{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
+							</span>
 						</div>
-						<p class="text-sm">
-							{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
-						</p>
-					</a>
+					</div>
+
 					{index !== posts.length - 1 && <span class="hr" />}
 				</Fragment>
 			)
@@ -77,5 +97,11 @@ const { posts, class: className } = Astro.props
 
 	.hr {
 		@apply mx-auto my-2 w-[95%] h-[0.1px] bg-black/80 dark:bg-white/80;
+	}
+
+	.tag {
+		@apply transition-colors;
+		@apply no-underline hover:underline;
+		@apply before:content-['#'];
 	}
 </style>
