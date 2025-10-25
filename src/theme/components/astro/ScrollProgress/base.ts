@@ -65,7 +65,8 @@ export class ScrollProgressBase extends HTMLElement {
 	private handleScroll = () => {
 		const { scrollTop, scrollHeight, clientHeight } = this.targetElement!
 		const maxScroll = scrollHeight - clientHeight
-		const percentage = maxScroll > 0 ? (scrollTop / maxScroll) * 100 : 100
+		const percentage =
+			maxScroll > 0 ? Math.ceil((scrollTop / maxScroll) * 100) : 100
 		const clampedPercentage = Math.min(100, Math.max(0, percentage))
 		this.setAttribute('percentage', clampedPercentage.toString())
 	}
