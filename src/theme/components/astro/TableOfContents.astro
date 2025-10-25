@@ -45,7 +45,7 @@ const {
 			return this.dataset.includeH1 === 'true'
 		}
 
-		get title() {
+		get #title() {
 			return this.dataset.title
 		}
 
@@ -88,7 +88,8 @@ const {
 				? 'h1, h2, h3, h4, h5, h6'
 				: 'h2, h3, h4, h5, h6'
 
-			const headingElements = this.contentElement.querySelectorAll(headingSelector)
+			const headingElements =
+				this.contentElement.querySelectorAll(headingSelector)
 
 			this.headings = Array.from(headingElements).map((heading) => {
 				const element = heading as HTMLElement
@@ -110,13 +111,13 @@ const {
 			})
 
 			// If includeH1 is true but no h1 is found, and title is provided, add a virtual h1
-			if (this.includeH1 && this.title) {
+			if (this.includeH1 && this.#title) {
 				const hasH1 = this.headings.some((h) => h.level === 1)
 				if (!hasH1) {
 					// Create a virtual h1 entry pointing to the document top
 					this.headings.unshift({
 						id: 'top',
-						text: this.title,
+						text: this.#title,
 						level: 1,
 						element: this.contentElement!,
 					})
@@ -126,7 +127,8 @@ const {
 
 		private render() {
 			if (this.headings.length === 0) {
-				this.innerHTML = '<div class="text-sm opacity-50">No headings found</div>'
+				this.innerHTML =
+					'<div class="text-sm opacity-50">No headings found</div>'
 				return
 			}
 
@@ -172,20 +174,21 @@ const {
 		}
 
 		private setupIntersectionObserver() {
-			const options: IntersectionObserverInit = {
-				root: this.scrollContainer,
-				rootMargin: '-80px 0px -80% 0px',
-				threshold: 0,
-			}
-
-			this.observer = new IntersectionObserver((entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						const id = entry.target.id
-						this.setActiveHeading(id)
-					}
-				})
-			}, options)
+			this.observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							const id = entry.target.id
+							this.setActiveHeading(id)
+						}
+					})
+				},
+				{
+					root: this.scrollContainer,
+					rootMargin: '-16px 0px -95% 0px',
+					threshold: 0,
+				},
+			)
 
 			this.headings.forEach((heading) => {
 				this.observer?.observe(heading.element)
@@ -206,7 +209,21 @@ const {
 			const activeLink = this.querySelector(`a[data-heading-id="${id}"]`)
 			if (activeLink) {
 				activeLink.classList.add('toc-active')
+				activeLink.scrollIntoView({
+					behavior: 'smooth',
+				})
 			}
+		}
+
+		private highlightHeading(element: HTMLElement) {
+			if (element.classList.contains('underline')) {
+				return
+			}
+			element.classList.add('underline')
+
+			setTimeout(() => {
+				element.classList.remove('underline')
+			}, 3000)
 		}
 
 		private setupClickHandlers() {
@@ -223,11 +240,13 @@ const {
 							const elementTop =
 								element.offsetTop - this.scrollContainer.offsetTop
 							this.scrollContainer.scrollTo({
-								top: elementTop - 80,
+								top: elementTop - 16,
 								behavior: 'smooth',
 							})
 							// Update URL without triggering page jump
 							history.pushState(null, '', href)
+
+							this.highlightHeading(element)
 						}
 					}
 				}
@@ -253,7 +272,8 @@ const {
 </table-of-contents>
 
 <style>
+	@reference "tailwindcss";
 	:global(.toc-active) {
-		@apply bg-primary/10 text-primary font-semibold;
+		@apply font-semibold;
 	}
 </style>
