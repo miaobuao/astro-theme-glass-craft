@@ -128,7 +128,7 @@ const background = await (async () => {
 					]}
 				>
 					<div class="sm:glassmorphism size-full rounded-md flex flex-row gap-2">
-						<div class="fixed w-full sm:w-50 lg:w-52 bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:overflow-auto no-scrollbar gap-2">
+						<div class="fixed w-full sm:w-48 md:w-52 bottom-0 left-0 z-50 sm:static sm:flex sm:flex-col sm:overflow-auto no-scrollbar gap-2">
 							{showAuthorInfo && (
 								<div
 									class:list={[
@@ -243,6 +243,8 @@ const background = await (async () => {
 								<slot />
 							</div>
 						</main>
+
+						<slot name="aside" />
 					</div>
 
 					{showScrollProgress === 'ball' && (
