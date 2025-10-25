@@ -54,15 +54,14 @@ const { tag, posts } = Astro.props
 	showScrollProgress={config.scrollProgress}
 	title={`Tag: ${tag}`}
 >
-	<div class="flex flex-col gap-4 max-sm:glassmorphism max-sm:p-2 rounded-lg">
-		<div class="flex items-center gap-2 p-1">
-			<h1 class="text-2xl sm:text-4xl font-bold">
-				<span class="text-primary-500 dark:text-primary-400">#</span>
-				{tag}
+	<div class="flex flex-col gap-2 max-sm:glassmorphism rounded-lg p-2">
+		<div class="flex items-center gap-2">
+			<h1 class="text-2xl font-bold">
+				#{tag}
 			</h1>
-			<span class="text-base sm:text-lg opacity-60">
-				({posts.length} {posts.length === 1 ? 'post' : 'posts'})
-			</span>
+			<div class="text-base sm:text-lg opacity-60 font-mono">
+				({posts.length})
+			</div>
 		</div>
 		<div class="flex flex-col gap-1">
 			{

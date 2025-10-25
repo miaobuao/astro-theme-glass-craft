@@ -58,36 +58,33 @@ const { posts, class: className } = Astro.props
 			const description = await marked(post.frontMatter.description)
 			return (
 				<Fragment>
-					<a
-						href={`/blog/${post.frontMatter.slug}`}
-						data-embed={`/embed/blog/${post.frontMatter.slug}`}
-						class="p-4 md:p-6 break-all blog-item"
-					>
-						<h2 class="text-lg md:text-2xl font-bold mb-2">
-							{post.frontMatter.title}
-						</h2>
-						<div class="mb-2 md:mb-4">
-							<Fragment set:html={description} />
-						</div>
-						<div class="flex flex-wrap items-center gap-2 text-sm">
-							<p>
+					<div class="flex flex-col gap-3 p-4 md:p-6 pb-0!">
+						<a
+							href={`/blog/${post.frontMatter.slug}`}
+							data-embed={`/embed/blog/${post.frontMatter.slug}`}
+							class="blog-item break-all hover:underline"
+						>
+							<h2 class="text-lg md:text-2xl font-bold mb-2">
+								{post.frontMatter.title}
+							</h2>
+							<div set:html={description} />
+						</a>
+						{post.frontMatter.tags.length > 0 && (
+							<div class="flex flex-wrap gap-2 text-xs">
+								{post.frontMatter.tags.map((tag) => (
+									<a href={`/tags/${tag}`} class="tag tag-link">
+										{tag}
+									</a>
+								))}
+							</div>
+						)}
+						<div class="flex flex-wrap items-center gap-4 text-xs">
+							<span>
 								{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
-							</p>
-							{post.frontMatter.tags.length > 0 && (
-								<div class="flex flex-wrap gap-1.5">
-									{post.frontMatter.tags.map((tag) => (
-										<a
-											href={`/tags/${tag}`}
-											class="tag tag-link"
-											onclick="event.stopPropagation()"
-										>
-											#{tag}
-										</a>
-									))}
-								</div>
-							)}
+							</span>
 						</div>
-					</a>
+					</div>
+
 					{index !== posts.length - 1 && <span class="hr" />}
 				</Fragment>
 			)
@@ -103,8 +100,8 @@ const { posts, class: className } = Astro.props
 	}
 
 	.tag {
-		@apply px-2 py-0.5 rounded text-xs bg-primary-500/10 dark:bg-primary-400/10 text-primary-600 dark:text-primary-300;
-		@apply transition-colors hover:bg-primary-500/20 dark:hover:bg-primary-400/20;
-		@apply no-underline;
+		@apply transition-colors;
+		@apply no-underline hover:underline;
+		@apply before:content-['#'];
 	}
 </style>
