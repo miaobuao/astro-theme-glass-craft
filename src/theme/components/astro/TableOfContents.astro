@@ -162,7 +162,7 @@ const {
 				a.textContent = heading.text
 				a.dataset.headingId = heading.id
 				a.className =
-					'block py-1 px-2 rounded text-sm transition-colors hover:bg-black/5 dark:hover:bg-white/5'
+					'block py-1 px-2 rounded text-sm transition-colors hover:bg-black/15 dark:hover:bg-white/15'
 
 				li.appendChild(a)
 				ul.appendChild(li)
@@ -264,16 +264,11 @@ const {
 	data-title={title}
 	class:list={[className]}
 >
-	<div class="animate-pulse">
-		<div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-		<div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2"></div>
-		<div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
-	</div>
 </table-of-contents>
 
 <style>
 	@reference "tailwindcss";
 	:global(.toc-active) {
-		@apply font-semibold;
+		@apply font-semibold bg-black/25 dark:bg-white/25;
 	}
 </style>
