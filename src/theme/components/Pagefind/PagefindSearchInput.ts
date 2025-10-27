@@ -1,7 +1,7 @@
 import { debounce } from 'lodash-es'
 import type { PagefindSearchResults } from './PagefindSearchResults'
-import type { PagefindResult } from './pagefind'
 import { pagefindEmitter } from './emitter'
+import type { PagefindResult } from './pagefind'
 
 class PagefindSearchInput extends HTMLElement {
 	input = this.querySelector('input')!

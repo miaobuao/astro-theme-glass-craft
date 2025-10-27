@@ -26,6 +26,14 @@ const sortedPosts = processedPosts
 	})
 ---
 
+<script type="module">
+	if (!window.pagefind) {
+		const pagefind = await import('/pagefind/pagefind.js')
+		pagefind.init()
+		window.pagefind = pagefind
+	}
+</script>
+
 <BaseLayout showAuthorInfo showScrollProgress={config.scrollProgress}>
 	<BlogList posts={sortedPosts} />
 	<PagefindSearchButton />
