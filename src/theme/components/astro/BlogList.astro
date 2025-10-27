@@ -46,10 +46,7 @@ const { posts, class: className } = Astro.props
 </script>
 
 <div
-	class:list={[
-		'flex flex-col gap-2 max-sm:glassmorphism rounded-lg',
-		className,
-	]}
+	class:list={['flex flex-col gap-2 rounded-lg max-sm:px-2', className]}
 	id="blog-list"
 	data-has-giscus={config.comment?.giscus ? 'true' : 'false'}
 >
@@ -58,13 +55,13 @@ const { posts, class: className } = Astro.props
 			const description = await marked(post.frontMatter.description)
 			return (
 				<Fragment>
-					<div class="flex flex-col gap-3 p-4 md:p-6 pb-0!">
+					<div class="flex flex-col gap-3 p-4 md:p-6 pb-0! max-sm:glassmorphism rounded-lg max-sm:p-4!">
 						<a
 							href={`/blog/${post.frontMatter.slug}`}
 							data-embed={`/embed/blog/${post.frontMatter.slug}`}
 							class="blog-item break-all hover:underline"
 						>
-							<h2 class="text-lg md:text-2xl font-bold mb-2">
+							<h2 class="text-lg md:text-2xl font-bold sm:mb-2">
 								{post.frontMatter.title}
 							</h2>
 							<div set:html={description} />
@@ -85,7 +82,7 @@ const { posts, class: className } = Astro.props
 						</div>
 					</div>
 
-					{index !== posts.length - 1 && <span class="hr" />}
+					{index !== posts.length - 1 && <span class="hr max-sm:hidden" />}
 				</Fragment>
 			)
 		})

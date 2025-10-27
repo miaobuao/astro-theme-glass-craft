@@ -39,7 +39,7 @@ function WindowItem(props: WindowProps) {
 	}
 	return (
 		<div
-			class="transition-all flex items-center gap-1 hover:glassmorphism hover:cursor-pointer border-none p-1 rounded-md select-none"
+			class="transition-all flex items-center gap-1 hover:glassmorphism hover:cursor-pointer p-1 rounded-md select-none"
 			onClick={() => {
 				wmEmitter.emit('focusWindow', { id: props.id })
 			}}

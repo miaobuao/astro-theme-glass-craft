@@ -24,6 +24,10 @@ const sortedPosts = processedPosts
 	})
 ---
 
-<BaseLayout showAuthorInfo showScrollProgress={config.scrollProgress}>
+<BaseLayout
+	showAuthorInfo
+	showSearchButton
+	showScrollProgress={config.scrollProgress}
+>
 	<BlogList posts={sortedPosts} />
 </BaseLayout>

@@ -68,7 +68,7 @@ const { tag, posts } = Astro.props
 				posts.map((post) => (
 					<a
 						href={`/blog/${post.frontMatter.slug}`}
-						class="p-2 rounded-sm transition-all hover:glassmorphism max-sm:active:glassmorphism border-none!"
+						class="p-2 rounded-sm transition-all hover:glassmorphism max-sm:active:glassmorphism"
 					>
 						<div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
 							<div class="flex-1 font-semibold">{post.frontMatter.title}</div>
