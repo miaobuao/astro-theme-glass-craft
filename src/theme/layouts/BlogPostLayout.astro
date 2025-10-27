@@ -21,9 +21,10 @@ function getValue<T extends keyof Frontmatter = any>(key: T) {
 	return (props.frontmatter?.[key] || props[key]) as Frontmatter[T]
 }
 
-const title = getValue('title')
+const ogTitle = getValue('title')
 const pubDate = getValue('pubDate')
 const description = getValue('description')
+const title = [ogTitle, config.title].filter(Boolean).join(' | ')
 ---
 
 <script>
@@ -37,6 +38,9 @@ const description = getValue('description')
 	showAuthorInfo
 	showScrollProgress={config.scrollProgress}
 	{title}
+	og={{
+		title: ogTitle,
+	}}
 	{description}
 >
 	<div class="flex-1 flex flex-col glassmorphism rounded-lg">

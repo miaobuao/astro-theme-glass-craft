@@ -6,10 +6,14 @@ import { ClientRouter } from 'astro:transitions'
 
 export interface Props extends HTMLAttributes<'body'> {
 	title?: string
+	og?: {
+		title?: string
+	}
 	description?: string
 }
 
 const { title, description, ...others } = Astro.props
+const ogTitle = Astro.props.og?.title || title
 ---
 
 <html lang="zh-CN" class="no-scrollbar">
@@ -19,15 +23,9 @@ const { title, description, ...others } = Astro.props
 		{title && <title data-pagefind-meta="title">{title}</title>}
 
 		<!-- Open Graph / Facebook -->
-		{
-			title && (
-				<Fragment>
-					<meta property="og:title" content={title} />
-					<meta property="og:type" content="website" />
-					<meta property="og:url" content={Astro.url} />
-				</Fragment>
-			)
-		}
+		{ogTitle && <meta property="og:title" content={ogTitle} />}
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url} />
 		{
 			description && (
 				<Fragment>
