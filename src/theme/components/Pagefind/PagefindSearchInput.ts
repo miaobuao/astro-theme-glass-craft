@@ -1,6 +1,7 @@
 import { debounce } from 'lodash-es'
 import type { PagefindSearchResults } from './PagefindSearchResults'
 import type { PagefindResult } from './pagefind'
+import { pagefindEmitter } from './emitter'
 
 class PagefindSearchInput extends HTMLElement {
 	input = this.querySelector('input')!
@@ -8,54 +9,66 @@ class PagefindSearchInput extends HTMLElement {
 	results: PagefindSearchResults = this.querySelector(
 		'pagefind-search-results',
 	)!
-	mask: HTMLElement = this.querySelector('pagefind-mask')!
+
+	private handleKeyup = (e: KeyboardEvent) => {
+		if (e.isComposing) {
+			return
+		}
+		this.adjustResultsHeight()
+		this.search(this.input.value)
+		if (this.input.value.length) {
+			this.clearBtn.classList.remove('hidden')
+		} else {
+			this.clearBtn.classList.add('hidden')
+		}
+	}
+
+	private handleKeydown = (e: KeyboardEvent) => {
+		if (e.key === 'Escape') {
+			this.results.clear()
+			pagefindEmitter.emit('close')
+			this.input.blur()
+			e.preventDefault()
+		}
+	}
+
+	private handleFocus = () => {
+		this.adjustResultsHeight()
+		this.search(this.input.value)
+	}
+
+	private handleClearClick = (e: MouseEvent) => {
+		this.input.value = ''
+		pagefindEmitter.emit('close')
+		this.results?.clear()
+		e.preventDefault()
+	}
+
+	private handleClose = () => {
+		this.results?.clear()
+	}
 
 	connectedCallback() {
-		this.input.placeholder = '🔍 搜索文章...'
+		this.input.addEventListener('keyup', this.handleKeyup)
+		this.input.addEventListener('keydown', this.handleKeydown)
+		this.input.addEventListener('focus', this.handleFocus)
+		this.clearBtn.addEventListener('mousedown', this.handleClearClick)
 
-		this.input.addEventListener('keyup', (e) => {
-			if ((e as KeyboardEvent).isComposing) {
-				return
-			}
-			this.adjustResultsHeight()
-			this.search(this.input.value)
-			if (this.input.value.length) {
-				this.clearBtn.classList.remove('hidden')
-			} else {
-				this.clearBtn.classList.add('hidden')
-			}
-		})
-
-		this.input.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape') {
-				this.results.clear()
-				this.mask.classList.add('hidden')
-				this.input.blur()
-				e.preventDefault()
-			}
-		})
-
-		this.input.addEventListener('focus', () => {
-			this.adjustResultsHeight()
-			this.search(this.input.value)
-		})
-
-		this.mask.addEventListener('click', () => {
-			this.mask.classList.add('hidden')
-			this.results?.clear()
-		})
-
-		this.clearBtn.addEventListener('mousedown', (e) => {
-			this.input.value = ''
-			this.mask?.classList.add('hidden')
-			this.results?.clear()
-			e.preventDefault()
-		})
+		// Listen for close events to clear input
+		pagefindEmitter.on('close', this.handleClose)
 
 		if (this.input.value.length) {
 			this.search(this.input.value)
 			this.clearBtn.classList.remove('hidden')
 		}
+	}
+
+	disconnectedCallback() {
+		this.input.removeEventListener('keyup', this.handleKeyup)
+		this.input.removeEventListener('keydown', this.handleKeydown)
+		this.input.removeEventListener('focus', this.handleFocus)
+		this.clearBtn.removeEventListener('mousedown', this.handleClearClick)
+		pagefindEmitter.off('close', this.handleClose)
 	}
 
 	search = debounce(async (text) => {
@@ -65,9 +78,6 @@ class PagefindSearchInput extends HTMLElement {
 		// @ts-expect-error pagefind defined on window
 		const searchResults = await pagefind.search(text)
 		this.results.clear()
-		if (searchResults.results.length) {
-			this.mask?.classList.remove('hidden')
-		}
 		searchResults.results.forEach(async (res: any) => {
 			const data: PagefindResult = await res.data()
 			const slices = data.excerpt

@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import BlogList from '../components/astro/BlogList.astro'
-import SearchModal from '../components/Pagefind/SearchModal.astro'
+import PagefindSearchModal from '../components/Pagefind/PagefindSearchModal.astro'
+import PagefindSearchButton from '../components/Pagefind/PagefindSearchButton.astro'
 import { getCollection } from 'astro:content'
 import { createFallbackBlogFrontMatterProcessor } from '../utils/fallback-blog-frontmatter'
 import { config } from '../consts'
@@ -27,5 +28,6 @@ const sortedPosts = processedPosts
 
 <BaseLayout showAuthorInfo showScrollProgress={config.scrollProgress}>
 	<BlogList posts={sortedPosts} />
-	<SearchModal />
+	<PagefindSearchButton />
+	<PagefindSearchModal />
 </BaseLayout>

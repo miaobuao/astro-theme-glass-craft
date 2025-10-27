@@ -1,0 +1,28 @@
+---
+// Search button component that triggers pagefind modal
+---
+
+<script>
+	import './PagefindSearchButton'
+</script>
+
+<pagefind-search-button
+	class="fixed bottom-8 right-8 z-40 w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center cursor-pointer"
+	aria-label="搜索"
+	role="button"
+	tabindex="0"
+>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		class="h-6 w-6"
+		fill="none"
+		viewBox="0 0 24 24"
+		stroke="currentColor"
+	>
+		<path
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			stroke-width="2"
+			d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+	</svg>
+</pagefind-search-button>

@@ -1,0 +1,56 @@
+---
+import PagefindTemplates from './PagefindTemplates.astro'
+---
+
+<script>
+	import './PagefindMask'
+	import './PagefindSearchInput'
+	import './PagefindSearchResults'
+	import './PagefindSearchResultItem'
+</script>
+
+<!-- Search Modal -->
+<pagefind-mask data-blur="true" class="fixed inset-0 bg-black/50 z-50 hidden">
+	<div class="fixed inset-0 flex items-start justify-center pt-20 px-4">
+		<pagefind-search-input class="w-full max-w-2xl">
+			<div
+				class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden"
+			>
+				<!-- Search Input -->
+				<div class="p-6 border-b border-gray-200 dark:border-gray-700">
+					<div class="relative flex items-center gap-3">
+						<input
+							type="text"
+							class="flex-1 text-2xl bg-transparent border-none outline-none text-gray-900 dark:text-gray-100 placeholder-gray-400"
+							placeholder="🔍 搜索文章..."
+							autofocus
+						/>
+						<button
+							class="hidden text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M6 18L18 6M6 6l12 12"></path>
+							</svg>
+						</button>
+					</div>
+				</div>
+
+				<!-- Search Results -->
+				<pagefind-search-results class="p-4 overflow-y-auto">
+				</pagefind-search-results>
+			</div>
+		</pagefind-search-input>
+	</div>
+</pagefind-mask>
+
+<PagefindTemplates />
