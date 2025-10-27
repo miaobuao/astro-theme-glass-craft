@@ -16,11 +16,6 @@ class PagefindSearchInput extends HTMLElement {
 		}
 		this.adjustResultsHeight()
 		this.search(this.input.value)
-		if (this.input.value.length) {
-			this.clearBtn.classList.remove('hidden')
-		} else {
-			this.clearBtn.classList.add('hidden')
-		}
 	}
 
 	private handleKeydown = (e: KeyboardEvent) => {
@@ -50,7 +45,7 @@ class PagefindSearchInput extends HTMLElement {
 
 	connectedCallback() {
 		this.input.addEventListener('keyup', this.handleKeyup)
-		this.input.addEventListener('keydown', this.handleKeydown)
+		window.addEventListener('keydown', this.handleKeydown)
 		this.input.addEventListener('focus', this.handleFocus)
 		this.clearBtn.addEventListener('mousedown', this.handleClearClick)
 
@@ -59,13 +54,12 @@ class PagefindSearchInput extends HTMLElement {
 
 		if (this.input.value.length) {
 			this.search(this.input.value)
-			this.clearBtn.classList.remove('hidden')
 		}
 	}
 
 	disconnectedCallback() {
 		this.input.removeEventListener('keyup', this.handleKeyup)
-		this.input.removeEventListener('keydown', this.handleKeydown)
+		window.removeEventListener('keydown', this.handleKeydown)
 		this.input.removeEventListener('focus', this.handleFocus)
 		this.clearBtn.removeEventListener('mousedown', this.handleClearClick)
 		pagefindEmitter.off('close', this.handleClose)

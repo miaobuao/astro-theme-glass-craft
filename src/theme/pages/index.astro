@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import BlogList from '../components/astro/BlogList.astro'
-import PagefindSearchModal from '../components/Pagefind/PagefindSearchModal.astro'
-import PagefindSearchButton from '../components/Pagefind/PagefindSearchButton.astro'
 import { getCollection } from 'astro:content'
 import { createFallbackBlogFrontMatterProcessor } from '../utils/fallback-blog-frontmatter'
 import { config } from '../consts'
@@ -26,16 +24,10 @@ const sortedPosts = processedPosts
 	})
 ---
 
-<script type="module">
-	if (!window.pagefind) {
-		const pagefind = await import('/pagefind/pagefind.js')
-		pagefind.init()
-		window.pagefind = pagefind
-	}
-</script>
-
-<BaseLayout showAuthorInfo showScrollProgress={config.scrollProgress}>
+<BaseLayout
+	showAuthorInfo
+	showSearchButton
+	showScrollProgress={config.scrollProgress}
+>
 	<BlogList posts={sortedPosts} />
-	<PagefindSearchButton />
-	<PagefindSearchModal />
 </BaseLayout>

@@ -13,14 +13,18 @@ import { WindowsList } from '../components/solid/WindowManager/WindowsList'
 import { getNavigationConditions } from '../utils/navigation'
 import ScrollProgressBall from '../components/astro/ScrollProgress/ScrollProgressBall.astro'
 import ScrollProgressLine from '../components/astro/ScrollProgress/ScrollProgressLine.astro'
+import PagefindSearchModal from '../components/Pagefind/PagefindSearchModal.astro'
+import PagefindSearchButton from '../components/Pagefind/PagefindSearchButton.astro'
 
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
 	showScrollProgress?: 'ball' | 'line' | false
+	showSearchButton?: boolean
 }
 
 const {
 	showAuthorInfo,
+	showSearchButton,
 	showScrollProgress,
 	title,
 	description,
@@ -112,6 +116,16 @@ const background = await (async () => {
 })()
 ---
 
+<script type="module">
+	if (!window.pagefind) {
+		const pagefind = await import('/pagefind/pagefind.js')
+		pagefind.init()
+		window.pagefind = pagefind
+	}
+</script>
+
+{showSearchButton && <PagefindSearchModal />}
+
 <BaseHtml
 	{...otherProps}
 	title={title ?? config.title}
@@ -151,7 +165,7 @@ const background = await (async () => {
 								</div>
 							)}
 
-							<div class="flex flex-row sm:flex-col w-full justify-around border-none max-sm:glassmorphism sm:p-2">
+							<div class="flex flex-row sm:flex-col w-full justify-around max-sm:glassmorphism sm:p-2">
 								<AdaptiveIconButton active={isTimeline} href="/">
 									<i
 										slot="icon"
@@ -241,9 +255,25 @@ const background = await (async () => {
 							id="main-scroll-container"
 							class="overflow-auto h-full flex-1 no-scrollbar"
 						>
-							<div class="p-2 sm:pl-0">
-								<slot />
-							</div>
+							{showSearchButton ? (
+								<Fragment>
+									<div class="sticky top-0 z-50 py-2 sm:pt-4 sm:pb-0 px-4 flex justify-end">
+										{showSearchButton && (
+											<PagefindSearchButton class="flex gap-2 items-center justify-center cursor-pointer rounded-full p-1 px-4 pr-3 border border-black/50 dark:border-white/50 shadow-md transition-transform hover:scale-105 hover:shadow-lg backdrop-blur-md">
+												<p>Search</p>
+												<i class="icon-[mdi--search] size-[1.2rem]" />
+											</PagefindSearchButton>
+										)}
+									</div>
+									<div class="sm:pl-0">
+										<slot />
+									</div>
+								</Fragment>
+							) : (
+								<div class="p-2 sm:pl-0">
+									<slot />
+								</div>
+							)}
 						</main>
 
 						<slot name="aside" />

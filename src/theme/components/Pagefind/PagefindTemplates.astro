@@ -3,21 +3,24 @@
 ---
 
 <template id="template-pagefind-search-result-item">
-	<div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm shadow-lg rounded-lg p-4 flex flex-col gap-2 mb-2 hover:shadow-xl transition-shadow">
-		<a
+	<a class="rounded-lg hover:glassmorphism p-4 flex flex-col gap-2 mb-2">
+		<p
 			slot="title"
-			class="text-lg font-semibold hover:underline break-all text-blue-600 dark:text-blue-400 flex items-center gap-1"
+			class="text-lg font-semibold break-all text-blue-600 dark:text-blue-400 flex items-center gap-1"
 		>
-		</a>
-		<div class="excerpt text-gray-700 dark:text-gray-300 break-all text-sm"></div>
-	</div>
+		</p>
+		<div
+			class="excerpt text-gray-700 dark:text-gray-300 break-all text-sm after:content-['...']"
+		>
+		</div>
+	</a>
 </template>
 
 <style>
 	.excerpt mark {
 		background-color: #fbbf24;
 		color: #1f2937;
-		border-radius: 2px;
+		border-radius: 4px;
 		padding: 0 2px;
 		margin: 0 1px;
 	}

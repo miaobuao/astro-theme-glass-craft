@@ -7,14 +7,14 @@
 }
 
 @utility glassmorphism {
-	@apply bg-white/50 backdrop-blur-lg border border-white/60;
-	@apply dark:bg-black/50 border-black/10;
+	@apply bg-white/50 backdrop-blur-lg;
+	@apply dark:bg-black/50;
 	@apply not-supports-[((backdrop-filter:blur(1px))or(-webkit-backdrop-filter:blur(1px)))]:bg-white/85;
 	@apply not-supports-[((backdrop-filter:blur(1px))or(-webkit-backdrop-filter:blur(1px)))]:dark:bg-black/85;
 }
 
 @utility no-glassmorphism {
-	@apply bg-transparent border-none backdrop-blur-none;
+	@apply bg-transparent backdrop-blur-none;
 }
 
 @utility no-scrollbar {

@@ -20,8 +20,9 @@ export class PagefindSearchResultItem extends HTMLElement {
 		const link = this.querySelector('a')
 		if (link) {
 			link.href = this.result.url
-			link.textContent = this.result.meta.title || 'Untitled'
+			link
 		}
+		this.querySelector('p')!.textContent = this.result.meta.title || 'Untitled'
 
 		const excerpt = this.querySelector('.excerpt')
 		if (excerpt) {

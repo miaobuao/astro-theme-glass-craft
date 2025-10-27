@@ -10,10 +10,6 @@ class PagefindMask extends HTMLElement {
 	}
 
 	connectedCallback() {
-		if (this.dataset.blur?.toLowerCase() === 'true') {
-			this.classList.add('backdrop-blur-sm')
-		}
-
 		// Listen for events to show/hide the modal
 		pagefindEmitter.on('open', this.handleOpen)
 		pagefindEmitter.on('close', this.handleClose)
