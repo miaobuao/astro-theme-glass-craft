@@ -55,6 +55,8 @@
 		}
 	}
 	.footnotes {
+		@apply break-all;
+
 		.sr-only {
 			@apply hidden;
 		}
