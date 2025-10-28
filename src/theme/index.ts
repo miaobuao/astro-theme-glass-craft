@@ -168,6 +168,24 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/collection',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/collection/index.astro',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/collection/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/collection/[...slug].astro',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/viewer/image',
 					entrypoint: resolve(__dirname, 'src/theme/pages/viewer/image.astro'),
 					prerender: true,

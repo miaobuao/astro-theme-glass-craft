@@ -36,6 +36,9 @@ const isTimeline =
 const isArchive =
 	Astro.url.pathname === '/archive' ||
 	Astro.url.pathname.startsWith('/archive/')
+const isCollection =
+	Astro.url.pathname === '/collection' ||
+	Astro.url.pathname.startsWith('/collection/')
 const isBrowse =
 	Astro.url.pathname === '/browse' || Astro.url.pathname.startsWith('/browse/')
 const isAboutMe =
@@ -58,6 +61,10 @@ const timelineIcon = isTimeline
 const archiveIcon = isArchive
 	? 'icon-[icon-park-solid--calendar]'
 	: 'icon-[icon-park-outline--calendar]'
+
+const collectionIcon = isCollection
+	? 'icon-[material-symbols--folder-copy]'
+	: 'icon-[material-symbols--folder-copy-outline]'
 
 const browseIcon = isBrowse
 	? 'icon-[material-symbols--folder-open]'
@@ -172,6 +179,13 @@ const background = await (async () => {
 										class:list={[timelineIcon, 'size-6 sm:size-8']}
 									/>
 									Timeline
+								</AdaptiveIconButton>
+								<AdaptiveIconButton active={isCollection} href="/collection">
+									<i
+										slot="icon"
+										class:list={[collectionIcon, 'size-6 sm:size-8']}
+									/>
+									Collection
 								</AdaptiveIconButton>
 								{showArchive && (
 									<AdaptiveIconButton active={isArchive} href="/archive">

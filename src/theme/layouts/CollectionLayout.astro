@@ -1,0 +1,47 @@
+---
+import BaseLayout from './BaseLayout.astro'
+import { config } from '../consts'
+
+interface CollectionNode {
+	isDir: boolean
+	name: string
+	url: string
+}
+
+interface Props {
+	files: CollectionNode[]
+}
+
+const { files } = Astro.props as Props
+---
+
+<BaseLayout showAuthorInfo showScrollProgress={config.scrollProgress}>
+	<div
+		class:list={[
+			'grid gap-2',
+			'sm:grid-cols-2',
+			'xl:grid-cols-3',
+			'2xl:grid-cols-4',
+		]}
+	>
+		{
+			files.map((file) => {
+				const icon = file.isDir
+					? 'icon-[vscode-icons--default-folder]'
+					: 'icon-[vscode-icons--file-type-markdown]'
+
+				return (
+					<a
+						href={file.url}
+						class="transition-all flex items-center gap-2 p-2 rounded-md glassmorphism"
+					>
+						<i class={`${icon} size-12`} />
+						<p class="flex-1 truncate" title={file.name}>
+							{file.name}
+						</p>
+					</a>
+				)
+			})
+		}
+	</div>
+</BaseLayout>

@@ -1,0 +1,65 @@
+---
+import CollectionLayout from '../../layouts/CollectionLayout.astro'
+import { getCollection } from 'astro:content'
+import { createFallbackBlogFrontMatterProcessor } from '../../utils/fallback-blog-frontmatter'
+import { config } from '../../consts'
+
+// Get all blog posts
+const blogPosts = await getCollection('blog')
+const fallback = createFallbackBlogFrontMatterProcessor({
+	options: {
+		slugify: config.slugifyArticleUrl,
+	},
+})
+const processedPosts = await Promise.all(blogPosts.map(fallback))
+
+// Build hierarchical structure from blog posts
+interface CollectionNode {
+	isDir: boolean
+	name: string
+	url: string
+}
+
+// Helper to build tree structure
+function buildTree(posts: typeof processedPosts): CollectionNode[] {
+	const root: Map<string, CollectionNode> = new Map()
+	const postMap = new Map(posts.map((p) => [p.entry.id, p]))
+
+	posts.forEach((post) => {
+		const pathParts = post.entry.id.split('/')
+		let currentPath = ''
+
+		pathParts.forEach((part, index) => {
+			const isFile = index === pathParts.length - 1
+			const previousPath = currentPath
+			currentPath = currentPath ? `${currentPath}/${part}` : part
+
+			if (!root.has(currentPath)) {
+				const node: CollectionNode = {
+					isDir: !isFile,
+					name: part.replace(/\.(md|mdx)$/, ''),
+					url: isFile
+						? `/blog/${postMap.get(post.entry.id)!.frontMatter.slug}`
+						: `/collection/${currentPath}`,
+				}
+
+				root.set(currentPath, node)
+			}
+		})
+	})
+
+	// Return only root level items
+	const rootItems: CollectionNode[] = []
+	root.forEach((node, path) => {
+		if (!path.includes('/')) {
+			rootItems.push(node)
+		}
+	})
+
+	return rootItems
+}
+
+const files = buildTree(processedPosts)
+---
+
+<CollectionLayout files={files} />
