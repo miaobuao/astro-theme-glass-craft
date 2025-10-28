@@ -28,6 +28,7 @@ import SuperJSON from 'superjson'
 import packageJson from '../../package.json'
 import { remarkDirectiveRehype } from '../plugins/remark/remark-directive-rehype'
 import type { ThemeConfig } from './config'
+import { slugifyBlogPostUrl } from './utils/slugify-blog-post-url'
 const packageName = packageJson.name
 const __dirname = resolve(import.meta.dirname, '../../')
 
@@ -264,7 +265,14 @@ export default function ThemeIntegration(
 							...(config.markdown?.remarkPlugins ?? []),
 						]),
 						rehypePlugins: uniq([
-							rehypeAstroRelativeMarkdownLinks,
+							[
+								rehypeAstroRelativeMarkdownLinks,
+								{
+									slugify: userOpts.slugifyArticleUrl
+										? (segment: string) => slugifyBlogPostUrl(segment)
+										: false,
+								},
+							],
 							rehypeHeadingIds,
 							[rehypeAutoLinkHeadings, { behavior: 'wrap' }],
 							rehypeSlug,

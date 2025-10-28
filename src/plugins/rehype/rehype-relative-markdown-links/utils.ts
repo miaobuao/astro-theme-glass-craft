@@ -119,9 +119,26 @@ export const normaliseAstroOutputPath = (
 	return normalizePath(buildPath())
 }
 
-export const generateSlug = (pathSegments: string[]): string => {
+export const generateSlug = (
+	pathSegments: string[],
+	slugifyFn?: ((segment: string) => string) | boolean
+): string => {
+	// Determine which slugify function to use
+	let segmentTransform: (segment: string) => string
+
+	if (typeof slugifyFn === 'function') {
+		// Use custom slugify function
+		segmentTransform = slugifyFn
+	} else if (slugifyFn === false) {
+		// No slugification, use original segment
+		segmentTransform = (segment) => segment
+	} else {
+		// Default: use transliteration slugify
+		segmentTransform = slugify
+	}
+
 	return pathSegments
-		.map((segment) => slugify(segment))
+		.map((segment) => segmentTransform(segment))
 		.join(URL_PATH_SEPARATOR)
 		.replace(/\/index$/, '')
 }

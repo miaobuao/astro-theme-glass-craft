@@ -100,7 +100,7 @@ const remarkRelativeMarkdownLinks: Plugin<
 			// each path segment should be individually sluggified
 			const pathSegments = withoutFileExt.split(FILE_PATH_SEPARATOR)
 			// Astro generates a slug for each page on the site as a fallback if the page does not have a custom slug
-			const generatedSlug = generateSlug(pathSegments)
+			const generatedSlug = generateSlug(pathSegments, options.slugify)
 			// if we have a custom slug, use it, else use the default
 			const resolvedSlug = resolveSlug(generatedSlug, frontmatterSlug)
 			// determine the collection base based on specified options

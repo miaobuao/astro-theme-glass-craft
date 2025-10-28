@@ -33,6 +33,29 @@ export const OptionsSchema = z.object({
 	 */
 	srcDir: z.string().default('./src'),
 	/**
+	 * Control how path segments should be slugified:
+	 *   - Custom function: Provide your own slugify function `(segment: string) => string`
+	 *   - `true`: Use the default transliteration slugify (default behavior)
+	 *   - `false`: Do not slugify, use original path segments as-is
+	 *
+	 * @default `true`
+	 * @example
+	 * ```js
+	 * {
+	 *   // Use custom slugify function
+	 *   slugify: (segment) => segment.toLowerCase().replace(/\s+/g, '-')
+	 * }
+	 * ```
+	 * @example
+	 * ```js
+	 * {
+	 *   // Disable slugification
+	 *   slugify: false
+	 * }
+	 * ```
+	 */
+	slugify: z.union([z.function(), z.boolean()]).optional(),
+	/**
 	 * Set how the base segment of the URL path to the referenced markdown file should be derived:
 	 *   - `"name"` - Apply the name on disk of the content collection (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/docs/guides/my-guide`)
 	 *   - `false` - Do not apply a base (ex. `./guides/my-guide.md` referenced from `./resources/my-reference.md` in the content collection `docs` would resolve to the path `/guides/my-guide`)
@@ -70,7 +93,7 @@ export const OptionsSchema = z.object({
 	 * }
 	 * ```
 	 */
-	collections: z.record(CollectionConfigSchema).default({}),
+	collections: z.record(z.string(), CollectionConfigSchema).default({}),
 	/**
 	 * The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build.
 	 * @see {@link https://docs.astro.build/en/reference/configuration-reference/#base}
@@ -112,15 +135,22 @@ export const OptionsSchema = z.object({
 		.default('ignore')
 })
 
+/** Slugify function type */
+export type SlugifyFunction = (segment: string) => string
+
 /** Collection specific options */
 export type CollectionConfig = z.input<CollectionConfigSchemaType>
 type CollectionConfigSchemaType = typeof CollectionConfigSchema
 
 /** General options */
-export type Options = z.input<OptionsSchemaType>
+export type Options = Omit<z.input<OptionsSchemaType>, 'slugify'> & {
+	slugify?: SlugifyFunction | boolean
+}
 type OptionsSchemaType = typeof OptionsSchema
 
-interface EffectiveOptions extends z.infer<OptionsSchemaType> {}
+export interface EffectiveOptions extends Omit<z.infer<OptionsSchemaType>, 'slugify'> {
+	slugify?: SlugifyFunction | boolean
+}
 export interface EffectiveCollectionOptions
 	extends Omit<EffectiveOptions, 'collections'> {
 	collectionName: string
@@ -134,14 +164,14 @@ export const validateOptions = (
 		throw result.error
 	}
 
-	return result.data
+	return result.data as EffectiveOptions
 }
 
 export const mergeCollectionOptions = (
 	collectionName: string,
 	options: EffectiveOptions
 ): EffectiveCollectionOptions => {
-	const config = options.collections[collectionName] || {}
+	const config: Partial<CollectionConfig> = options.collections[collectionName] || {}
 	const { base = options.collectionBase, name = collectionName } = config
 	return {
 		...options,
