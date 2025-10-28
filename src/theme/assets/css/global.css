@@ -7,6 +7,7 @@
 }
 
 @utility glassmorphism {
+	@apply border-amber-50/20;
 	@apply bg-white/50 backdrop-blur-lg;
 	@apply dark:bg-black/50;
 	@apply not-supports-[((backdrop-filter:blur(1px))or(-webkit-backdrop-filter:blur(1px)))]:bg-white/85;
