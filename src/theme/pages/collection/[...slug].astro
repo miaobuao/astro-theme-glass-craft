@@ -17,7 +17,9 @@ export async function getStaticPaths() {
 			slugify: config.slugifyArticleUrl,
 		},
 	})
-	const processedPosts = await Promise.all(blogPosts.map(fallback))
+	const processedPosts = await Promise.all(blogPosts.map(fallback)).then((p) =>
+		p.filter((p) => !p.frontMatter.isDraft),
+	)
 
 	// Build all possible directory paths
 	const directories = new Set<string>()
@@ -43,11 +45,19 @@ export async function getStaticPaths() {
 					directoryChildren.set(previousPath, [])
 				}
 				const children = directoryChildren.get(previousPath)!
-				const existingChild = children.find((c) => c.url === (isFile ? `/blog/${postMap.get(post.entry.id)!.frontMatter.slug}` : `/collection/${currentPath}`))
+				const existingChild = children.find(
+					(c) =>
+						c.url ===
+						(isFile
+							? `/blog/${postMap.get(post.entry.id)!.frontMatter.slug}`
+							: `/collection/${currentPath}`),
+				)
 				if (!existingChild) {
 					children.push({
 						isDir: !isFile,
-						name: part.replace(/\.(md|mdx)$/, ''),
+						name: isFile
+							? postMap.get(post.entry.id)!.frontMatter.title
+							: part.replace(/\.(md|mdx)$/, ''),
 						url: isFile
 							? `/blog/${postMap.get(post.entry.id)!.frontMatter.slug}`
 							: `/collection/${currentPath}`,
@@ -67,6 +77,13 @@ export async function getStaticPaths() {
 }
 
 const { children } = Astro.props
+children.sort((a, b) => {
+	if (a.isDir === b.isDir) {
+		return a.name.localeCompare(b.name)
+	} else {
+		return a.isDir ? -1 : 1
+	}
+})
 ---
 
 <CollectionLayout files={children} />

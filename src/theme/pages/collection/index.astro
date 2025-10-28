@@ -37,7 +37,9 @@ function buildTree(posts: typeof processedPosts): CollectionNode[] {
 			if (!root.has(currentPath)) {
 				const node: CollectionNode = {
 					isDir: !isFile,
-					name: part.replace(/\.(md|mdx)$/, ''),
+					name: isFile
+						? postMap.get(post.entry.id)!.frontMatter.title
+						: part.replace(/\.(md|mdx)$/, ''),
 					url: isFile
 						? `/blog/${postMap.get(post.entry.id)!.frontMatter.slug}`
 						: `/collection/${currentPath}`,
@@ -59,7 +61,15 @@ function buildTree(posts: typeof processedPosts): CollectionNode[] {
 	return rootItems
 }
 
-const files = buildTree(processedPosts)
+const files = buildTree(processedPosts.filter((p) => !p.frontMatter.isDraft))
+
+files.sort((a, b) => {
+	if (a.isDir === b.isDir) {
+		return a.name.localeCompare(b.name)
+	} else {
+		return a.isDir ? -1 : 1
+	}
+})
 ---
 
 <CollectionLayout files={files} />
