@@ -34,6 +34,11 @@ const enablePagefind = props.enablePagefind ?? true
 	import '../components/astro/directive/box/info'
 	import '../components/astro/directive/box/warning'
 	import '../components/astro/directive/box/error'
+
+	import mediumZoom from 'medium-zoom'
+	mediumZoom(document.querySelectorAll('article img'), {
+		background: '#000',
+	})
 </script>
 
 <BaseLayout

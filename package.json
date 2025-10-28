@@ -39,6 +39,7 @@
 		"marked": "^16.4.0",
 		"mdast-util-from-markdown": "^2.0.2",
 		"mdast-util-to-string": "^4.0.0",
+		"medium-zoom": "^1.1.0",
 		"mime-types": "^3.0.1",
 		"mitt": "^3.0.1",
 		"moment": "^2.30.1",
