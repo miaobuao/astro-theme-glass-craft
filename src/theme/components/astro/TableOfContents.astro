@@ -170,6 +170,11 @@ const {
 
 			tocList.appendChild(ul)
 			this.innerHTML = ''
+
+			// Add fade-in animation using Tailwind classes
+			tocList.className =
+				'toc-list animate-in fade-in slide-in-from-top-2 duration-300'
+
 			this.appendChild(tocList)
 		}
 
@@ -264,11 +269,44 @@ const {
 	data-title={title}
 	class:list={[className]}
 >
+	<div class="toc-skeleton flex flex-col gap-2 py-1 animate-pulse">
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</div>
 </table-of-contents>
 
 <style>
 	@reference "tailwindcss";
+
 	:global(.toc-active) {
 		@apply font-semibold bg-black/25 dark:bg-white/25;
+	}
+
+	.toc-skeleton {
+		> div {
+			@apply h-7 bg-black/10 dark:bg-white/10 rounded-md;
+		}
+		> div:nth-child(1) {
+			@apply w-[85%];
+		}
+		> div:nth-child(2) {
+			@apply w-[70%] ml-3;
+		}
+		> div:nth-child(3) {
+			@apply w-[80%] ml-3;
+		}
+		> div:nth-child(4) {
+			@apply w-[90%];
+		}
+		> div:nth-child(5) {
+			@apply w-[65%] ml-3;
+		}
+		> div:nth-child(6) {
+			@apply w-[75%];
+		}
 	}
 </style>
