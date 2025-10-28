@@ -10,7 +10,7 @@ import type {
 	ViteUserConfig,
 } from 'astro'
 import pagefind from 'astro-pagefind'
-import rehypeAstroRelativeMarkdownLinks from '../plugins/rehype/rehype-relative-markdown-links'
+import { remarkRelativeMarkdownLinks } from '../plugins/remark/remark-relative-markdown-links'
 
 import { uniq } from 'lodash-es'
 import { spawn } from 'node:child_process'
@@ -260,19 +260,19 @@ export default function ThemeIntegration(
 									breakLink: true,
 								},
 							],
-							remarkGithubAdmonitionsToDirectives,
-							remarkMath,
-							...(config.markdown?.remarkPlugins ?? []),
-						]),
-						rehypePlugins: uniq([
 							[
-								rehypeAstroRelativeMarkdownLinks,
+								remarkRelativeMarkdownLinks,
 								{
 									slugify: userOpts.slugifyArticleUrl
 										? (segment: string) => slugifyBlogPostUrl(segment)
 										: false,
 								},
 							],
+							remarkGithubAdmonitionsToDirectives,
+							remarkMath,
+							...(config.markdown?.remarkPlugins ?? []),
+						]),
+						rehypePlugins: uniq([
 							rehypeHeadingIds,
 							[rehypeAutoLinkHeadings, { behavior: 'wrap' }],
 							rehypeSlug,
