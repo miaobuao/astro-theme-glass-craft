@@ -46,7 +46,7 @@ const { posts, class: className } = Astro.props
 </script>
 
 <div
-	class:list={['flex flex-col gap-2 rounded-lg max-sm:px-2', className]}
+	class:list={['flex flex-col gap-2 rounded-lg', className]}
 	id="blog-list"
 	data-has-giscus={config.comment?.giscus ? 'true' : 'false'}
 >
@@ -55,7 +55,7 @@ const { posts, class: className } = Astro.props
 			const description = await marked(post.frontMatter.description)
 			return (
 				<Fragment>
-					<div class="flex flex-col gap-3 p-4 md:p-6 pb-0! max-sm:glassmorphism rounded-lg max-sm:p-4!">
+					<div class="flex flex-col gap-3 p-4 md:p-6 pb-0! max-sm:glassmorphism max-sm:border rounded-lg max-sm:p-4!">
 						<a
 							href={`/blog/${post.frontMatter.slug}`}
 							data-embed={`/embed/blog/${post.frontMatter.slug}`}
@@ -67,7 +67,7 @@ const { posts, class: className } = Astro.props
 							<div set:html={description} />
 						</a>
 						{post.frontMatter.tags.length > 0 && (
-							<div class="flex flex-wrap gap-2 text-xs">
+							<div class="flex flex-wrap gap-2 text-sm sm:text-xs">
 								{post.frontMatter.tags.map((tag) => (
 									<a href={`/tags/${tag}`} class="tag tag-link">
 										{tag}
@@ -79,6 +79,7 @@ const { posts, class: className } = Astro.props
 							<span>
 								{moment(post.frontMatter.publishDate).format('YYYY-MM-DD')}
 							</span>
+							<span>{post.frontMatter.readingTime.text} </span>
 						</div>
 					</div>
 

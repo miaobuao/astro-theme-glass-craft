@@ -16,12 +16,10 @@
 	</a>
 </template>
 
-<style>
+<style is:global>
+	@reference "tailwindcss";
+
 	.excerpt mark {
-		background-color: #fbbf24;
-		color: #1f2937;
-		border-radius: 4px;
-		padding: 0 2px;
-		margin: 0 1px;
+		@apply bg-[#fbbf24] text-black rounded-sm px-0.5;
 	}
 </style>

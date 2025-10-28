@@ -1,0 +1,89 @@
+---
+import CollectionLayout from '../../layouts/CollectionLayout.astro'
+import { getCollection } from 'astro:content'
+import { createFallbackBlogFrontMatterProcessor } from '../../utils/fallback-blog-frontmatter'
+import { config } from '../../consts'
+
+interface CollectionNode {
+	isDir: boolean
+	name: string
+	url: string
+}
+
+export async function getStaticPaths() {
+	const blogPosts = await getCollection('blog')
+	const fallback = createFallbackBlogFrontMatterProcessor({
+		options: {
+			slugify: config.slugifyArticleUrl,
+		},
+	})
+	const processedPosts = await Promise.all(blogPosts.map(fallback)).then((p) =>
+		p.filter((p) => !p.frontMatter.isDraft),
+	)
+
+	// Build all possible directory paths
+	const directories = new Set<string>()
+	const directoryChildren = new Map<string, CollectionNode[]>()
+	const postMap = new Map(processedPosts.map((p) => [p.entry.id, p]))
+
+	processedPosts.forEach((post) => {
+		const pathParts = post.entry.id.split('/')
+		let currentPath = ''
+
+		pathParts.forEach((part, index) => {
+			const isFile = index === pathParts.length - 1
+			const previousPath = currentPath
+			currentPath = currentPath ? `${currentPath}/${part}` : part
+
+			if (!isFile) {
+				directories.add(currentPath)
+			}
+
+			// Track parent-child relationships
+			if (previousPath) {
+				if (!directoryChildren.has(previousPath)) {
+					directoryChildren.set(previousPath, [])
+				}
+				const children = directoryChildren.get(previousPath)!
+				const existingChild = children.find(
+					(c) =>
+						c.url ===
+						(isFile
+							? `/blog/${postMap.get(post.entry.id)!.frontMatter.slug}`
+							: `/collection/${currentPath}`),
+				)
+				if (!existingChild) {
+					children.push({
+						isDir: !isFile,
+						name: isFile
+							? postMap.get(post.entry.id)!.frontMatter.title
+							: part.replace(/\.(md|mdx)$/, ''),
+						url: isFile
+							? `/blog/${postMap.get(post.entry.id)!.frontMatter.slug}`
+							: `/collection/${currentPath}`,
+					})
+				}
+			}
+		})
+	})
+
+	// Generate paths for all directories
+	return Array.from(directories).map((dir) => ({
+		params: { slug: dir },
+		props: {
+			children: directoryChildren.get(dir) || [],
+		},
+	}))
+}
+
+const { children } = Astro.props
+children.sort((a, b) => {
+	if (a.isDir === b.isDir) {
+		return a.name.localeCompare(b.name)
+	} else {
+		return a.isDir ? -1 : 1
+	}
+})
+---
+
+<CollectionLayout files={children} />

@@ -10,9 +10,9 @@ import type {
 	ViteUserConfig,
 } from 'astro'
 import pagefind from 'astro-pagefind'
-import rehypeAstroRelativeMarkdownLinks from 'astro-rehype-relative-markdown-links'
-import { h } from 'hastscript'
-import { isString, uniq } from 'lodash-es'
+import { remarkRelativeMarkdownLinks } from '../plugins/remark/remark-relative-markdown-links'
+
+import { uniq } from 'lodash-es'
 import { spawn } from 'node:child_process'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -25,9 +25,10 @@ import remarkGithubAdmonitionsToDirectives from 'remark-github-admonitions-to-di
 import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import SuperJSON from 'superjson'
-import { visit } from 'unist-util-visit'
 import packageJson from '../../package.json'
+import { remarkDirectiveRehype } from '../plugins/remark/remark-directive-rehype'
 import type { ThemeConfig } from './config'
+import { slugifyBlogPostUrl } from './utils/slugify-blog-post-url'
 const packageName = packageJson.name
 const __dirname = resolve(import.meta.dirname, '../../')
 
@@ -168,6 +169,24 @@ export default function ThemeIntegration(
 				})
 
 				injectRoute({
+					pattern: '/collection',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/collection/index.astro',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
+					pattern: '/collection/[...slug]',
+					entrypoint: resolve(
+						__dirname,
+						'src/theme/pages/collection/[...slug].astro',
+					),
+					prerender: true,
+				})
+
+				injectRoute({
 					pattern: '/viewer/image',
 					entrypoint: resolve(__dirname, 'src/theme/pages/viewer/image.astro'),
 					prerender: true,
@@ -234,31 +253,19 @@ export default function ThemeIntegration(
 						remarkPlugins: uniq([
 							remarkParse,
 							remarkDirective,
-							function remarkDirectiveRehype() {
-								return function (tree: any) {
-									visit(tree, function (node) {
-										if (
-											node.type === 'containerDirective' ||
-											node.type === 'leafDirective' ||
-											node.type === 'textDirective'
-										) {
-											const data = node.data || (node.data = {})
-											const hast = h(node.name, node.attributes || {})
-											if ('properties' in hast) {
-												data.hProperties = hast.properties
-											}
-											if ('tagName' in hast && isString(hast.tagName)) {
-												data.hName =
-													'directive-box-' + hast.tagName.toLowerCase()
-											}
-										}
-									})
-								}
-							},
+							remarkDirectiveRehype,
 							[
 								remarkFootnotesExtra,
 								{
 									breakLink: true,
+								},
+							],
+							[
+								remarkRelativeMarkdownLinks,
+								{
+									slugify: userOpts.slugifyArticleUrl
+										? (segment: string) => slugifyBlogPostUrl(segment)
+										: false,
 								},
 							],
 							remarkGithubAdmonitionsToDirectives,
@@ -266,7 +273,6 @@ export default function ThemeIntegration(
 							...(config.markdown?.remarkPlugins ?? []),
 						]),
 						rehypePlugins: uniq([
-							rehypeAstroRelativeMarkdownLinks,
 							rehypeHeadingIds,
 							[rehypeAutoLinkHeadings, { behavior: 'wrap' }],
 							rehypeSlug,

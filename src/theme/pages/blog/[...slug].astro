@@ -3,6 +3,7 @@ import type { InferGetStaticPropsType } from 'astro'
 import { getCollection, render } from 'astro:content'
 import BlogPostLayout from '../../layouts/BlogPostLayout.astro'
 import { createFallbackBlogFrontMatterProcessor } from '../../utils/fallback-blog-frontmatter'
+import { config } from '../../consts'
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog')
@@ -33,15 +34,16 @@ export async function getStaticPaths() {
 }
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>
-const { post } = Astro.props
+const { post, slugify } = Astro.props
 
 const { Content } = await render(post.entry)
 
 const title = post.frontMatter.title
 const description = post.frontMatter.description
 const pubDate = post.frontMatter.publishDate
+const enablePagefind = slugify === config.slugifyArticleUrl
 ---
 
-<BlogPostLayout {title} {description} {pubDate}>
+<BlogPostLayout {title} {description} {pubDate} {enablePagefind}>
 	<Content />
 </BlogPostLayout>

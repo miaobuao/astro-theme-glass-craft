@@ -26,12 +26,15 @@
 		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.1.10",
 		"@types/lodash-es": "^4.17.12",
+		"@types/mdast": "^4.0.4",
 		"@types/mime-types": "^3.0.1",
 		"astro-pagefind": "^1.8.3",
-		"astro-rehype-relative-markdown-links": "^0.18.1",
+		"catch-unknown": "^2.0.0",
 		"giscus": "^1.6.0",
+		"gray-matter": "^4.0.3",
 		"hash-wasm": "^4.12.0",
 		"hastscript": "^9.0.1",
+		"is-absolute-url": "^5.0.0",
 		"lodash-es": "^4.17.21",
 		"marked": "^16.4.0",
 		"mdast-util-from-markdown": "^2.0.2",
@@ -61,11 +64,13 @@
 		"superjson": "^2.2.2",
 		"tailwindcss": "^4.1.10",
 		"transliteration": "^2.3.5",
-		"unist-util-visit": "^5.0.0"
+		"unified": "^11.0.5",
+		"unist-util-visit": "^5.0.0",
+		"zod": "^4.1.12"
 	},
 	"devDependencies": {
-		"astro": "^5.10.0",
-		"prettier": "^3.5.3",
+		"astro": "^5.15.2",
+		"prettier": "^3.6.2",
 		"prettier-plugin-astro": "^0.14.1"
 	}
 }
