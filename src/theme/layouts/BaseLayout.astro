@@ -19,12 +19,12 @@ import PagefindSearchButton from '../components/astro/Pagefind/PagefindSearchBut
 interface Props extends BaseHtmlProps {
 	showAuthorInfo?: boolean
 	showScrollProgress?: 'ball' | 'line' | false
-	showSearchButton?: boolean
+	showToolBar?: boolean
 }
 
 const {
 	showAuthorInfo,
-	showSearchButton,
+	showToolBar,
 	showScrollProgress,
 	title,
 	description,
@@ -86,7 +86,7 @@ const finderIcon = isFinder
 	? 'icon-[ix--navigation-filled]'
 	: 'icon-[ix--navigation]'
 
-const { showGallery, showArchive, showFriendLinks, showShare, showFinder } =
+const { showGallery, showFriendLinks, showShare, showFinder } =
 	await getNavigationConditions()
 
 const canUseBackground = !!config.backgroundImage
@@ -131,7 +131,7 @@ const background = await (async () => {
 	}
 </script>
 
-{showSearchButton && <PagefindSearchModal />}
+{showToolBar && <PagefindSearchModal />}
 
 <BaseHtml
 	{...otherProps}
@@ -180,22 +180,7 @@ const background = await (async () => {
 									/>
 									Timeline
 								</AdaptiveIconButton>
-								<AdaptiveIconButton active={isCollection} href="/collection">
-									<i
-										slot="icon"
-										class:list={[collectionIcon, 'size-6 sm:size-8']}
-									/>
-									Collection
-								</AdaptiveIconButton>
-								{showArchive && (
-									<AdaptiveIconButton active={isArchive} href="/archive">
-										<i
-											slot="icon"
-											class:list={[archiveIcon, 'size-6 sm:size-8']}
-										/>
-										Archive
-									</AdaptiveIconButton>
-								)}
+
 								{showShare && (
 									<AdaptiveIconButton
 										class="hidden sm:flex"
@@ -269,17 +254,25 @@ const background = await (async () => {
 							id="main-scroll-container"
 							class="overflow-auto h-full flex-1 no-scrollbar"
 						>
-							{showSearchButton ? (
+							{showToolBar ? (
 								<Fragment>
-									<div class="sticky top-0 z-50 py-2 sm:pt-4 sm:pb-0 px-4 flex justify-end">
-										{showSearchButton && (
-											<PagefindSearchButton class="flex gap-2 items-center justify-center cursor-pointer rounded-full p-1 px-4 pr-3 border border-black/50 dark:border-white/50 shadow-md transition-transform hover:scale-105 hover:shadow-lg backdrop-blur-md">
-												<p>Search</p>
+									<div class="sticky top-0 z-50 w-full">
+										<div class="py-2 sm:pt-4 sm:pb-0 px-2 sm:px-4 flex justify-end gap-2 sm:gap-4 max-sm:w-screen overscroll-auto">
+											<a class="blur-btn" href="/collection">
+												<p class="max-sm:text-xs">Collection</p>
+												<i class:list={[collectionIcon, 'size-[1.2rem]']} />
+											</a>
+											<a class="blur-btn" href="/archive">
+												<p class="max-sm:text-xs">Archive</p>
+												<i class:list={[archiveIcon, 'size-[1.2rem]']} />
+											</a>
+											<PagefindSearchButton class="blur-btn">
+												<p class="max-sm:text-xs">Search</p>
 												<i class="icon-[mdi--search] size-[1.2rem]" />
 											</PagefindSearchButton>
-										)}
+										</div>
 									</div>
-									<div class="sm:pl-0">
+									<div class="sm:pl-0 p-2">
 										<slot />
 									</div>
 								</Fragment>
@@ -349,11 +342,11 @@ const background = await (async () => {
 	/>
 </BaseHtml>
 
-<style>
-	.scroll-progress-line-shadow {
-		filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.2))
-			drop-shadow(0 -4px 5px rgba(0, 0, 0, 0.14))
-			drop-shadow(0 -1px 10px rgba(0, 0, 0, 0.12));
+<style is:global>
+	@reference "tailwindcss";
+
+	.blur-btn {
+		@apply flex gap-2 items-center justify-center cursor-pointer rounded-full p-1 px-4 pr-3 border border-black/50 dark:border-white/50 shadow-md transition-transform hover:scale-105 hover:shadow-lg backdrop-blur-md max-sm:bg-white/20 max-sm:dark:bg-black/20;
 	}
 </style>
 

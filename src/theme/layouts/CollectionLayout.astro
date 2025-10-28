@@ -13,11 +13,14 @@ interface Props {
 }
 
 const { files } = Astro.props as Props
-files.sort
 ---
 
-<BaseLayout showAuthorInfo showScrollProgress={config.scrollProgress}>
-	<div class:list={['grid gap-2', 'lg:grid-cols-2']}>
+<BaseLayout
+	showAuthorInfo
+	showToolBar
+	showScrollProgress={config.scrollProgress}
+>
+	<div class:list={['grid gap-2 lg:grid-cols-2']}>
 		{
 			files.map((file) => {
 				const icon = file.isDir

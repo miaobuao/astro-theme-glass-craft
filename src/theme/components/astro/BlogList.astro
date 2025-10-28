@@ -46,7 +46,7 @@ const { posts, class: className } = Astro.props
 </script>
 
 <div
-	class:list={['flex flex-col gap-2 rounded-lg max-sm:px-2', className]}
+	class:list={['flex flex-col gap-2 rounded-lg', className]}
 	id="blog-list"
 	data-has-giscus={config.comment?.giscus ? 'true' : 'false'}
 >
