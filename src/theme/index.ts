@@ -10,9 +10,9 @@ import type {
 	ViteUserConfig,
 } from 'astro'
 import pagefind from 'astro-pagefind'
-import rehypeAstroRelativeMarkdownLinks from 'astro-rehype-relative-markdown-links'
-import { h } from 'hastscript'
-import { isString, uniq } from 'lodash-es'
+import rehypeAstroRelativeMarkdownLinks from '../plugins/rehype/rehype-relative-markdown-links'
+
+import { uniq } from 'lodash-es'
 import { spawn } from 'node:child_process'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -25,8 +25,8 @@ import remarkGithubAdmonitionsToDirectives from 'remark-github-admonitions-to-di
 import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import SuperJSON from 'superjson'
-import { visit } from 'unist-util-visit'
 import packageJson from '../../package.json'
+import { remarkDirectiveRehype } from '../plugins/remark/remark-directive-rehype'
 import type { ThemeConfig } from './config'
 const packageName = packageJson.name
 const __dirname = resolve(import.meta.dirname, '../../')
@@ -252,27 +252,7 @@ export default function ThemeIntegration(
 						remarkPlugins: uniq([
 							remarkParse,
 							remarkDirective,
-							function remarkDirectiveRehype() {
-								return function (tree: any) {
-									visit(tree, function (node) {
-										if (
-											node.type === 'containerDirective' ||
-											node.type === 'leafDirective' ||
-											node.type === 'textDirective'
-										) {
-											const data = node.data || (node.data = {})
-											const hast = h(node.name, node.attributes || {})
-											if ('properties' in hast) {
-												data.hProperties = hast.properties
-											}
-											if ('tagName' in hast && isString(hast.tagName)) {
-												data.hName =
-													'directive-box-' + hast.tagName.toLowerCase()
-											}
-										}
-									})
-								}
-							},
+							remarkDirectiveRehype,
 							[
 								remarkFootnotesExtra,
 								{
