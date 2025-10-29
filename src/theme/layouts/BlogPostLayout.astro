@@ -95,3 +95,15 @@ const enablePagefind = props.enablePagefind ?? true
 		</div>
 	</aside>
 </BaseLayout>
+
+<style is:global>
+	@reference "tailwindcss";
+
+	.medium-zoom-overlay {
+		@apply z-110;
+	}
+
+	.medium-zoom-image {
+		@apply z-120;
+	}
+</style>

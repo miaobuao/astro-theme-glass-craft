@@ -30,15 +30,29 @@ Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sap
 
 ## Images
 
-### Syntax
+### Basic Image Syntax
 
 ```markdown
 ![Alt text](./full/or/relative/path/of/image)
 ```
 
-### Output
+#### Output
 
 ![blog placeholder](/blog-placeholder-about.jpg)
+
+### Relative Path Images
+
+You can use relative paths to reference images in your content directory:
+
+#### Syntax
+
+```markdown
+![Cloud Image](./assets/images/cloud.webp)
+```
+
+#### Output
+
+![Cloud Image](./assets/images/cloud.webp)
 
 ## Blockquotes
 

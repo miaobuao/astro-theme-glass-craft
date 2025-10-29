@@ -20,7 +20,7 @@ const { files } = Astro.props as Props
 	showToolBar
 	showScrollProgress={config.scrollProgress}
 >
-	<div class:list={['grid gap-2 lg:grid-cols-2']}>
+	<div class:list={['grid gap-2 grid-cols-1 lg:grid-cols-2']}>
 		{
 			files.map((file) => {
 				const icon = file.isDir
